@@ -2,9 +2,23 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hello wasm-pack!</title>
+    <title>LW - Character Selection</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+    <div class="container">
+      <header>
+        <h1 class="title">LW</h1>
+      </header>
+      
+      <main class="character-selection">
+        <h2>Select a Character</h2>
+        <div id="character-list" class="character-grid">
+          <div class="loading">Loading characters...</div>
+        </div>
+      </main>
+    </div>
+    
     <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
     <script src="./bootstrap.js"></script>
   </body>

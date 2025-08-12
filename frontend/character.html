@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LW - Character Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1 class="title">LW</h1>
+        <button id="back-button" class="back-btn">← Back to Selection</button>
+      </header>
+      
+      <main class="character-sheet">
+        <div class="character-header">
+          <h2 id="character-name" class="character-name">Character Name</h2>
+          <p id="character-subclass" class="character-subclass">Subclass</p>
+        </div>
+        
+        <div class="character-content">
+          <div class="character-portrait-section">
+            <div class="portrait-container">
+              <img id="character-portrait" class="character-portrait" src="default-portrait.png" alt="Character Portrait">
+            </div>
+            <div id="character-description" class="character-description">
+              Character description will appear here...
+            </div>
+          </div>
+          
+          <div class="character-stats">
+            <div class="stats-grid">
+              <div class="stat-block">
+                <label>Health</label>
+                <span id="character-health" class="stat-value">0</span>
+              </div>
+              <div class="stat-block">
+                <label>Attack</label>
+                <span id="character-attack" class="stat-value">0</span>
+              </div>
+              <div class="stat-block">
+                <label>Defense</label>
+                <span id="character-defense" class="stat-value">0</span>
+              </div>
+              <div class="stat-block">
+                <label>Will</label>
+                <span id="character-will" class="stat-value">0</span>
+              </div>
+              <div class="stat-block">
+                <label>Speed</label>
+                <span id="character-speed" class="stat-value">0</span>
+              </div>
+              <div class="stat-block">
+                <label>Flying</label>
+                <span id="character-flying" class="stat-value">No</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="character-abilities">
+          <h3>Abilities & Attacks</h3>
+          <div id="character-attacks" class="abilities-list">
+            <div class="loading">Loading abilities...</div>
+          </div>
+        </div>
+        
+        <div class="character-companions" id="companions-section" style="display: none;">
+          <h3>Companions</h3>
+          <div id="character-companions" class="companions-list">
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+    <script src="./character.js" type="module"></script>
+  </body>
+</html>
