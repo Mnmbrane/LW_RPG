@@ -117,6 +117,8 @@
     "defense": 3,
     "will": 10,
     "speed": 6,
+    "is_flying": false,
+    "companions": null,
     "attacks": [
       "Attack Advantage - 7 against dark",
       "Defense Advantage - 6 against dark",
@@ -470,6 +472,8 @@
     "companions": [
       {
         "name": "Halfling companion",
+        "subclass": "Companion",
+        "description": "",
         "health": 15,
         "attack": 5,
         "defense": 6,
@@ -1458,7 +1462,10 @@
     ]
   },
   {
-    "name": "The Paladin Assassin- 28 (Legendary Dark Warrior) Battle IQ.",
+    "name": "The Paladin Assassin",
+    "health": 28,
+    "subclass": "Legendary Dark Warrior",
+    "description": "Battle IQ.",
     "attack": 5,
     "defense": 3,
     "will": 7,
