@@ -1,84 +1,67 @@
-<div align="center">
+# LW RPG Character Viewer
 
-  <h1><code>wasm-pack-template</code></h1>
+A web application for viewing Lone Wolf RPG characters built with Rust/WebAssembly backend and JavaScript frontend. This project demonstrates character selection and detailed character viewing with stats, abilities, and descriptions.
 
-  <strong>A template for kick starting a Rust and WebAssembly project using <a href="https://github.com/rustwasm/wasm-pack">wasm-pack</a>.</strong>
+## Features
 
-  <p>
-    <a href="https://travis-ci.org/rustwasm/wasm-pack-template"><img src="https://img.shields.io/travis/rustwasm/wasm-pack-template.svg?style=flat-square" alt="Build Status" /></a>
-  </p>
+- Character selection interface with a list of available characters
+- Detailed character view showing stats, abilities, and descriptions
+- Built with Rust/WASM for performance and JavaScript for the frontend
+- Responsive web design
 
-  <h3>
-    <a href="https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html">Tutorial</a>
-    <span> | </span>
-    <a href="https://discordapp.com/channels/442252698964721669/443151097398296587">Chat</a>
-  </h3>
+## Getting Started
 
-  <sub>Built with 🦀🕸 by <a href="https://rustwasm.github.io/">The Rust and WebAssembly Working Group</a></sub>
-</div>
+### Prerequisites
 
-## About
+- [Rust](https://rustup.rs/) installed
+- [wasm-pack](https://rustwasm.github.io/wasm-pack/installer/) installed
+- [Node.js](https://nodejs.org/) installed
 
-[**📚 Read this template tutorial! 📚**][template-docs]
+### Building and Running
 
-This template is designed for compiling Rust libraries into WebAssembly and
-publishing the resulting package to NPM.
+1. **Build the WASM package** (run from root directory):
+   ```bash
+   wasm-pack build
+   ```
 
-Be sure to check out [other `wasm-pack` tutorials online][tutorials] for other
-templates and usages of `wasm-pack`.
+2. **Install frontend dependencies and start development server**:
+   ```bash
+   cd frontend
+   npm install
+   npm start
+   ```
 
-[tutorials]: https://rustwasm.github.io/docs/wasm-pack/tutorials/index.html
-[template-docs]: https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html
+3. **For production build**:
+   ```bash
+   cd frontend
+   npm run build
+   ```
 
-## 🚴 Usage
+### Running the Built Application
 
-### 🐑 Use `cargo generate` to Clone this Template
+After building, you can serve the `frontend/dist/` folder using any static file server.
 
-[Learn more about `cargo generate` here.](https://github.com/ashleygwilliams/cargo-generate)
-
-```
-cargo generate --git https://github.com/rustwasm/wasm-pack-template.git --name my-project
-cd my-project
-```
-
-### 🛠️ Build with `wasm-pack build`
-
-```
-wasm-pack build
-```
-
-### 🔬 Test in Headless Browsers with `wasm-pack test`
-
-```
-wasm-pack test --headless --firefox
+**Option 1: Python HTTP Server**
+```bash
+cd frontend/dist
+# Python 3
+python -m http.server 8000
+# Python 2
+python -m SimpleHTTPServer 8000
 ```
 
-### 🎁 Publish to NPM with `wasm-pack publish`
-
+**Option 2: Node.js HTTP Server**
+```bash
+npm install -g http-server
+cd frontend/dist
+http-server -p 8000
 ```
-wasm-pack publish
-```
 
-## 🔋 Batteries Included
+Then open your browser to `http://localhost:8000`
 
-* [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) for communicating
-  between WebAssembly and JavaScript.
-* [`console_error_panic_hook`](https://github.com/rustwasm/console_error_panic_hook)
-  for logging panic messages to the developer console.
-* `LICENSE-APACHE` and `LICENSE-MIT`: most Rust projects are licensed this way, so these are included for you
+## Project Structure
 
-## License
-
-Licensed under either of
-
-* Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
-* MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
-
-at your option.
-
-### Contribution
-
-Unless you explicitly state otherwise, any contribution intentionally
-submitted for inclusion in the work by you, as defined in the Apache-2.0
-license, shall be dual licensed as above, without any additional terms or
-conditions.
+- `/src/` - Rust source code for WASM backend
+- `/frontend/` - JavaScript frontend application
+- `/pkg/` - Generated WASM package (created by wasm-pack)
+- `/frontend/dist/` - Built frontend application (created by npm run build)
