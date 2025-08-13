@@ -16,6 +16,7 @@ module.exports = {
       patterns: [
         { from: 'index.html', to: 'index.html' },
         { from: 'character.html', to: 'character.html' },
+        { from: 'character.js', to: 'character.js' },
         { from: 'styles.css', to: 'styles.css' }
       ]
     })

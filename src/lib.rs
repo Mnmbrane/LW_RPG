@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Character {
     name: String,
@@ -17,12 +18,14 @@ pub struct Character {
     attacks: Vec<String>,
 }
 
+#[wasm_bindgen]
 #[derive(Debug)]
 pub struct CharacterList {
     list: Vec<Character>,
     serialized_name_list: Vec<u8>,
 }
 
+#[wasm_bindgen]
 impl CharacterList {
     pub fn new() -> Self {
         let char_list = Self::parse_json();
