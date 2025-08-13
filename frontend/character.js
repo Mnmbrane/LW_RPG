@@ -12,10 +12,10 @@ class CharacterViewer {
     try {
       // Wait for WASM to load
       await wasm.default();
-      
+
       // Get selected character index from localStorage
       this.characterIndex = localStorage.getItem('selectedCharacterIndex');
-      
+
       if (this.characterIndex === null) {
         this.showError("No character selected");
         return;
@@ -83,7 +83,7 @@ class CharacterViewer {
 
   renderAttacks() {
     const attacksContainer = document.getElementById('character-attacks');
-    
+
     if (!this.character.attacks || this.character.attacks.length === 0) {
       attacksContainer.innerHTML = '<div class="loading">No abilities available</div>';
       return;
@@ -99,14 +99,14 @@ class CharacterViewer {
   renderCompanions() {
     const companionsSection = document.getElementById('companions-section');
     const companionsContainer = document.getElementById('character-companions');
-    
+
     if (!this.character.companions || this.character.companions.length === 0) {
       companionsSection.style.display = 'none';
       return;
     }
 
     companionsSection.style.display = 'block';
-    
+
     const companionsHtml = this.character.companions.map((companion, index) => {
       if (typeof companion === 'string') {
         return `<div class="companion-item">${companion}</div>`;

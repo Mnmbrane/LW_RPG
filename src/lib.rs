@@ -1,13 +1,7 @@
+mod character;
+mod index;
 mod utils;
 
-use wasm_bindgen::prelude::*;
-
-#[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, lw-rpg!");
-}
+// Re-export public functions from modules
+pub use character::*;
+pub use index::*;

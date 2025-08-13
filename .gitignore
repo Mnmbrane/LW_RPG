@@ -4,3 +4,8 @@ Cargo.lock
 bin/
 pkg/
 wasm-pack.log
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/package-lock.json
