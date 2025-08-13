@@ -1,3 +1,4 @@
-import * as wasm from "lw-rpg";
-import { memory } from "lw-rpg/lw_rpg_bg";
+import { Universe } from "lw-rpg";
 
+console.log("WASM loaded successfully!");
+document.getElementById('character-list').innerHTML = '<div>WASM is working!</div>';

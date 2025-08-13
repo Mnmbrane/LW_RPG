@@ -1,6 +1,7 @@
 use lw_rpg::*;
 
 fn main() {
-    println!("Testing...{}", parse_json());
+    println!("Testing...");
+    let char_list = CharacterList::new();
+    dbg!(char_list);
 }
-
