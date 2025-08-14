@@ -103,14 +103,16 @@ impl CharacterList {
     }
 
     pub fn get_attacks(&self, index: usize) -> *const u8 {
-        // TODO: Implement - return attacks as null-terminated string
-        let empty = String::new();
-        empty.as_ptr()
+        let mut result: Vec<u8> = Vec::new();
+        for attack in &self.list[index].attacks {
+            result.extend(attack.as_bytes());
+            result.push(0u8);
+        }
+        result.as_ptr()
     }
 
     pub fn get_attacks_count(&self, index: usize) -> usize {
-        // TODO: Implement
-        0
+        self.list[index].attacks.len()
     }
 
     pub fn get_companions(&self, index: usize) -> *const u8 {
