@@ -1,6 +1,6 @@
 # LW RPG Character Viewer
 
-A web application for viewing Lone Wolf RPG characters built with Rust/WebAssembly backend and JavaScript frontend. This project demonstrates character selection and detailed character viewing with stats, abilities, and descriptions.
+A web application for viewing LW RPG characters built with Rust/WebAssembly backend and JavaScript frontend. This project demonstrates character selection and detailed character viewing with stats, abilities, and descriptions.
 
 ## Features
 
