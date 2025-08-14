@@ -95,13 +95,13 @@ function displayCharacter(data) {
   document.getElementById('character-subclass').textContent = data.subclass;
   document.getElementById('character-description').textContent = data.description;
 
-  // Update stats (show ∞ for 255 values)
-  document.getElementById('character-health').textContent = data.health === 255 ? '∞' : data.health;
-  document.getElementById('character-attack').textContent = data.attack === 255 ? '∞' : data.attack;
-  document.getElementById('character-defense').textContent = data.defense === 255 ? '∞' : data.defense;
-  document.getElementById('character-will').textContent = data.will === 255 ? '∞' : data.will;
-  document.getElementById('character-speed').textContent = data.speed === 255 ? '∞' : data.speed;
-  document.getElementById('character-flying').textContent = data.isFlying ? 'Yes' : 'No';
+  // Update stats in input elements
+  document.getElementById('character-health').value = data.health;
+  document.getElementById('character-attack').value = data.attack;
+  document.getElementById('character-defense').value = data.defense;
+  document.getElementById('character-will').value = data.will;
+  document.getElementById('character-speed').value = data.speed;
+  document.getElementById('character-flying').checked = data.isFlying;
 
   // Update attacks
   if (data.attacks && data.attacks.length > 0) {
