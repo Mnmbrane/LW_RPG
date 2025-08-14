@@ -54,6 +54,76 @@ impl CharacterList {
         result
     }
 
+    pub fn get_health(&self, index: usize) -> u8 {
+        self.list[index].health
+    }
+
+    pub fn get_name(&self, index: usize) -> *const u8 {
+        self.list[index].name.as_ptr()
+    }
+
+    pub fn get_name_size(&self, index: usize) -> usize {
+        self.list[index].name.len()
+    }
+
+    pub fn get_subclass(&self, index: usize) -> *const u8 {
+        self.list[index].subclass.as_ptr()
+    }
+
+    pub fn get_subclass_size(&self, index: usize) -> usize {
+        self.list[index].subclass.len()
+    }
+
+    pub fn get_description(&self, index: usize) -> *const u8 {
+        self.list[index].description.as_ptr()
+    }
+
+    pub fn get_description_size(&self, index: usize) -> usize {
+        self.list[index].description.len()
+    }
+
+    pub fn get_attack(&self, index: usize) -> u8 {
+        self.list[index].attack
+    }
+
+    pub fn get_defense(&self, index: usize) -> u8 {
+        self.list[index].defense
+    }
+
+    pub fn get_will(&self, index: usize) -> u8 {
+        self.list[index].will
+    }
+
+    pub fn get_speed(&self, index: usize) -> u8 {
+        self.list[index].speed
+    }
+
+    pub fn get_is_flying(&self, index: usize) -> bool {
+        self.list[index].is_flying
+    }
+
+    pub fn get_attacks(&self, index: usize) -> *const u8 {
+        // TODO: Implement - return attacks as null-terminated string
+        let empty = String::new();
+        empty.as_ptr()
+    }
+
+    pub fn get_attacks_count(&self, index: usize) -> usize {
+        // TODO: Implement
+        0
+    }
+
+    pub fn get_companions(&self, index: usize) -> *const u8 {
+        // TODO: Implement - return companions as null-terminated string
+        let empty = String::new();
+        empty.as_ptr()
+    }
+
+    pub fn get_companions_count(&self, index: usize) -> usize {
+        // TODO: Implement
+        0
+    }
+
     pub fn get_name_list(&self) -> *const u8 {
         self.serialized_name_list.as_ptr()
     }
