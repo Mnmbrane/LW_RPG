@@ -246,6 +246,31 @@ header {
   font-weight: bold;
 }
 
+.stat-input {
+  background: #fff;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  width: 100px;
+  color: #212529;
+  transition: all 0.3s ease;
+}
+
+.stat-input:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.flying-checkbox {
+  transform: scale(1.8);
+  margin: 0;
+  cursor: pointer;
+}
+
 .character-abilities {
   background: white;
   border: 2px solid #dee2e6;
