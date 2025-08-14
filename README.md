@@ -17,24 +17,41 @@ A web application for viewing LW RPG characters built with Rust/WebAssembly back
 - [wasm-pack](https://rustwasm.github.io/wasm-pack/installer/) installed
 - [Node.js](https://nodejs.org/) installed
 
-### Building and Running
+### Quick Build (Recommended)
 
-1. **Build the WASM package** (run from root directory):
-   ```bash
-   wasm-pack build
-   ```
+**Automated build and deployment** using the build script:
+```bash
+# One command builds everything and deploys to GitHub Pages
+./build.sh
+```
 
-2. **Install frontend dependencies and start development server**:
+### Manual Building and Running
+
+1. **Install frontend dependencies** (one-time setup):
    ```bash
    cd frontend
    npm install
+   cd ..
+   ```
+
+2. **Start development server**:
+   ```bash
+   cd frontend
    npm start
    ```
 
-3. **For production build**:
+3. **Manual production build** (if not using build.sh):
    ```bash
+   # Build WASM package
+   wasm-pack build
+   
+   # Build frontend
    cd frontend
    npm run build
+   
+   # Deploy to GitHub Pages
+   cd ..
+   cp -r frontend/dist/* docs/
    ```
 
 ### Running the Built Application
@@ -65,3 +82,6 @@ Then open your browser to `http://localhost:8000`
 - `/frontend/` - JavaScript frontend application
 - `/pkg/` - Generated WASM package (created by wasm-pack)
 - `/frontend/dist/` - Built frontend application (created by npm run build)
+- `/docs/` - GitHub Pages deployment directory
+- `build.sh` - Automated build and deployment script
+- `lw.json` - Character data file

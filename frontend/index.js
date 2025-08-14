@@ -96,11 +96,11 @@ function displayCharacter(data) {
   document.getElementById('character-description').textContent = data.description;
 
   // Update stats in input elements
-  document.getElementById('character-health').value = data.health;
-  document.getElementById('character-attack').value = data.attack;
-  document.getElementById('character-defense').value = data.defense;
-  document.getElementById('character-will').value = data.will;
-  document.getElementById('character-speed').value = data.speed;
+  setStatValue('character-health', data.health);
+  setStatValue('character-attack', data.attack);
+  setStatValue('character-defense', data.defense);
+  setStatValue('character-will', data.will);
+  setStatValue('character-speed', data.speed);
   document.getElementById('character-flying').checked = data.isFlying;
 
   // Update attacks
@@ -120,4 +120,61 @@ function displayCharacter(data) {
 // Back button functionality
 document.getElementById('back-button').addEventListener('click', showCharacterSelection);
 
+// Stat display functions for infinity symbol
+function setStatValue(elementId, value) {
+  const element = document.getElementById(elementId);
+  console.log(`Setting ${elementId} to value: ${value} (type: ${typeof value})`);
 
+  // Remove existing event listeners to prevent duplicates
+  element.removeEventListener('focus', handleStatFocus);
+  element.removeEventListener('blur', handleStatBlur);
+  element.removeEventListener('input', handleStatInput);
+
+  // Set the value first
+  element.value = value;
+
+  // Add event listeners
+  element.addEventListener('focus', handleStatFocus);
+  element.addEventListener('blur', handleStatBlur);
+  element.addEventListener('input', handleStatInput);
+
+  // Set initial display (infinity if 255)
+  if (value === 255) {
+    console.log(`Setting ${elementId} to infinity symbol`);
+    element.type = 'text';  // Change to text to allow infinity symbol
+    element.value = '∞';
+  }
+}
+
+function handleStatFocus() {
+  // Show actual number when focused for editing
+  if (this.value === '∞') {
+    this.type = 'number';  // Change back to number for editing
+    this.value = '255';
+  }
+}
+
+function handleStatInput() {
+  // Real-time validation while typing
+  if (this.type === 'number') {
+    let value = parseInt(this.value);
+    if (value > 255) {
+      this.value = '255';
+    } else if (value < 0) {
+      this.value = '0';
+    }
+  }
+}
+
+function handleStatBlur() {
+  // Validate and clamp the value to 0-255 range
+  let value = parseInt(this.value) || 0;
+  value = Math.max(0, Math.min(255, value));
+  this.value = value;
+
+  // Show infinity symbol when not focused if value is 255
+  if (value === 255) {
+    this.type = 'text';  // Change to text to allow infinity symbol
+    this.value = '∞';
+  }
+}
