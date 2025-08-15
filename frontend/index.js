@@ -93,19 +93,23 @@ characterListElement.addEventListener('click', (event) => {
       attacks = attacksString.split('\0').filter(attack => attack.length > 0).slice(0, attacksCount);
     }
 
-    // Create character data object
+    // Get saved state for this character
+    const savedState = loadCharacterState();
+    const hasSavedData = savedState && savedState.characterIndex === selectedIndex;
+    
+    // Create character data object, using saved data if available
     const characterData = {
       index: selectedIndex,
       name: name,
       subclass: subclass,
       description: description,
-      health: characterList.get_health(selectedIndex),
-      attack: characterList.get_attack(selectedIndex),
-      defense: characterList.get_defense(selectedIndex),
-      will: characterList.get_will(selectedIndex),
-      speed: characterList.get_speed(selectedIndex),
-      isFlying: characterList.get_is_flying(selectedIndex),
-      attacks: attacks
+      health: hasSavedData ? savedState.characterData.health : characterList.get_health(selectedIndex),
+      attack: hasSavedData ? savedState.characterData.attack : characterList.get_attack(selectedIndex),
+      defense: hasSavedData ? savedState.characterData.defense : characterList.get_defense(selectedIndex),
+      will: hasSavedData ? savedState.characterData.will : characterList.get_will(selectedIndex),
+      speed: hasSavedData ? savedState.characterData.speed : characterList.get_speed(selectedIndex),
+      isFlying: hasSavedData ? savedState.characterData.isFlying : characterList.get_is_flying(selectedIndex),
+      attacks: hasSavedData ? savedState.characterData.attacks : attacks
     };
 
     // Save state and display character view
