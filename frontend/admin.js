@@ -43,11 +43,11 @@ function populateSubclassFilter() {
   charactersData.forEach(char => {
     if (char.subclass) subclasses.add(char.subclass);
   });
-  
+
   const filter = document.getElementById('admin-subclass-filter');
   // Clear existing options except "All Subclasses"
   filter.innerHTML = '<option value="">All Subclasses</option>';
-  
+
   Array.from(subclasses).sort().forEach(subclass => {
     const option = document.createElement('option');
     option.value = subclass;
@@ -60,15 +60,15 @@ function populateSubclassFilter() {
 function filterAndDisplayCharacters() {
   const searchTerm = document.getElementById('admin-search').value.toLowerCase();
   const selectedSubclass = document.getElementById('admin-subclass-filter').value;
-  
+
   const filteredCharacters = charactersData.filter(char => {
     const matchesSearch = char.name.toLowerCase().includes(searchTerm);
     const matchesSubclass = !selectedSubclass || char.subclass === selectedSubclass;
     return matchesSearch && matchesSubclass;
   });
-  
+
   const grid = document.getElementById('admin-character-grid');
-  
+
   if (filteredCharacters.length === 0) {
     grid.innerHTML = '<div class="loading">No characters found matching your criteria.</div>';
   } else {
@@ -152,7 +152,7 @@ function addNewCharacter() {
 function editCharacter(index) {
   editingCharacterIndex = index;
   const char = charactersData[index];
-  
+
   // Populate form with character data
   document.getElementById('char-name').value = char.name || '';
   document.getElementById('char-subclass').value = char.subclass || '';
@@ -163,7 +163,7 @@ function editCharacter(index) {
   document.getElementById('char-will').value = char.will || 0;
   document.getElementById('char-speed').value = char.speed || 0;
   document.getElementById('char-flying').checked = char.is_flying || false;
-  
+
   // Populate attacks
   const attacksContainer = document.getElementById('attacks-container');
   if (char.attacks && char.attacks.length > 0) {
@@ -176,7 +176,7 @@ function editCharacter(index) {
   } else {
     clearForm();
   }
-  
+
   showCharacterForm(true);
 }
 
@@ -205,14 +205,14 @@ function removeAttack(button) {
 // Save character
 function saveCharacter(event) {
   event.preventDefault();
-  
+
   // Validate form
   const form = document.getElementById('character-form');
   if (!form.checkValidity()) {
     form.reportValidity();
     return;
   }
-  
+
   // Get form data
   const characterData = {
     name: document.getElementById('char-name').value.trim(),
@@ -228,7 +228,7 @@ function saveCharacter(event) {
       .map(input => input.value.trim())
       .filter(attack => attack.length > 0)
   };
-  
+
   // Save or update character
   if (editingCharacterIndex >= 0) {
     // Update existing character
@@ -237,13 +237,13 @@ function saveCharacter(event) {
     // Add new character
     charactersData.push(characterData);
   }
-  
+
   // Save to localStorage
   saveCharactersData();
-  
+
   // Return to character list
   showCharacterList();
-  
+
   alert(editingCharacterIndex >= 0 ? 'Character updated successfully!' : 'Character added successfully!');
 }
 
@@ -272,7 +272,7 @@ window.hashPassword = async function(password) {
 // Password protection functions
 function checkAdminAccess() {
   const sessionValid = sessionStorage.getItem(PASSWORD_SESSION_KEY) === 'valid';
-  
+
   if (sessionValid) {
     showAdminInterface();
   } else {
@@ -293,13 +293,13 @@ function showAdminInterface() {
 
 async function handlePasswordSubmit(event) {
   event.preventDefault();
-  
+
   const password = document.getElementById('admin-password').value;
   const errorElement = document.getElementById('password-error');
-  
+
   try {
     const passwordHash = await window.hashPassword(password);
-    
+
     if (passwordHash === ADMIN_PASSWORD_HASH) {
       // Set session flag (valid until browser tab closes)
       sessionStorage.setItem(PASSWORD_SESSION_KEY, 'valid');
@@ -320,18 +320,18 @@ async function handlePasswordSubmit(event) {
 function initializeAdmin() {
   loadCharactersData();
   showCharacterList();
-  
+
   // Event listeners
   document.getElementById('add-character-btn').addEventListener('click', addNewCharacter);
   document.getElementById('cancel-edit-btn').addEventListener('click', showCharacterList);
   document.getElementById('character-form').addEventListener('submit', saveCharacter);
   document.getElementById('delete-character-btn').addEventListener('click', deleteCharacter);
   document.getElementById('add-attack-btn').addEventListener('click', addAttack);
-  
+
   // GitHub integration
   document.getElementById('save-github-settings-btn').addEventListener('click', saveGitHubSettings);
   document.getElementById('cancel-github-settings-btn').addEventListener('click', hideGitHubSettings);
-  
+
   // Search and filter
   document.getElementById('admin-search').addEventListener('input', filterAndDisplayCharacters);
   document.getElementById('admin-subclass-filter').addEventListener('change', filterAndDisplayCharacters);
@@ -462,97 +462,11 @@ async function createPullRequest(branchName, title, body) {
   }
 }
 
-async function saveCharacterAndCreatePR(characterData, isEdit = false) {
-  try {
-    // Show loading state
-    const button = document.getElementById('save-and-pr-btn');
-    const originalText = button.textContent;
-    button.textContent = 'Creating PR...';
-    button.disabled = true;
-
-    // Get current JSON content
-    const fileContent = await getCurrentFileContent();
-    let characters = JSON.parse(fileContent.content);
-
-    // Add or update character
-    if (isEdit && editingCharacterIndex >= 0) {
-      characters[editingCharacterIndex] = characterData;
-    } else {
-      characters.push(characterData);
-    }
-
-    // Create branch name
-    const timestamp = Date.now();
-    const branchName = `add-character-${characterData.name.replace(/\s+/g, '-').toLowerCase()}-${timestamp}`;
-
-    // Create branch
-    await createBranch(branchName);
-
-    // Commit changes
-    const newContent = JSON.stringify(characters, null, 2);
-    const commitMessage = isEdit 
-      ? `Update character: ${characterData.name}`
-      : `Add new character: ${characterData.name}`;
-    
-    await commitChanges(branchName, newContent, commitMessage);
-
-    // Create PR
-    const prTitle = isEdit 
-      ? `Update Character: ${characterData.name}`
-      : `Add New Character: ${characterData.name}`;
-    
-    const prBody = `## ${isEdit ? 'Character Update' : 'New Character Added'}
-
-**Character Name:** ${characterData.name}
-**Subclass:** ${characterData.subclass}
-
-### Stats:
-- Health: ${characterData.health}
-- Attack: ${characterData.attack}
-- Defense: ${characterData.defense}
-- Will: ${characterData.will}
-- Speed: ${characterData.speed}
-- Flying: ${characterData.is_flying ? 'Yes' : 'No'}
-
-### Abilities:
-${characterData.attacks.map(attack => `- ${attack}`).join('\n')}
-
----
-*This PR was automatically generated from the LW Admin interface.*`;
-
-    const pr = await createPullRequest(branchName, prTitle, prBody);
-
-    // Reset button
-    button.textContent = originalText;
-    button.disabled = false;
-
-    // Show success message
-    alert(`Pull request created successfully!\n\nPR #${pr.number}: ${pr.title}\n\nView at: ${pr.html_url}`);
-
-    // Also save locally
-    if (isEdit && editingCharacterIndex >= 0) {
-      charactersData[editingCharacterIndex] = characterData;
-    } else {
-      charactersData.push(characterData);
-    }
-    saveCharactersData();
-    showCharacterList();
-
-  } catch (error) {
-    // Reset button on error
-    const button = document.getElementById('save-and-pr-btn');
-    button.textContent = 'Save & Create PR';
-    button.disabled = false;
-
-    alert(`Failed to create pull request:\n\n${error.message}`);
-    console.error('PR creation error:', error);
-  }
-}
 
 // GitHub Settings Functions
 function showGitHubSettings() {
   document.getElementById('github-settings-modal').style.display = 'flex';
-  
+
   // Load existing token (masked)
   const token = getGitHubToken();
   if (token) {
@@ -567,7 +481,7 @@ function hideGitHubSettings() {
 function saveGitHubSettings() {
   const tokenInput = document.getElementById('github-token');
   const token = tokenInput.value.trim();
-  
+
   if (token && token !== '••••••••••••••••') {
     saveGitHubToken(token);
     alert('GitHub token saved successfully!');
@@ -582,45 +496,15 @@ async function testConnection() {
   alert(result.message);
 }
 
-// Handle Save & Create PR button
-async function handleSaveAndCreatePR(event) {
-  event.preventDefault();
-  
-  // Validate form first
-  const form = document.getElementById('character-form');
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-  
-  // Get form data (same as saveCharacter)
-  const characterData = {
-    name: document.getElementById('char-name').value.trim(),
-    subclass: document.getElementById('char-subclass').value.trim(),
-    description: document.getElementById('char-description').value.trim(),
-    health: parseInt(document.getElementById('char-health').value) || 0,
-    attack: parseInt(document.getElementById('char-attack').value) || 0,
-    defense: parseInt(document.getElementById('char-defense').value) || 0,
-    will: parseInt(document.getElementById('char-will').value) || 0,
-    speed: parseInt(document.getElementById('char-speed').value) || 0,
-    is_flying: document.getElementById('char-flying').checked,
-    attacks: Array.from(document.querySelectorAll('.attack-input'))
-      .map(input => input.value.trim())
-      .filter(attack => attack.length > 0)
-  };
-  
-  // Create PR
-  await saveCharacterAndCreatePR(characterData, editingCharacterIndex >= 0);
-}
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
   // Set up password form
   document.getElementById('password-form').addEventListener('submit', handlePasswordSubmit);
-  
+
   // Set up hash generator button
   document.getElementById('generate-hash-btn').addEventListener('click', generateNewHash);
-  
+
   // Check if user should have access
   checkAdminAccess();
 });
