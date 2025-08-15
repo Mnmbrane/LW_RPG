@@ -302,7 +302,7 @@ function displayCharacter(data) {
     attacksContainer.innerHTML = data.attacks.map((attack, index) =>
       `<div class="ability-item">
         <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
-        <button class="remove-ability-btn">Remove</button>
+        <button class="remove-ability-btn">×</button>
       </div>`
     ).join('');
 
@@ -511,7 +511,7 @@ function resetCharacterAbilities() {
     attacksContainer.innerHTML = originalAttacks.map((attack, index) =>
       `<div class="ability-item">
         <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
-        <button class="remove-ability-btn">Remove</button>
+        <button class="remove-ability-btn">×</button>
       </div>`
     ).join('');
 
@@ -541,7 +541,7 @@ function addNewAbility() {
   
   const attackIndex = attacksContainer.children.length;
   abilityItem.innerHTML = `<textarea class="ability-text" data-attack-index="${attackIndex}" placeholder="Attack description..."></textarea>
-    <button class="remove-ability-btn">Remove</button>`;
+    <button class="remove-ability-btn">×</button>`;
   
   // Add to container
   attacksContainer.appendChild(abilityItem);
@@ -632,9 +632,9 @@ function handlePortraitUpload(event) {
       // Update the portrait display
       document.getElementById('character-portrait').src = base64Image;
 
-      // Show remove button, hide upload button text
-      document.getElementById('remove-portrait-btn').style.display = 'inline-block';
-      document.getElementById('upload-portrait-btn').textContent = 'Change Photo';
+      // Show remove button, hide upload button
+      document.getElementById('remove-portrait-btn').style.display = 'flex';
+      document.getElementById('upload-portrait-btn').style.display = 'none';
     }
   };
   reader.readAsDataURL(file);
@@ -654,9 +654,9 @@ function removeCustomPortrait() {
     // Reset to default image
     document.getElementById('character-portrait').src = 'default_profile.jpg';
 
-    // Hide remove button, reset upload button text
+    // Hide remove button, show upload button
     document.getElementById('remove-portrait-btn').style.display = 'none';
-    document.getElementById('upload-portrait-btn').textContent = 'Upload Photo';
+    document.getElementById('upload-portrait-btn').style.display = 'flex';
   }
 }
 
@@ -665,15 +665,15 @@ function loadCustomPortrait(characterIndex) {
   const customPortrait = localStorage.getItem(portraitKey);
 
   if (customPortrait) {
-    // Load custom portrait
+    // Load custom portrait - show remove button, hide upload button
     document.getElementById('character-portrait').src = customPortrait;
-    document.getElementById('remove-portrait-btn').style.display = 'inline-block';
-    document.getElementById('upload-portrait-btn').textContent = 'Change Photo';
+    document.getElementById('remove-portrait-btn').style.display = 'flex';
+    document.getElementById('upload-portrait-btn').style.display = 'none';
   } else {
-    // Use default portrait
+    // Use default portrait - show upload button, hide remove button
     document.getElementById('character-portrait').src = 'default_profile.jpg';
     document.getElementById('remove-portrait-btn').style.display = 'none';
-    document.getElementById('upload-portrait-btn').textContent = 'Upload Photo';
+    document.getElementById('upload-portrait-btn').style.display = 'flex';
   }
 }
 
