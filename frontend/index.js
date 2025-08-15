@@ -164,6 +164,13 @@ function displayCharacter(data) {
   document.getElementById('reset-stats-btn').addEventListener('click', resetCharacterStats);
   document.getElementById('reset-abilities-btn').addEventListener('click', resetCharacterAbilities);
 
+  // Add portrait upload event listeners
+  document.getElementById('upload-portrait-btn').addEventListener('click', () => {
+    document.getElementById('portrait-upload').click();
+  });
+  document.getElementById('portrait-upload').addEventListener('change', handlePortraitUpload);
+  document.getElementById('remove-portrait-btn').addEventListener('click', removeCustomPortrait);
+
   // Update attacks
   if (data.attacks && data.attacks.length > 0) {
     const attacksContainer = document.getElementById('character-attacks');
@@ -185,6 +192,9 @@ function displayCharacter(data) {
 
   // Hide companions section for now
   document.getElementById('companions-section').style.display = 'none';
+
+  // Load custom portrait if available
+  loadCustomPortrait(data.index);
 }
 
 // Back button functionality
@@ -376,4 +386,74 @@ function resetCharacterAbilities() {
 
   // Save the updated state
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
+}
+
+// Portrait upload functions
+function handlePortraitUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Check file size (limit to 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image file too large. Please choose a file smaller than 5MB.');
+    return;
+  }
+
+  // Check file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please select a valid image file.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64Image = e.target.result;
+    const savedState = loadCharacterState();
+    if (savedState) {
+      // Store in localStorage with character-specific key
+      const portraitKey = `lw-rpg-portrait-${savedState.characterIndex}`;
+      localStorage.setItem(portraitKey, base64Image);
+      
+      // Update the portrait display
+      document.getElementById('character-portrait').src = base64Image;
+      
+      // Show remove button, hide upload button text
+      document.getElementById('remove-portrait-btn').style.display = 'inline-block';
+      document.getElementById('upload-portrait-btn').textContent = 'Change Photo';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeCustomPortrait() {
+  const savedState = loadCharacterState();
+  if (savedState) {
+    // Remove from localStorage
+    const portraitKey = `lw-rpg-portrait-${savedState.characterIndex}`;
+    localStorage.removeItem(portraitKey);
+    
+    // Reset to default image
+    document.getElementById('character-portrait').src = 'default_profile.jpg';
+    
+    // Hide remove button, reset upload button text
+    document.getElementById('remove-portrait-btn').style.display = 'none';
+    document.getElementById('upload-portrait-btn').textContent = 'Upload Photo';
+  }
+}
+
+function loadCustomPortrait(characterIndex) {
+  const portraitKey = `lw-rpg-portrait-${characterIndex}`;
+  const customPortrait = localStorage.getItem(portraitKey);
+  
+  if (customPortrait) {
+    // Load custom portrait
+    document.getElementById('character-portrait').src = customPortrait;
+    document.getElementById('remove-portrait-btn').style.display = 'inline-block';
+    document.getElementById('upload-portrait-btn').textContent = 'Change Photo';
+  } else {
+    // Use default portrait
+    document.getElementById('character-portrait').src = 'default_profile.jpg';
+    document.getElementById('remove-portrait-btn').style.display = 'none';
+    document.getElementById('upload-portrait-btn').textContent = 'Upload Photo';
+  }
 }
