@@ -2,6 +2,34 @@ import { CharacterList } from "lw-rpg";
 import { memory } from "lw-rpg/lw_rpg_bg.wasm";
 
 const characterList = CharacterList.new();
+
+// Session storage functions
+function saveCharacterState(index, characterData, currentView = 'character-view') {
+  const state = {
+    characterIndex: index,
+    characterData: characterData,
+    currentView: currentView,
+    timestamp: Date.now()
+  };
+  sessionStorage.setItem('lw-rpg-state', JSON.stringify(state));
+}
+
+function loadCharacterState() {
+  const saved = sessionStorage.getItem('lw-rpg-state');
+  return saved ? JSON.parse(saved) : null;
+}
+
+function clearCharacterState() {
+  sessionStorage.removeItem('lw-rpg-state');
+}
+
+function saveViewState(view) {
+  const savedState = loadCharacterState();
+  if (savedState) {
+    savedState.currentView = view;
+    sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
+  }
+}
 const nameListPtr = characterList.get_name_list();
 const listSize = characterList.get_character_count();
 const nameListArray = new Uint8Array(memory.buffer, nameListPtr);
@@ -16,6 +44,21 @@ const characterListElement = document.getElementById('character-list');
 characterListElement.innerHTML = characterNames.map((name, index) =>
   `<button class="character-item" data-index="${index}">${name}</button>`
 ).join('');
+
+// Check for saved state on page load
+const savedState = loadCharacterState();
+if (savedState && savedState.characterData) {
+  if (savedState.currentView === 'character-view') {
+    // Restore character view with saved data
+    showCharacterView(savedState.characterData);
+  } else {
+    // Stay on character selection but keep the saved data
+    showCharacterSelection();
+  }
+} else {
+  // No saved state, default to character selection
+  showCharacterSelection();
+}
 
 // Handle character selection
 characterListElement.addEventListener('click', (event) => {
@@ -65,7 +108,8 @@ characterListElement.addEventListener('click', (event) => {
       attacks: attacks
     };
 
-    // Display character view
+    // Save state and display character view
+    saveCharacterState(selectedIndex, characterData);
     showCharacterView(characterData);
   }
 });
@@ -77,6 +121,9 @@ function showCharacterView(data) {
   document.getElementById('character-view-section').style.display = 'block';
   document.getElementById('back-button').style.display = 'block';
 
+  // Save view state
+  saveViewState('character-view');
+
   // Update character data
   displayCharacter(data);
 }
@@ -84,7 +131,11 @@ function showCharacterView(data) {
 // Function to show selection and hide character view
 function showCharacterSelection() {
   document.getElementById('character-selection-section').style.display = 'block';
+  document.getElementById('character-view-section').style.display = 'none';
   document.getElementById('back-button').style.display = 'none';
+  
+  // Save view state but don't clear character data
+  saveViewState('character-selection');
 }
 
 // Function to display character data
@@ -101,6 +152,9 @@ function displayCharacter(data) {
   setStatValue('character-will', data.will);
   setStatValue('character-speed', data.speed);
   document.getElementById('character-flying').checked = data.isFlying;
+  
+  // Add change listener for checkbox to save state
+  document.getElementById('character-flying').addEventListener('change', updateStoredStats);
 
   // Update attacks
   if (data.attacks && data.attacks.length > 0) {
@@ -176,4 +230,28 @@ function handleStatBlur() {
     this.type = 'text';  // Change to text to allow infinity symbol
     this.value = '∞';
   }
+
+  // Update sessionStorage with current stats
+  updateStoredStats();
+}
+
+function updateStoredStats() {
+  const savedState = loadCharacterState();
+  if (!savedState) return;
+
+  // Update the characterData with current values
+  savedState.characterData.health = getStatValue('character-health');
+  savedState.characterData.attack = getStatValue('character-attack');
+  savedState.characterData.defense = getStatValue('character-defense');
+  savedState.characterData.will = getStatValue('character-will');
+  savedState.characterData.speed = getStatValue('character-speed');
+  savedState.characterData.isFlying = document.getElementById('character-flying').checked;
+
+  // Save back to sessionStorage
+  sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
+}
+
+function getStatValue(elementId) {
+  const element = document.getElementById(elementId);
+  return element.value === '∞' ? 255 : parseInt(element.value) || 0;
 }
