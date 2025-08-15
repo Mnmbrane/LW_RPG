@@ -24,11 +24,10 @@
 
     <div class="container" id="admin-content" style="display: none;">
       <header>
-        <h1 class="title">LW Admin</h1>
+        <a href="index.html" class="back-btn">← Back to Game</a>
+        <h1 class="title" style="margin-right: 40px;">LW Admin</h1>
         <nav class="admin-nav">
-          <a href="index.html" class="nav-link">← Back to Game</a>
           <div class="admin-actions">
-            <button id="github-settings-btn" class="github-settings-btn">⚙️ GitHub Settings</button>
             <button id="add-character-btn" class="add-character-btn">+ Add New Character</button>
           </div>
         </nav>
@@ -120,7 +119,6 @@
           
           <div class="form-actions">
             <button type="submit" id="save-character-btn" class="save-btn">Save Character</button>
-            <button type="button" id="save-and-pr-btn" class="save-btn" style="margin-right: 10px;">Save & Create PR</button>
             <button type="button" id="delete-character-btn" class="delete-btn" style="display: none;">Delete Character</button>
           </div>
         </form>
@@ -147,7 +145,6 @@
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" id="test-connection-btn" class="save-btn">Test Connection</button>
             <button type="button" id="save-github-settings-btn" class="save-btn">Save Settings</button>
             <button type="button" id="cancel-github-settings-btn" class="cancel-btn">Cancel</button>
           </div>

@@ -329,11 +329,8 @@ function initializeAdmin() {
   document.getElementById('add-attack-btn').addEventListener('click', addAttack);
   
   // GitHub integration
-  document.getElementById('github-settings-btn').addEventListener('click', showGitHubSettings);
-  document.getElementById('save-and-pr-btn').addEventListener('click', handleSaveAndCreatePR);
   document.getElementById('save-github-settings-btn').addEventListener('click', saveGitHubSettings);
   document.getElementById('cancel-github-settings-btn').addEventListener('click', hideGitHubSettings);
-  document.getElementById('test-connection-btn').addEventListener('click', testConnection);
   
   // Search and filter
   document.getElementById('admin-search').addEventListener('input', filterAndDisplayCharacters);

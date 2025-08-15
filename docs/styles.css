@@ -60,6 +60,8 @@ header {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: 4px;
   margin-bottom: 10px;
+  flex: 1;
+  text-align: center;
 }
 
 .back-btn {

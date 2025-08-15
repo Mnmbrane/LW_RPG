@@ -24,10 +24,12 @@
 
     <div class="container" id="admin-content" style="display: none;">
       <header>
-        <h1 class="title">LW Admin</h1>
+        <a href="index.html" class="back-btn">← Back to Game</a>
+        <h1 class="title" style="margin-right: 40px;">LW Admin</h1>
         <nav class="admin-nav">
-          <a href="index.html" class="nav-link">← Back to Game</a>
-          <button id="add-character-btn" class="add-character-btn">+ Add New Character</button>
+          <div class="admin-actions">
+            <button id="add-character-btn" class="add-character-btn">+ Add New Character</button>
+          </div>
         </nav>
       </header>
       
@@ -121,6 +123,33 @@
           </div>
         </form>
       </main>
+    </div>
+
+    <!-- GitHub Settings Modal -->
+    <div id="github-settings-modal" class="password-modal" style="display: none;">
+      <div class="password-modal-content">
+        <h2>GitHub Settings</h2>
+        <form id="github-settings-form">
+          <div class="form-group">
+            <label for="github-token">GitHub Personal Access Token</label>
+            <input type="password" id="github-token" placeholder="Enter your GitHub token...">
+            <small>This token is stored locally and used to create pull requests</small>
+          </div>
+          <div class="form-group">
+            <label>Repository Configuration</label>
+            <div class="github-config-info">
+              <p><strong>Owner:</strong> Mnmbrane</p>
+              <p><strong>Repository:</strong> LW_RPG</p>
+              <p><strong>Branch:</strong> main</p>
+              <p><strong>File:</strong> lw.json</p>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="save-github-settings-btn" class="save-btn">Save Settings</button>
+            <button type="button" id="cancel-github-settings-btn" class="cancel-btn">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
     
     <script src="./admin.js"></script>
