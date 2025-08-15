@@ -18,6 +18,7 @@ body {
 .app-layout {
   display: flex;
   min-height: 100vh;
+  position: relative;
 }
 
 .container {
@@ -95,6 +96,7 @@ header {
 /* Sidebar Character Panel */
 .character-panel {
   width: 350px;
+  min-width: 350px;
   background: white;
   border-right: 2px solid #dee2e6;
   padding: 20px;
@@ -103,11 +105,14 @@ header {
   position: relative;
   overflow-y: auto;
   max-height: 100vh;
+  flex-shrink: 0;
 }
 
 .character-panel.collapsed {
   transform: translateX(-100%);
   overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
 
 .panel-header {
@@ -173,16 +178,21 @@ header {
 .main-content {
   flex: 1;
   padding: 20px;
-  transition: margin-left 0.3s ease;
+  transition: all 0.3s ease;
   overflow-y: auto;
 }
 
+/* When panel is collapsed, main content takes full width */
+.app-layout.panel-collapsed .main-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 !important;
+}
+
 .main-header {
-  text-align: center;
   margin-bottom: 30px;
-  position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 }
 

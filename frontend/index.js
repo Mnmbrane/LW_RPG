@@ -12,7 +12,7 @@ function saveCharacterState(index, characterData, currentView = 'character-view'
     timestamp: Date.now()
   };
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(state));
-  
+
   // Also save to global character states
   saveToGlobalStates(index, characterData);
 }
@@ -64,25 +64,25 @@ let allCharacterData = [];
 function populateCharacterData() {
   const decoder = new TextDecoder('utf-8');
   const subclasses = new Set();
-  
+
   for (let i = 0; i < listSize; i++) {
     const namePtr = characterList.get_name(i);
     const nameSize = characterList.get_name_size(i);
     const subclassPtr = characterList.get_subclass(i);
     const subclassSize = characterList.get_subclass_size(i);
-    
+
     const name = decoder.decode(new Uint8Array(memory.buffer, namePtr, nameSize));
     const subclass = decoder.decode(new Uint8Array(memory.buffer, subclassPtr, subclassSize));
-    
+
     allCharacterData.push({
       index: i,
       name: name,
       subclass: subclass
     });
-    
+
     subclasses.add(subclass);
   }
-  
+
   // Populate subclass filter dropdown
   const subclassFilter = document.getElementById('subclass-filter');
   Array.from(subclasses).sort().forEach(subclass => {
@@ -97,15 +97,15 @@ function populateCharacterData() {
 function filterAndDisplayCharacters() {
   const searchTerm = document.getElementById('character-search').value.toLowerCase();
   const selectedSubclass = document.getElementById('subclass-filter').value;
-  
+
   const filteredCharacters = allCharacterData.filter(char => {
     const matchesSearch = char.name.toLowerCase().includes(searchTerm);
     const matchesSubclass = !selectedSubclass || char.subclass === selectedSubclass;
     return matchesSearch && matchesSubclass;
   });
-  
+
   const characterListElement = document.getElementById('character-list');
-  
+
   if (filteredCharacters.length === 0) {
     characterListElement.innerHTML = '<div class="loading">No characters found matching your criteria.</div>';
   } else {
@@ -149,10 +149,10 @@ if (savedState && savedState.characterData) {
 // Handle character selection (using event delegation for dynamic content)
 document.getElementById('character-list').addEventListener('click', (event) => {
   console.log('Click detected on:', event.target);
-  
+
   // Find the character-item element (could be the clicked element or its parent)
   let characterItem = event.target.closest('.character-item');
-  
+
   if (characterItem) {
     let selectedIndex = parseInt(characterItem.dataset.index);
     let selectedName = characterNames[selectedIndex];
@@ -185,7 +185,7 @@ document.getElementById('character-list').addEventListener('click', (event) => {
 
     // Get saved state for this specific character from global states
     const globalSavedData = loadFromGlobalStates(selectedIndex);
-    
+
     // Create character data object, using saved data if available
     const characterData = {
       index: selectedIndex,
@@ -212,7 +212,7 @@ function showCharacterView(data) {
   // Hide welcome section, show character view
   document.getElementById('welcome-section').style.display = 'none';
   document.getElementById('character-view-section').style.display = 'block';
-  
+
   // Add selected class to the character in the sidebar
   updateSelectedCharacter(data.index);
 
@@ -227,12 +227,12 @@ function showCharacterView(data) {
 function showCharacterSelection() {
   document.getElementById('welcome-section').style.display = 'block';
   document.getElementById('character-view-section').style.display = 'none';
-  
+
   // Remove selected class from all characters
   document.querySelectorAll('.character-item').forEach(item => {
     item.classList.remove('selected');
   });
-  
+
   // Save view state but don't clear character data
   saveViewState('character-selection');
 }
@@ -242,7 +242,7 @@ function updateSelectedCharacter(selectedIndex) {
   document.querySelectorAll('.character-item').forEach(item => {
     item.classList.remove('selected');
   });
-  
+
   const selectedItem = document.querySelector(`[data-index="${selectedIndex}"]`);
   if (selectedItem) {
     selectedItem.classList.add('selected');
@@ -263,7 +263,7 @@ function displayCharacter(data) {
   setStatValue('character-will', data.will);
   setStatValue('character-speed', data.speed);
   document.getElementById('character-flying').checked = data.isFlying;
-  
+
   // Add change listener for checkbox to save state
   document.getElementById('character-flying').addEventListener('change', updateStoredStats);
 
@@ -286,7 +286,7 @@ function displayCharacter(data) {
         <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
       </div>`
     ).join('');
-    
+
     // Add event listeners for attack text changes
     const attackTextareas = attacksContainer.querySelectorAll('.ability-text');
     attackTextareas.forEach(textarea => {
@@ -387,7 +387,7 @@ function updateStoredStats() {
 
   // Save back to sessionStorage (current view state)
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
-  
+
   // Also save to global states (persistent across character switches)
   saveToGlobalStates(savedState.characterIndex, savedState.characterData);
 }
@@ -406,15 +406,15 @@ function resetCharacterStats() {
   if (!confirm('Reset all stats to original values?')) {
     return;
   }
-  
+
   const savedState = loadCharacterState();
   if (!savedState) return;
 
   const characterIndex = savedState.characterIndex;
-  
+
   // Get original character data from WASM
   const decoder = new TextDecoder('utf-8');
-  
+
   const namePtr = characterList.get_name(characterIndex);
   const nameSize = characterList.get_name_size(characterIndex);
   const subclassPtr = characterList.get_subclass(characterIndex);
@@ -453,7 +453,7 @@ function resetCharacterStats() {
 
   // Update the display with original data
   displayCharacter(originalData);
-  
+
   // Save the reset state
   saveCharacterState(characterIndex, originalData);
 }
@@ -462,18 +462,18 @@ function resetCharacterAbilities() {
   if (!confirm('Reset all abilities to original text?')) {
     return;
   }
-  
+
   const savedState = loadCharacterState();
   if (!savedState) return;
 
   const characterIndex = savedState.characterIndex;
-  
+
   // Get original attacks from WASM
   const decoder = new TextDecoder('utf-8');
   const attacksPtr = characterList.get_attacks(characterIndex);
   const attacksCount = characterList.get_attacks_count(characterIndex);
   let originalAttacks = [];
-  
+
   if (attacksCount > 0) {
     const attacksArray = new Uint8Array(memory.buffer, attacksPtr);
     const attacksString = decoder.decode(attacksArray);
@@ -491,7 +491,7 @@ function resetCharacterAbilities() {
         <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
       </div>`
     ).join('');
-    
+
     // Re-add event listeners for the new textareas
     const attackTextareas = attacksContainer.querySelectorAll('.ability-text');
     attackTextareas.forEach(textarea => {
@@ -531,10 +531,10 @@ function handlePortraitUpload(event) {
       // Store in localStorage with character-specific key
       const portraitKey = `lw-rpg-portrait-${savedState.characterIndex}`;
       localStorage.setItem(portraitKey, base64Image);
-      
+
       // Update the portrait display
       document.getElementById('character-portrait').src = base64Image;
-      
+
       // Show remove button, hide upload button text
       document.getElementById('remove-portrait-btn').style.display = 'inline-block';
       document.getElementById('upload-portrait-btn').textContent = 'Change Photo';
@@ -547,16 +547,16 @@ function removeCustomPortrait() {
   if (!confirm('Remove custom portrait?')) {
     return;
   }
-  
+
   const savedState = loadCharacterState();
   if (savedState) {
     // Remove from localStorage
     const portraitKey = `lw-rpg-portrait-${savedState.characterIndex}`;
     localStorage.removeItem(portraitKey);
-    
+
     // Reset to default image
     document.getElementById('character-portrait').src = 'default_profile.jpg';
-    
+
     // Hide remove button, reset upload button text
     document.getElementById('remove-portrait-btn').style.display = 'none';
     document.getElementById('upload-portrait-btn').textContent = 'Upload Photo';
@@ -566,7 +566,7 @@ function removeCustomPortrait() {
 function loadCustomPortrait(characterIndex) {
   const portraitKey = `lw-rpg-portrait-${characterIndex}`;
   const customPortrait = localStorage.getItem(portraitKey);
-  
+
   if (customPortrait) {
     // Load custom portrait
     document.getElementById('character-portrait').src = customPortrait;
@@ -584,36 +584,40 @@ function loadCustomPortrait(characterIndex) {
 function setupPanelToggle() {
   const panelToggle = document.getElementById('panel-toggle');
   const showPanelBtn = document.getElementById('show-panel-btn');
-  
+
   if (panelToggle && showPanelBtn) {
     console.log('Panel buttons found, setting up event listeners');
-    
+
     // Hide panel button (<<)
     panelToggle.addEventListener('click', function(e) {
       e.preventDefault();
       console.log('Hide panel clicked!');
       const panel = document.getElementById('character-panel');
-      
+
       if (panel) {
+        const appLayout = document.querySelector('.app-layout');
         panel.classList.add('collapsed');
+        if (appLayout) appLayout.classList.add('panel-collapsed');
         showPanelBtn.style.display = 'block'; // Show the >> button
         console.log('Panel collapsed');
       }
     });
-    
+
     // Show panel button (>>)
     showPanelBtn.addEventListener('click', function(e) {
       e.preventDefault();
       console.log('Show panel clicked!');
       const panel = document.getElementById('character-panel');
-      
+
       if (panel) {
+        const appLayout = document.querySelector('.app-layout');
         panel.classList.remove('collapsed');
+        if (appLayout) appLayout.classList.remove('panel-collapsed');
         showPanelBtn.style.display = 'none'; // Hide the >> button
         console.log('Panel shown');
       }
     });
-    
+
   } else {
     console.error('Panel buttons not found!');
     // Try again in a bit
