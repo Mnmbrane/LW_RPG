@@ -15,6 +15,15 @@
       <!-- Character Selection Section -->
       <main id="character-selection-section" class="character-selection">
         <h2>Select a Character :</h2>
+        
+        <div class="search-filter-controls">
+          <input type="text" id="character-search" placeholder="Search characters..." class="search-input">
+          <select id="subclass-filter" class="filter-select">
+            <option value="">All Subclasses</option>
+          </select>
+          <button id="clear-filters-btn" class="clear-filters-btn">Clear</button>
+        </div>
+        
         <div id="character-list" class="character-grid">
           <div class="loading">Loading characters...</div>
         </div>

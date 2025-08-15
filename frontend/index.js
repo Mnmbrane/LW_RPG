@@ -57,11 +57,76 @@ const decoder = new TextDecoder('utf-8');
 const fullString = decoder.decode(nameListArray);
 const characterNames = fullString.split('\0').filter(name => name.length > 0).slice(0, listSize);
 
-// Add characters to the HTML list
-const characterListElement = document.getElementById('character-list');
-characterListElement.innerHTML = characterNames.map((name, index) =>
-  `<button class="character-item" data-index="${index}">${name}</button>`
-).join('');
+// Store all character data for filtering
+let allCharacterData = [];
+
+// Populate character data array and subclass filter
+function populateCharacterData() {
+  const decoder = new TextDecoder('utf-8');
+  const subclasses = new Set();
+  
+  for (let i = 0; i < listSize; i++) {
+    const namePtr = characterList.get_name(i);
+    const nameSize = characterList.get_name_size(i);
+    const subclassPtr = characterList.get_subclass(i);
+    const subclassSize = characterList.get_subclass_size(i);
+    
+    const name = decoder.decode(new Uint8Array(memory.buffer, namePtr, nameSize));
+    const subclass = decoder.decode(new Uint8Array(memory.buffer, subclassPtr, subclassSize));
+    
+    allCharacterData.push({
+      index: i,
+      name: name,
+      subclass: subclass
+    });
+    
+    subclasses.add(subclass);
+  }
+  
+  // Populate subclass filter dropdown
+  const subclassFilter = document.getElementById('subclass-filter');
+  Array.from(subclasses).sort().forEach(subclass => {
+    const option = document.createElement('option');
+    option.value = subclass;
+    option.textContent = subclass;
+    subclassFilter.appendChild(option);
+  });
+}
+
+// Filter and display characters
+function filterAndDisplayCharacters() {
+  const searchTerm = document.getElementById('character-search').value.toLowerCase();
+  const selectedSubclass = document.getElementById('subclass-filter').value;
+  
+  const filteredCharacters = allCharacterData.filter(char => {
+    const matchesSearch = char.name.toLowerCase().includes(searchTerm);
+    const matchesSubclass = !selectedSubclass || char.subclass === selectedSubclass;
+    return matchesSearch && matchesSubclass;
+  });
+  
+  const characterListElement = document.getElementById('character-list');
+  
+  if (filteredCharacters.length === 0) {
+    characterListElement.innerHTML = '<div class="loading">No characters found matching your criteria.</div>';
+  } else {
+    characterListElement.innerHTML = filteredCharacters.map(char =>
+      `<button class="character-item" data-index="${char.index}">${char.name}</button>`
+    ).join('');
+  }
+}
+
+// Initialize character data and display
+populateCharacterData();
+filterAndDisplayCharacters();
+
+// Add search and filter event listeners
+document.getElementById('character-search').addEventListener('input', filterAndDisplayCharacters);
+document.getElementById('subclass-filter').addEventListener('change', filterAndDisplayCharacters);
+document.getElementById('clear-filters-btn').addEventListener('click', () => {
+  document.getElementById('character-search').value = '';
+  document.getElementById('subclass-filter').value = '';
+  filterAndDisplayCharacters();
+});
 
 // Check for saved state on page load
 const savedState = loadCharacterState();
@@ -78,8 +143,8 @@ if (savedState && savedState.characterData) {
   showCharacterSelection();
 }
 
-// Handle character selection
-characterListElement.addEventListener('click', (event) => {
+// Handle character selection (using event delegation for dynamic content)
+document.getElementById('character-list').addEventListener('click', (event) => {
   console.log('Click detected on:', event.target);
   if (event.target.classList.contains('character-item')) {
     let selectedIndex = parseInt(event.target.dataset.index);
