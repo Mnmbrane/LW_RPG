@@ -160,8 +160,9 @@ function displayCharacter(data) {
   // Add change listener for checkbox to save state
   document.getElementById('character-flying').addEventListener('change', updateStoredStats);
 
-  // Add reset button event listener
+  // Add reset button event listeners
   document.getElementById('reset-stats-btn').addEventListener('click', resetCharacterStats);
+  document.getElementById('reset-abilities-btn').addEventListener('click', resetCharacterAbilities);
 
   // Update attacks
   if (data.attacks && data.attacks.length > 0) {
@@ -331,4 +332,48 @@ function resetCharacterStats() {
   
   // Save the reset state
   saveCharacterState(characterIndex, originalData);
+}
+
+function resetCharacterAbilities() {
+  const savedState = loadCharacterState();
+  if (!savedState) return;
+
+  const characterIndex = savedState.characterIndex;
+  
+  // Get original attacks from WASM
+  const decoder = new TextDecoder('utf-8');
+  const attacksPtr = characterList.get_attacks(characterIndex);
+  const attacksCount = characterList.get_attacks_count(characterIndex);
+  let originalAttacks = [];
+  
+  if (attacksCount > 0) {
+    const attacksArray = new Uint8Array(memory.buffer, attacksPtr);
+    const attacksString = decoder.decode(attacksArray);
+    originalAttacks = attacksString.split('\0').filter(attack => attack.length > 0).slice(0, attacksCount);
+  }
+
+  // Update only the attacks in saved state (keep other edits)
+  savedState.characterData.attacks = originalAttacks;
+
+  // Rebuild the attacks display
+  const attacksContainer = document.getElementById('character-attacks');
+  if (originalAttacks.length > 0) {
+    attacksContainer.innerHTML = originalAttacks.map((attack, index) =>
+      `<div class="ability-item">
+        <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
+      </div>`
+    ).join('');
+    
+    // Re-add event listeners for the new textareas
+    const attackTextareas = attacksContainer.querySelectorAll('.ability-text');
+    attackTextareas.forEach(textarea => {
+      textarea.addEventListener('blur', updateStoredStats);
+      textarea.addEventListener('input', autoResizeTextarea);
+    });
+  } else {
+    attacksContainer.innerHTML = '<div class="loading">No abilities available</div>';
+  }
+
+  // Save the updated state
+  sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
 }
