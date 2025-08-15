@@ -115,6 +115,19 @@ header {
   z-index: -1;
 }
 
+.panel-sticky-header {
+  position: sticky;
+  top: -20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10;
+  margin: -20px -20px 20px -20px;
+  padding: 20px 20px 0 20px;
+  border-bottom: 1px solid rgba(222, 226, 230, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .panel-header {
   display: flex;
   justify-content: space-between;
@@ -222,7 +235,8 @@ header {
 
 /* Character List in Sidebar */
 .character-list {
-  margin-top: 20px;
+  margin-top: 10px;
+  padding-top: 10px;
 }
 
 .character-list .character-item {
@@ -283,6 +297,7 @@ header {
 .character-panel .search-filter-controls {
   flex-direction: column;
   gap: 10px;
+  padding: 0 0 20px 0;
 }
 
 .search-input, .filter-select {
