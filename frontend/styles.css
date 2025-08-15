@@ -25,6 +25,32 @@ header {
   text-align: center;
   margin-bottom: 30px;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.admin-link {
+  color: #6c757d;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: 2px solid #6c757d;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.admin-link:hover {
+  color: #495057;
+  border-color: #495057;
+  background: #f8f9fa;
 }
 
 .title {
