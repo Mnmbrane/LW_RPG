@@ -84,7 +84,6 @@ function showCharacterView(data) {
 // Function to show selection and hide character view
 function showCharacterSelection() {
   document.getElementById('character-selection-section').style.display = 'block';
-  document.getElementById('character-view-section').style.display = 'none';
   document.getElementById('back-button').style.display = 'none';
 }
 

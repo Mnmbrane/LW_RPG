@@ -359,19 +359,3 @@ header {
   }
 }
 
-/* Default portrait placeholder */
-.character-portrait[src="default-portrait.png"] {
-  background: linear-gradient(145deg, #e9ecef 0%, #f8f9fa 100%);
-  border-style: dashed;
-  border-color: #6c757d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.character-portrait[src="default-portrait.png"]::before {
-  content: "No Portrait";
-  color: #6c757d;
-  font-size: 1rem;
-  text-align: center;
-}

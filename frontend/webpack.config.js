@@ -15,7 +15,8 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'index.html', to: 'index.html' },
-        { from: 'styles.css', to: 'styles.css' }
+        { from: 'styles.css', to: 'styles.css' },
+        { from: '../default_profile.jpg', to: 'default_profile.jpg' }
       ]
     })
   ],
