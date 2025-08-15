@@ -580,6 +580,36 @@ function loadCustomPortrait(characterIndex) {
   }
 }
 
+// Panel state persistence
+const PANEL_STATE_KEY = 'lw-rpg-panel-collapsed';
+
+function savePanelState(isCollapsed) {
+  localStorage.setItem(PANEL_STATE_KEY, isCollapsed.toString());
+}
+
+function loadPanelState() {
+  const saved = localStorage.getItem(PANEL_STATE_KEY);
+  return saved === 'true';
+}
+
+function setPanelState(isCollapsed) {
+  const panel = document.getElementById('character-panel');
+  const appLayout = document.querySelector('.app-layout');
+  const showPanelBtn = document.getElementById('show-panel-btn');
+  
+  if (panel && appLayout && showPanelBtn) {
+    if (isCollapsed) {
+      panel.classList.add('collapsed');
+      appLayout.classList.add('panel-collapsed');
+      showPanelBtn.style.display = 'block';
+    } else {
+      panel.classList.remove('collapsed');
+      appLayout.classList.remove('panel-collapsed');
+      showPanelBtn.style.display = 'none';
+    }
+  }
+}
+
 // Panel toggle functionality
 function setupPanelToggle() {
   const panelToggle = document.getElementById('panel-toggle');
@@ -587,6 +617,24 @@ function setupPanelToggle() {
 
   if (panelToggle && showPanelBtn) {
     console.log('Panel buttons found, setting up event listeners');
+    
+    // Restore saved panel state
+    const savedState = loadPanelState();
+    setPanelState(savedState);
+    
+    // Remove temporary classes and apply proper state
+    document.documentElement.classList.remove('panel-will-be-collapsed');
+    document.documentElement.classList.remove('character-will-be-shown');
+    
+    // Make panel visible now that state is applied
+    const panel = document.getElementById('character-panel');
+    const appLayout = document.querySelector('.app-layout');
+    if (panel) {
+      panel.classList.add('js-ready');
+    }
+    if (appLayout) {
+      appLayout.classList.add('js-ready');
+    }
 
     // Hide panel button (<<)
     panelToggle.addEventListener('click', function(e) {
@@ -599,6 +647,7 @@ function setupPanelToggle() {
         panel.classList.add('collapsed');
         if (appLayout) appLayout.classList.add('panel-collapsed');
         showPanelBtn.style.display = 'block'; // Show the >> button
+        savePanelState(true); // Save collapsed state
         console.log('Panel collapsed');
       }
     });
@@ -614,6 +663,7 @@ function setupPanelToggle() {
         panel.classList.remove('collapsed');
         if (appLayout) appLayout.classList.remove('panel-collapsed');
         showPanelBtn.style.display = 'none'; // Hide the >> button
+        savePanelState(false); // Save expanded state
         console.log('Panel shown');
       }
     });

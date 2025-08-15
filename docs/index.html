@@ -6,6 +6,29 @@
     <link rel="stylesheet" href="styles.css?v=2">
   </head>
   <body>
+    <script>
+      // Apply states immediately to prevent flash
+      (function() {
+        // Handle panel state
+        const savedPanelState = localStorage.getItem('lw-rpg-panel-collapsed');
+        if (savedPanelState === 'true') {
+          document.documentElement.classList.add('panel-will-be-collapsed');
+        }
+        
+        // Handle character view state
+        const savedCharacterState = sessionStorage.getItem('lw-rpg-state');
+        if (savedCharacterState) {
+          try {
+            const state = JSON.parse(savedCharacterState);
+            if (state.currentView === 'character-view' && state.characterData) {
+              document.documentElement.classList.add('character-will-be-shown');
+            }
+          } catch (e) {
+            // Invalid state, ignore
+          }
+        }
+      })();
+    </script>
     <div class="app-layout">
       <!-- Show Panel Button (hidden by default) -->
       <button id="show-panel-btn" class="show-panel-btn" style="display: none;">&gt;&gt;</button>
@@ -49,8 +72,8 @@
         <!-- Character View Section -->
         <div id="character-view-section" class="character-sheet" style="display: none;">
           <div class="character-header">
-            <h2 id="character-name" class="character-name">Character Name</h2>
-            <p id="character-subclass" class="character-subclass">Subclass</p>
+            <h2 id="character-name" class="character-name">&nbsp;</h2>
+            <p id="character-subclass" class="character-subclass">&nbsp;</p>
           </div>
           
           <div class="character-content">

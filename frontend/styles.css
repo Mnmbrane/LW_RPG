@@ -108,6 +108,46 @@ header {
   flex-shrink: 0;
 }
 
+/* Initial state - prevent flash by starting collapsed if needed */
+html.panel-will-be-collapsed .character-panel {
+  transform: translateX(-100%);
+  position: absolute;
+  z-index: -1;
+}
+
+html.panel-will-be-collapsed .app-layout {
+  padding-left: 0;
+}
+
+html.panel-will-be-collapsed .main-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 !important;
+}
+
+html.panel-will-be-collapsed .show-panel-btn {
+  display: block !important;
+}
+
+/* Initial character view state - prevent welcome section flash */
+html.character-will-be-shown #welcome-section {
+  display: none !important;
+}
+
+html.character-will-be-shown #character-view-section {
+  display: block !important;
+}
+
+/* Hide panel initially to prevent flash, JS will show it */
+.character-panel:not(.js-ready) {
+  opacity: 0;
+}
+
+.character-panel.js-ready {
+  opacity: 1;
+  transition: transform 0.3s ease, opacity 0.1s ease;
+}
+
 .character-panel.collapsed {
   transform: translateX(-100%);
   overflow: hidden;
@@ -193,6 +233,15 @@ header {
   padding: 20px;
   transition: all 0.3s ease;
   overflow-y: auto;
+}
+
+/* Prevent flash during initial load */
+.app-layout:not(.js-ready) .main-content {
+  transition: none;
+}
+
+.app-layout.js-ready .main-content {
+  transition: all 0.3s ease;
 }
 
 /* When panel is collapsed, main content takes full width */
