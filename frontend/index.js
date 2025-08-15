@@ -110,7 +110,10 @@ function filterAndDisplayCharacters() {
     characterListElement.innerHTML = '<div class="loading">No characters found matching your criteria.</div>';
   } else {
     characterListElement.innerHTML = filteredCharacters.map(char =>
-      `<button class="character-item" data-index="${char.index}">${char.name}</button>`
+      `<div class="character-item" data-index="${char.index}">
+        <h3>${char.name}</h3>
+        <div class="subclass">${char.subclass}</div>
+      </div>`
     ).join('');
   }
 }
@@ -146,8 +149,12 @@ if (savedState && savedState.characterData) {
 // Handle character selection (using event delegation for dynamic content)
 document.getElementById('character-list').addEventListener('click', (event) => {
   console.log('Click detected on:', event.target);
-  if (event.target.classList.contains('character-item')) {
-    let selectedIndex = parseInt(event.target.dataset.index);
+  
+  // Find the character-item element (could be the clicked element or its parent)
+  let characterItem = event.target.closest('.character-item');
+  
+  if (characterItem) {
+    let selectedIndex = parseInt(characterItem.dataset.index);
     let selectedName = characterNames[selectedIndex];
 
     console.log('Character selected:', selectedName, 'Index:', selectedIndex);
@@ -200,12 +207,14 @@ document.getElementById('character-list').addEventListener('click', (event) => {
   }
 });
 
-// Function to show character view and hide selection
+// Function to show character view and hide welcome section
 function showCharacterView(data) {
-  // Hide selection section, show character view
-  document.getElementById('character-selection-section').style.display = 'none';
+  // Hide welcome section, show character view
+  document.getElementById('welcome-section').style.display = 'none';
   document.getElementById('character-view-section').style.display = 'block';
-  document.getElementById('back-button').style.display = 'block';
+  
+  // Add selected class to the character in the sidebar
+  updateSelectedCharacter(data.index);
 
   // Save view state
   saveViewState('character-view');
@@ -214,14 +223,30 @@ function showCharacterView(data) {
   displayCharacter(data);
 }
 
-// Function to show selection and hide character view
+// Function to show welcome section and hide character view
 function showCharacterSelection() {
-  document.getElementById('character-selection-section').style.display = 'block';
+  document.getElementById('welcome-section').style.display = 'block';
   document.getElementById('character-view-section').style.display = 'none';
-  document.getElementById('back-button').style.display = 'none';
+  
+  // Remove selected class from all characters
+  document.querySelectorAll('.character-item').forEach(item => {
+    item.classList.remove('selected');
+  });
   
   // Save view state but don't clear character data
   saveViewState('character-selection');
+}
+
+// Function to highlight selected character in sidebar
+function updateSelectedCharacter(selectedIndex) {
+  document.querySelectorAll('.character-item').forEach(item => {
+    item.classList.remove('selected');
+  });
+  
+  const selectedItem = document.querySelector(`[data-index="${selectedIndex}"]`);
+  if (selectedItem) {
+    selectedItem.classList.add('selected');
+  }
 }
 
 // Function to display character data
@@ -280,7 +305,7 @@ function displayCharacter(data) {
 }
 
 // Back button functionality
-document.getElementById('back-button').addEventListener('click', showCharacterSelection);
+// Back button removed in new sidebar layout
 
 // Stat display functions for infinity symbol
 function setStatValue(elementId, value) {
@@ -554,3 +579,47 @@ function loadCustomPortrait(characterIndex) {
     document.getElementById('upload-portrait-btn').textContent = 'Upload Photo';
   }
 }
+
+// Panel toggle functionality
+function setupPanelToggle() {
+  const panelToggle = document.getElementById('panel-toggle');
+  const showPanelBtn = document.getElementById('show-panel-btn');
+  
+  if (panelToggle && showPanelBtn) {
+    console.log('Panel buttons found, setting up event listeners');
+    
+    // Hide panel button (<<)
+    panelToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Hide panel clicked!');
+      const panel = document.getElementById('character-panel');
+      
+      if (panel) {
+        panel.classList.add('collapsed');
+        showPanelBtn.style.display = 'block'; // Show the >> button
+        console.log('Panel collapsed');
+      }
+    });
+    
+    // Show panel button (>>)
+    showPanelBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Show panel clicked!');
+      const panel = document.getElementById('character-panel');
+      
+      if (panel) {
+        panel.classList.remove('collapsed');
+        showPanelBtn.style.display = 'none'; // Hide the >> button
+        console.log('Panel shown');
+      }
+    });
+    
+  } else {
+    console.error('Panel buttons not found!');
+    // Try again in a bit
+    setTimeout(setupPanelToggle, 100);
+  }
+}
+
+// Call setup after a short delay to ensure DOM is ready
+setTimeout(setupPanelToggle, 100);
