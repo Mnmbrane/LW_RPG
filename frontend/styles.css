@@ -271,6 +271,26 @@ header {
   cursor: pointer;
 }
 
+.reset-stats-btn {
+  background: #dc3545;
+  color: white;
+  border: 2px solid #dc3545;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 15px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.reset-stats-btn:hover {
+  background: #c82333;
+  border-color: #c82333;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
 .character-abilities {
   background: white;
   border: 2px solid #dee2e6;

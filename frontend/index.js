@@ -160,6 +160,9 @@ function displayCharacter(data) {
   // Add change listener for checkbox to save state
   document.getElementById('character-flying').addEventListener('change', updateStoredStats);
 
+  // Add reset button event listener
+  document.getElementById('reset-stats-btn').addEventListener('click', resetCharacterStats);
+
   // Update attacks
   if (data.attacks && data.attacks.length > 0) {
     const attacksContainer = document.getElementById('character-attacks');
@@ -276,4 +279,56 @@ function getStatValue(elementId) {
 function autoResizeTextarea() {
   this.style.height = 'auto';
   this.style.height = (this.scrollHeight) + 'px';
+}
+
+function resetCharacterStats() {
+  const savedState = loadCharacterState();
+  if (!savedState) return;
+
+  const characterIndex = savedState.characterIndex;
+  
+  // Get original character data from WASM
+  const decoder = new TextDecoder('utf-8');
+  
+  const namePtr = characterList.get_name(characterIndex);
+  const nameSize = characterList.get_name_size(characterIndex);
+  const subclassPtr = characterList.get_subclass(characterIndex);
+  const subclassSize = characterList.get_subclass_size(characterIndex);
+  const descriptionPtr = characterList.get_description(characterIndex);
+  const descriptionSize = characterList.get_description_size(characterIndex);
+
+  const name = decoder.decode(new Uint8Array(memory.buffer, namePtr, nameSize));
+  const subclass = decoder.decode(new Uint8Array(memory.buffer, subclassPtr, subclassSize));
+  const description = decoder.decode(new Uint8Array(memory.buffer, descriptionPtr, descriptionSize));
+
+  // Get original attacks
+  const attacksPtr = characterList.get_attacks(characterIndex);
+  const attacksCount = characterList.get_attacks_count(characterIndex);
+  let attacks = [];
+  if (attacksCount > 0) {
+    const attacksArray = new Uint8Array(memory.buffer, attacksPtr);
+    const attacksString = decoder.decode(attacksArray);
+    attacks = attacksString.split('\0').filter(attack => attack.length > 0).slice(0, attacksCount);
+  }
+
+  // Create original character data
+  const originalData = {
+    index: characterIndex,
+    name: name,
+    subclass: subclass,
+    description: description,
+    health: characterList.get_health(characterIndex),
+    attack: characterList.get_attack(characterIndex),
+    defense: characterList.get_defense(characterIndex),
+    will: characterList.get_will(characterIndex),
+    speed: characterList.get_speed(characterIndex),
+    isFlying: characterList.get_is_flying(characterIndex),
+    attacks: attacks
+  };
+
+  // Update the display with original data
+  displayCharacter(originalData);
+  
+  // Save the reset state
+  saveCharacterState(characterIndex, originalData);
 }
