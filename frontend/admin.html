@@ -13,12 +13,12 @@
         <h2>Admin Access Required</h2>
         <form id="password-form">
           <input type="password" id="admin-password" placeholder="Enter admin password" required>
-          <button type="submit">Access Admin</button>
+          <div class="password-form-buttons">
+            <button type="button" id="cancel-admin-btn" class="cancel-admin-btn">Cancel</button>
+            <button type="submit" class="access-admin-btn">Access Admin</button>
+          </div>
         </form>
         <p id="password-error" class="password-error" style="display: none;">Incorrect password. Please try again.</p>
-        <div class="password-help">
-          <small>For developers: <button type="button" id="generate-hash-btn" style="font-size: 0.8rem; padding: 4px 8px;">Generate New Hash</button></small>
-        </div>
       </div>
     </div>
 

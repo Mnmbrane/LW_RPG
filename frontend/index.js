@@ -570,6 +570,15 @@ function removeAbility(button) {
     return;
   }
   
+  // Check if the ability text is empty
+  const textarea = button.parentElement.querySelector('.ability-text');
+  const abilityText = textarea.value.trim();
+  
+  // Confirm removal only if there's text content
+  if (abilityText.length > 0 && !confirm('Remove this ability?')) {
+    return;
+  }
+  
   // Remove the ability item
   button.parentElement.remove();
   

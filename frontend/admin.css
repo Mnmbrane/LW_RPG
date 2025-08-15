@@ -46,11 +46,17 @@
   box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
 }
 
-.password-modal-content button {
-  width: 100%;
-  background: #0d6efd;
+.password-form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.access-admin-btn {
+  flex: 1;
+  background: #28a745;
   color: white;
-  border: 2px solid #0d6efd;
+  border: 2px solid #28a745;
   padding: 15px;
   border-radius: 8px;
   cursor: pointer;
@@ -59,9 +65,9 @@
   transition: all 0.3s ease;
 }
 
-.password-modal-content button:hover {
-  background: #0b5ed7;
-  border-color: #0b5ed7;
+.access-admin-btn:hover {
+  background: #218838;
+  border-color: #218838;
 }
 
 .password-error {
@@ -70,20 +76,24 @@
   font-weight: bold;
 }
 
-.password-help {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #dee2e6;
-  color: #6c757d;
-  font-size: 0.85rem;
+.cancel-admin-btn {
+  flex: 1;
+  background: #6c757d;
+  color: white;
+  border: 2px solid #6c757d;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.password-help code {
-  background: #f8f9fa;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
+.cancel-admin-btn:hover {
+  background: #5a6268;
+  border-color: #5a6268;
 }
+
 
 .admin-nav {
   display: flex;

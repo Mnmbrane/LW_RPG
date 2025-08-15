@@ -502,9 +502,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set up password form
   document.getElementById('password-form').addEventListener('submit', handlePasswordSubmit);
 
-  // Set up hash generator button
-  document.getElementById('generate-hash-btn').addEventListener('click', generateNewHash);
+  // Set up cancel button
+  document.getElementById('cancel-admin-btn').addEventListener('click', cancelAdminAccess);
 
   // Check if user should have access
   checkAdminAccess();
 });
+
+// Cancel admin access and redirect to main page
+function cancelAdminAccess() {
+  window.location.href = 'index.html';
+}
