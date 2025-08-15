@@ -265,19 +265,36 @@ function displayCharacter(data) {
   document.getElementById('character-flying').checked = data.isFlying;
 
   // Add change listener for checkbox to save state
-  document.getElementById('character-flying').addEventListener('change', updateStoredStats);
+  const flyingCheckbox = document.getElementById('character-flying');
+  flyingCheckbox.removeEventListener('change', updateStoredStats);
+  flyingCheckbox.addEventListener('change', updateStoredStats);
 
-  // Add reset button event listeners
-  document.getElementById('reset-stats-btn').addEventListener('click', resetCharacterStats);
-  document.getElementById('reset-abilities-btn').addEventListener('click', resetCharacterAbilities);
-  document.getElementById('add-ability-btn').addEventListener('click', addNewAbility);
+  // Add reset button event listeners (remove existing first)
+  const resetStatsBtn = document.getElementById('reset-stats-btn');
+  const resetAbilitiesBtn = document.getElementById('reset-abilities-btn');
+  const addAbilityBtn = document.getElementById('add-ability-btn');
+  
+  resetStatsBtn.removeEventListener('click', resetCharacterStats);
+  resetStatsBtn.addEventListener('click', resetCharacterStats);
+  
+  resetAbilitiesBtn.removeEventListener('click', resetCharacterAbilities);
+  resetAbilitiesBtn.addEventListener('click', resetCharacterAbilities);
+  
+  addAbilityBtn.removeEventListener('click', addNewAbility);
+  addAbilityBtn.addEventListener('click', addNewAbility);
 
-  // Add portrait upload event listeners
-  document.getElementById('upload-portrait-btn').addEventListener('click', () => {
-    document.getElementById('portrait-upload').click();
-  });
-  document.getElementById('portrait-upload').addEventListener('change', handlePortraitUpload);
-  document.getElementById('remove-portrait-btn').addEventListener('click', removeCustomPortrait);
+  // Add portrait upload event listeners (remove existing first)
+  const uploadBtn = document.getElementById('upload-portrait-btn');
+  const uploadInput = document.getElementById('portrait-upload');
+  const removeBtn = document.getElementById('remove-portrait-btn');
+  
+  uploadBtn.removeEventListener('click', uploadBtnHandler);
+  uploadInput.removeEventListener('change', handlePortraitUpload);
+  removeBtn.removeEventListener('click', removeCustomPortrait);
+  
+  uploadBtn.addEventListener('click', uploadBtnHandler);
+  uploadInput.addEventListener('change', handlePortraitUpload);
+  removeBtn.addEventListener('click', removeCustomPortrait);
 
   // Update attacks
   if (data.attacks && data.attacks.length > 0) {
@@ -583,6 +600,10 @@ function handleRemoveAbilityClick(event) {
 }
 
 // Portrait upload functions
+function uploadBtnHandler() {
+  document.getElementById('portrait-upload').click();
+}
+
 function handlePortraitUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
