@@ -205,7 +205,7 @@ header {
 
 .character-description {
   color: #495057;
-  font-size: 0.95rem;
+  font-size: 1.14rem;
   line-height: 1.6;
   text-align: justify;
 }
@@ -348,7 +348,7 @@ header {
   background: transparent;
   border: none;
   color: #495057;
-  font-size: 0.95rem;
+  font-size: 1.14rem;
   line-height: 1.5;
   font-family: inherit;
   resize: none;
