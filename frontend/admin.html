@@ -27,7 +27,10 @@
         <h1 class="title">LW Admin</h1>
         <nav class="admin-nav">
           <a href="index.html" class="nav-link">← Back to Game</a>
-          <button id="add-character-btn" class="add-character-btn">+ Add New Character</button>
+          <div class="admin-actions">
+            <button id="github-settings-btn" class="github-settings-btn">⚙️ GitHub Settings</button>
+            <button id="add-character-btn" class="add-character-btn">+ Add New Character</button>
+          </div>
         </nav>
       </header>
       
@@ -117,10 +120,39 @@
           
           <div class="form-actions">
             <button type="submit" id="save-character-btn" class="save-btn">Save Character</button>
+            <button type="button" id="save-and-pr-btn" class="save-btn" style="margin-right: 10px;">Save & Create PR</button>
             <button type="button" id="delete-character-btn" class="delete-btn" style="display: none;">Delete Character</button>
           </div>
         </form>
       </main>
+    </div>
+
+    <!-- GitHub Settings Modal -->
+    <div id="github-settings-modal" class="password-modal" style="display: none;">
+      <div class="password-modal-content">
+        <h2>GitHub Settings</h2>
+        <form id="github-settings-form">
+          <div class="form-group">
+            <label for="github-token">GitHub Personal Access Token</label>
+            <input type="password" id="github-token" placeholder="Enter your GitHub token...">
+            <small>This token is stored locally and used to create pull requests</small>
+          </div>
+          <div class="form-group">
+            <label>Repository Configuration</label>
+            <div class="github-config-info">
+              <p><strong>Owner:</strong> Mnmbrane</p>
+              <p><strong>Repository:</strong> LW_RPG</p>
+              <p><strong>Branch:</strong> main</p>
+              <p><strong>File:</strong> lw.json</p>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="test-connection-btn" class="save-btn">Test Connection</button>
+            <button type="button" id="save-github-settings-btn" class="save-btn">Save Settings</button>
+            <button type="button" id="cancel-github-settings-btn" class="cancel-btn">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
     
     <script src="./admin.js"></script>
