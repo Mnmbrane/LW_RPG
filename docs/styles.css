@@ -677,10 +677,34 @@ html.character-will-be-shown #character-view-section {
   margin-bottom: 20px;
 }
 
+.abilities-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .character-abilities h3 {
   color: #0d6efd;
   font-size: 1.5rem;
   margin: 0;
+}
+
+.add-ability-btn {
+  background: #28a745;
+  color: white;
+  border: 2px solid #28a745;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.add-ability-btn:hover {
+  background: #218838;
+  border-color: #218838;
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
 }
 
 .reset-abilities-btn {
@@ -711,10 +735,13 @@ html.character-will-be-shown #character-view-section {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #dee2e6;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
 }
 
 .ability-text {
-  width: 100%;
+  flex: 1;
   background: transparent;
   border: none;
   color: #495057;
@@ -731,6 +758,26 @@ html.character-will-be-shown #character-view-section {
   background: white;
   border-radius: 4px;
   padding: 5px;
+}
+
+.remove-ability-btn {
+  background: #dc3545;
+  color: white;
+  border: 2px solid #dc3545;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  min-width: 70px;
+}
+
+.remove-ability-btn:hover {
+  background: #c82333;
+  border-color: #c82333;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
 }
 
 .character-companions {

@@ -270,6 +270,7 @@ function displayCharacter(data) {
   // Add reset button event listeners
   document.getElementById('reset-stats-btn').addEventListener('click', resetCharacterStats);
   document.getElementById('reset-abilities-btn').addEventListener('click', resetCharacterAbilities);
+  document.getElementById('add-ability-btn').addEventListener('click', addNewAbility);
 
   // Add portrait upload event listeners
   document.getElementById('upload-portrait-btn').addEventListener('click', () => {
@@ -284,6 +285,7 @@ function displayCharacter(data) {
     attacksContainer.innerHTML = data.attacks.map((attack, index) =>
       `<div class="ability-item">
         <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
+        <button class="remove-ability-btn">Remove</button>
       </div>`
     ).join('');
 
@@ -302,6 +304,9 @@ function displayCharacter(data) {
 
   // Load custom portrait if available
   loadCustomPortrait(data.index);
+  
+  // Add event delegation for remove ability buttons
+  setupRemoveAbilityListeners();
 }
 
 // Back button functionality
@@ -489,6 +494,7 @@ function resetCharacterAbilities() {
     attacksContainer.innerHTML = originalAttacks.map((attack, index) =>
       `<div class="ability-item">
         <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
+        <button class="remove-ability-btn">Remove</button>
       </div>`
     ).join('');
 
@@ -498,12 +504,82 @@ function resetCharacterAbilities() {
       textarea.addEventListener('blur', updateStoredStats);
       textarea.addEventListener('input', autoResizeTextarea);
     });
+    
+    // Set up remove button listeners
+    setupRemoveAbilityListeners();
   } else {
     attacksContainer.innerHTML = '<div class="loading">No abilities available</div>';
   }
 
   // Save the updated state
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
+}
+
+function addNewAbility() {
+  const attacksContainer = document.getElementById('character-attacks');
+  
+  // Create new ability item
+  const abilityItem = document.createElement('div');
+  abilityItem.className = 'ability-item';
+  
+  const attackIndex = attacksContainer.children.length;
+  abilityItem.innerHTML = `<textarea class="ability-text" data-attack-index="${attackIndex}" placeholder="Attack description..."></textarea>
+    <button class="remove-ability-btn">Remove</button>`;
+  
+  // Add to container
+  attacksContainer.appendChild(abilityItem);
+  
+  // Add event listeners to the new textarea
+  const textarea = abilityItem.querySelector('.ability-text');
+  textarea.addEventListener('blur', updateStoredStats);
+  textarea.addEventListener('input', autoResizeTextarea);
+  
+  // Focus the new textarea
+  textarea.focus();
+  
+  // Update stored stats to include the new empty ability
+  updateStoredStats();
+  
+  // Make sure remove button listeners are set up
+  setupRemoveAbilityListeners();
+}
+
+function removeAbility(button) {
+  const attacksContainer = document.getElementById('character-attacks');
+  
+  // Don't allow removing if there's only one ability left
+  if (attacksContainer.children.length <= 1) {
+    alert('At least one ability must remain.');
+    return;
+  }
+  
+  // Remove the ability item
+  button.parentElement.remove();
+  
+  // Update the data-attack-index for remaining textareas
+  const remainingTextareas = attacksContainer.querySelectorAll('.ability-text');
+  remainingTextareas.forEach((textarea, index) => {
+    textarea.setAttribute('data-attack-index', index);
+  });
+  
+  // Update stored stats to reflect the removal
+  updateStoredStats();
+}
+
+function setupRemoveAbilityListeners() {
+  const attacksContainer = document.getElementById('character-attacks');
+  
+  // Remove any existing listeners to avoid duplicates
+  attacksContainer.removeEventListener('click', handleRemoveAbilityClick);
+  
+  // Add event delegation for remove buttons
+  attacksContainer.addEventListener('click', handleRemoveAbilityClick);
+}
+
+function handleRemoveAbilityClick(event) {
+  if (event.target.classList.contains('remove-ability-btn')) {
+    removeAbility(event.target);
+  }
 }
 
 // Portrait upload functions
