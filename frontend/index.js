@@ -293,6 +293,10 @@ function autoResizeTextarea() {
 }
 
 function resetCharacterStats() {
+  if (!confirm('Are you sure you want to reset all stats to their original values? This cannot be undone.')) {
+    return;
+  }
+  
   const savedState = loadCharacterState();
   if (!savedState) return;
 
@@ -345,6 +349,10 @@ function resetCharacterStats() {
 }
 
 function resetCharacterAbilities() {
+  if (!confirm('Are you sure you want to reset all abilities to their original text? This cannot be undone.')) {
+    return;
+  }
+  
   const savedState = loadCharacterState();
   if (!savedState) return;
 
@@ -426,6 +434,10 @@ function handlePortraitUpload(event) {
 }
 
 function removeCustomPortrait() {
+  if (!confirm('Are you sure you want to remove this custom portrait and return to the default image?')) {
+    return;
+  }
+  
   const savedState = loadCharacterState();
   if (savedState) {
     // Remove from localStorage
