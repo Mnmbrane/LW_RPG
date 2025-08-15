@@ -159,9 +159,18 @@ function displayCharacter(data) {
   // Update attacks
   if (data.attacks && data.attacks.length > 0) {
     const attacksContainer = document.getElementById('character-attacks');
-    attacksContainer.innerHTML = data.attacks.map(attack =>
-      `<div class="ability-item">${attack}</div>`
+    attacksContainer.innerHTML = data.attacks.map((attack, index) =>
+      `<div class="ability-item">
+        <textarea class="ability-text" data-attack-index="${index}" placeholder="Attack description...">${attack}</textarea>
+      </div>`
     ).join('');
+    
+    // Add event listeners for attack text changes
+    const attackTextareas = attacksContainer.querySelectorAll('.ability-text');
+    attackTextareas.forEach(textarea => {
+      textarea.addEventListener('blur', updateStoredStats);
+      textarea.addEventListener('input', autoResizeTextarea);
+    });
   } else {
     document.getElementById('character-attacks').innerHTML = '<div class="loading">No abilities available</div>';
   }
@@ -247,6 +256,10 @@ function updateStoredStats() {
   savedState.characterData.speed = getStatValue('character-speed');
   savedState.characterData.isFlying = document.getElementById('character-flying').checked;
 
+  // Update attacks from textareas
+  const attackTextareas = document.querySelectorAll('.ability-text');
+  savedState.characterData.attacks = Array.from(attackTextareas).map(textarea => textarea.value);
+
   // Save back to sessionStorage
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
 }
@@ -254,4 +267,9 @@ function updateStoredStats() {
 function getStatValue(elementId) {
   const element = document.getElementById(elementId);
   return element.value === '∞' ? 255 : parseInt(element.value) || 0;
+}
+
+function autoResizeTextarea() {
+  this.style.height = 'auto';
+  this.style.height = (this.scrollHeight) + 'px';
 }

@@ -294,12 +294,29 @@ header {
 
 .ability-item {
   background: #f8f9fa;
-  padding: 15px;
+  padding: 10px;
   border-radius: 8px;
   border: 1px solid #dee2e6;
+}
+
+.ability-text {
+  width: 100%;
+  background: transparent;
+  border: none;
   color: #495057;
   font-size: 0.95rem;
   line-height: 1.5;
+  font-family: inherit;
+  resize: none;
+  overflow: hidden;
+  min-height: 40px;
+}
+
+.ability-text:focus {
+  outline: none;
+  background: white;
+  border-radius: 4px;
+  padding: 5px;
 }
 
 .character-companions {
