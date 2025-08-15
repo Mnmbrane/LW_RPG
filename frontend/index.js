@@ -3,7 +3,7 @@ import { memory } from "lw-rpg/lw_rpg_bg.wasm";
 
 const characterList = CharacterList.new();
 
-// Session storage functions
+// Session storage functions for current view state
 function saveCharacterState(index, characterData, currentView = 'character-view') {
   const state = {
     characterIndex: index,
@@ -12,6 +12,9 @@ function saveCharacterState(index, characterData, currentView = 'character-view'
     timestamp: Date.now()
   };
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(state));
+  
+  // Also save to global character states
+  saveToGlobalStates(index, characterData);
 }
 
 function loadCharacterState() {
@@ -29,6 +32,21 @@ function saveViewState(view) {
     savedState.currentView = view;
     sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
   }
+}
+
+// Global character states functions
+function saveToGlobalStates(characterIndex, characterData) {
+  const globalStates = JSON.parse(sessionStorage.getItem('lw-rpg-global-states') || '{}');
+  globalStates[characterIndex] = {
+    characterData: characterData,
+    timestamp: Date.now()
+  };
+  sessionStorage.setItem('lw-rpg-global-states', JSON.stringify(globalStates));
+}
+
+function loadFromGlobalStates(characterIndex) {
+  const globalStates = JSON.parse(sessionStorage.getItem('lw-rpg-global-states') || '{}');
+  return globalStates[characterIndex] || null;
 }
 const nameListPtr = characterList.get_name_list();
 const listSize = characterList.get_character_count();
@@ -93,9 +111,8 @@ characterListElement.addEventListener('click', (event) => {
       attacks = attacksString.split('\0').filter(attack => attack.length > 0).slice(0, attacksCount);
     }
 
-    // Get saved state for this character
-    const savedState = loadCharacterState();
-    const hasSavedData = savedState && savedState.characterIndex === selectedIndex;
+    // Get saved state for this specific character from global states
+    const globalSavedData = loadFromGlobalStates(selectedIndex);
     
     // Create character data object, using saved data if available
     const characterData = {
@@ -103,13 +120,13 @@ characterListElement.addEventListener('click', (event) => {
       name: name,
       subclass: subclass,
       description: description,
-      health: hasSavedData ? savedState.characterData.health : characterList.get_health(selectedIndex),
-      attack: hasSavedData ? savedState.characterData.attack : characterList.get_attack(selectedIndex),
-      defense: hasSavedData ? savedState.characterData.defense : characterList.get_defense(selectedIndex),
-      will: hasSavedData ? savedState.characterData.will : characterList.get_will(selectedIndex),
-      speed: hasSavedData ? savedState.characterData.speed : characterList.get_speed(selectedIndex),
-      isFlying: hasSavedData ? savedState.characterData.isFlying : characterList.get_is_flying(selectedIndex),
-      attacks: hasSavedData ? savedState.characterData.attacks : attacks
+      health: globalSavedData ? globalSavedData.characterData.health : characterList.get_health(selectedIndex),
+      attack: globalSavedData ? globalSavedData.characterData.attack : characterList.get_attack(selectedIndex),
+      defense: globalSavedData ? globalSavedData.characterData.defense : characterList.get_defense(selectedIndex),
+      will: globalSavedData ? globalSavedData.characterData.will : characterList.get_will(selectedIndex),
+      speed: globalSavedData ? globalSavedData.characterData.speed : characterList.get_speed(selectedIndex),
+      isFlying: globalSavedData ? globalSavedData.characterData.isFlying : characterList.get_is_flying(selectedIndex),
+      attacks: globalSavedData ? globalSavedData.characterData.attacks : attacks
     };
 
     // Save state and display character view
@@ -278,8 +295,11 @@ function updateStoredStats() {
   const attackTextareas = document.querySelectorAll('.ability-text');
   savedState.characterData.attacks = Array.from(attackTextareas).map(textarea => textarea.value);
 
-  // Save back to sessionStorage
+  // Save back to sessionStorage (current view state)
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(savedState));
+  
+  // Also save to global states (persistent across character switches)
+  saveToGlobalStates(savedState.characterIndex, savedState.characterData);
 }
 
 function getStatValue(elementId) {
