@@ -69,6 +69,17 @@
           <p>Select a character from the left panel to view and edit their stats, abilities, and portrait.</p>
         </div>
 
+        <!-- Admin Controls (positioned outside character view) -->
+        <div id="admin-controls" class="admin-controls" style="display: none;">
+          <div class="admin-controls-header">
+            <h3>Admin Actions:</h3>
+            <div class="admin-buttons">
+              <button id="add-new-character-btn" class="add-new-character-btn">Add Character</button>
+              <button id="submit-character-btn" class="submit-character-btn">Submit</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Character View Section -->
         <div id="character-view-section" class="character-sheet" style="display: none;">
           <div class="character-header">
@@ -144,18 +155,6 @@
           <div class="character-companions" id="companions-section" style="display: none;">
             <h3>Companions</h3>
             <div id="character-companions" class="companions-list">
-            </div>
-          </div>
-
-          <!-- Admin Controls (hidden by default) -->
-          <div id="admin-controls" class="admin-controls" style="display: none;">
-            <div class="admin-controls-header">
-              <h3>Admin Actions</h3>
-            </div>
-            <div class="admin-buttons">
-              <button id="add-new-character-btn" class="add-new-character-btn">Add New Character</button>
-              <button id="submit-character-btn" class="submit-character-btn">Submit Character</button>
-              <button id="exit-admin-btn" class="exit-admin-btn">Exit Admin Mode</button>
             </div>
           </div>
         </div>

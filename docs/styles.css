@@ -484,7 +484,9 @@ html.character-will-be-shown #character-view-section {
 .character-sheet {
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
 }
+
 
 .character-header {
   text-align: center;
@@ -978,34 +980,47 @@ html.character-will-be-shown #character-view-section {
 .admin-controls {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
   border: 2px solid #2196f3;
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 25px;
+  border-radius: 8px;
+  padding: 12px 16px;
+  position: fixed;
+  top: 10px;
+  right: 210px;
+  z-index: 1000;
+  max-width: 450px;
+  width: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .admin-controls-header {
-  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .admin-controls-header h3 {
   color: #1976d2;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .admin-buttons {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .admin-buttons button {
-  padding: 12px 20px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 120px;
 }
 
 .add-new-character-btn {

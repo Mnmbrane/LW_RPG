@@ -834,8 +834,8 @@ async function handleAdminLogin(event) {
     const passwordHash = await hashPassword(password);
 
     if (passwordHash === ADMIN_PASSWORD_HASH) {
-      // Set session flag (valid until browser tab closes)
-      sessionStorage.setItem(ADMIN_SESSION_KEY, 'valid');
+      // Set persistent flag (valid until manually disabled)
+      localStorage.setItem(ADMIN_SESSION_KEY, 'valid');
       enableAdminMode();
       hideAdminModal();
     } else {
@@ -854,6 +854,12 @@ function enableAdminMode() {
   isAdminMode = true;
   document.getElementById('admin-controls').style.display = 'block';
   
+  // Add class to character sheet for proper spacing
+  const characterSheet = document.querySelector('.character-sheet');
+  if (characterSheet) {
+    characterSheet.classList.add('admin-mode-active');
+  }
+  
   // Change admin button text
   const adminLink = document.getElementById('admin-link');
   adminLink.textContent = 'Admin Mode: ON';
@@ -864,19 +870,25 @@ function enableAdminMode() {
 
 function disableAdminMode() {
   isAdminMode = false;
-  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  localStorage.removeItem(ADMIN_SESSION_KEY);
   document.getElementById('admin-controls').style.display = 'none';
+  
+  // Remove class from character sheet
+  const characterSheet = document.querySelector('.character-sheet');
+  if (characterSheet) {
+    characterSheet.classList.remove('admin-mode-active');
+  }
   
   // Reset admin button
   const adminLink = document.getElementById('admin-link');
-  adminLink.textContent = 'Admin';
+  adminLink.textContent = 'Admin Mode: OFF';
   adminLink.style.background = 'none';
   adminLink.style.color = '#6c757d';
   adminLink.style.borderColor = '#6c757d';
 }
 
 function checkAdminSession() {
-  const sessionValid = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'valid';
+  const sessionValid = localStorage.getItem(ADMIN_SESSION_KEY) === 'valid';
   if (sessionValid) {
     enableAdminMode();
   }
@@ -982,8 +994,7 @@ function submitCharacterToJSON() {
 
   // Show confirmation
   const confirmation = confirm(
-    `Submit character "${validatedCharacter.name}"?\n\n` +
-    `This will prepare the character data for addition to the main character database.\n\n` +
+    `Submit character "${validatedCharacter.name}"?` +
     `Character Summary:\n` +
     `• Name: ${validatedCharacter.name}\n` +
     `• Subclass: ${validatedCharacter.subclass}\n` +
@@ -1208,9 +1219,8 @@ function setupAdminEventListeners() {
   const cancelAdminBtn = document.getElementById('cancel-admin-btn');
   const addNewCharacterBtn = document.getElementById('add-new-character-btn');
   const submitCharacterBtn = document.getElementById('submit-character-btn');
-  const exitAdminBtn = document.getElementById('exit-admin-btn');
 
-  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !addNewCharacterBtn || !submitCharacterBtn || !exitAdminBtn) {
+  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !addNewCharacterBtn || !submitCharacterBtn) {
     // Elements not ready yet, try again in a bit
     setTimeout(setupAdminEventListeners, 100);
     return;
@@ -1239,7 +1249,6 @@ function setupAdminEventListeners() {
   // Admin controls
   addNewCharacterBtn.addEventListener('click', createNewCharacter);
   submitCharacterBtn.addEventListener('click', submitCharacterToJSON);
-  exitAdminBtn.addEventListener('click', disableAdminMode);
 
   // Check for existing admin session
   checkAdminSession();
