@@ -59,7 +59,7 @@
       <main class="main-content">
         <header class="main-header">
           <div class="header-buttons">
-            <a href="admin.html" class="admin-link">Admin</a>
+            <button id="admin-link" class="admin-link">Admin</button>
           </div>
         </header>
         
@@ -142,8 +142,35 @@
             <div id="character-companions" class="companions-list">
             </div>
           </div>
+
+          <!-- Admin Controls (hidden by default) -->
+          <div id="admin-controls" class="admin-controls" style="display: none;">
+            <div class="admin-controls-header">
+              <h3>Admin Actions</h3>
+              <span class="admin-mode-indicator">Admin Mode Active</span>
+            </div>
+            <div class="admin-buttons">
+              <button id="submit-character-btn" class="submit-character-btn">Submit Character to JSON</button>
+              <button id="exit-admin-btn" class="exit-admin-btn">Exit Admin Mode</button>
+            </div>
+          </div>
         </div>
       </main>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="admin-modal" style="display: none;">
+      <div class="admin-modal-content">
+        <h2>Admin Access Required</h2>
+        <form id="admin-login-form">
+          <input type="password" id="admin-password" placeholder="Enter admin password" required>
+          <div class="admin-form-buttons">
+            <button type="button" id="cancel-admin-btn" class="cancel-admin-btn">Cancel</button>
+            <button type="submit" class="access-admin-btn">Access Admin</button>
+          </div>
+        </form>
+        <p id="admin-password-error" class="admin-password-error" style="display: none;">Incorrect password. Please try again.</p>
+      </div>
     </div>
     
     <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>

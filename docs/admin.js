@@ -6,6 +6,10 @@
 const ADMIN_PASSWORD_HASH = '2043945af7a4924fc6c9ca20c1b8ec0b413475ba33d8c30daa06c1515c324d76';
 const PASSWORD_SESSION_KEY = 'lw-rpg-admin-session';
 
+// Initialize WASM character list
+let wasmCharacterList = null;
+let wasmCharacterData = [];
+
 // GitHub API Configuration
 const GITHUB_CONFIG = {
   owner: 'Mnmbrane',
@@ -20,16 +24,100 @@ const GITHUB_TOKEN_KEY = 'lw-rpg-github-token';
 let charactersData = [];
 let editingCharacterIndex = -1;
 
+// Load characters from WASM module
+function loadWasmCharacters() {
+  try {
+    if (!window.CharacterList) {
+      console.warn('WASM module not loaded, skipping WASM characters');
+      return;
+    }
+    
+    wasmCharacterList = window.CharacterList.new();
+    const listSize = wasmCharacterList.get_character_count();
+    const decoder = new TextDecoder('utf-8');
+    
+    wasmCharacterData = [];
+    
+    for (let i = 0; i < listSize; i++) {
+      const namePtr = wasmCharacterList.get_name(i);
+      const nameSize = wasmCharacterList.get_name_size(i);
+      const subclassPtr = wasmCharacterList.get_subclass(i);
+      const subclassSize = wasmCharacterList.get_subclass_size(i);
+      const descPtr = wasmCharacterList.get_description(i);
+      const descSize = wasmCharacterList.get_description_size(i);
+      
+      const name = decoder.decode(new Uint8Array(window.memory.buffer, namePtr, nameSize));
+      const subclass = decoder.decode(new Uint8Array(window.memory.buffer, subclassPtr, subclassSize));
+      const description = decoder.decode(new Uint8Array(window.memory.buffer, descPtr, descSize));
+      
+      // Get attacks
+      const attacksCount = wasmCharacterList.get_attacks_count(i);
+      const attacksPtr = wasmCharacterList.get_attacks(i);
+      let attacks = [];
+      
+      if (attacksCount > 0 && attacksPtr !== 0) {
+        // Read null-terminated strings from the attacks pointer
+        let offset = 0;
+        for (let j = 0; j < attacksCount; j++) {
+          let attackEnd = offset;
+          const attacksArray = new Uint8Array(window.memory.buffer, attacksPtr + offset);
+          
+          // Find null terminator
+          while (attacksArray[attackEnd - offset] !== 0 && attackEnd - offset < 1000) {
+            attackEnd++;
+          }
+          
+          if (attackEnd > offset) {
+            const attack = decoder.decode(new Uint8Array(window.memory.buffer, attacksPtr + offset, attackEnd - offset));
+            attacks.push(attack);
+          }
+          
+          offset = attackEnd + 1; // Skip null terminator
+        }
+      }
+      
+      wasmCharacterData.push({
+        name: name,
+        subclass: subclass,
+        description: description,
+        health: wasmCharacterList.get_health(i),
+        attack: wasmCharacterList.get_attack(i),
+        defense: wasmCharacterList.get_defense(i),
+        will: wasmCharacterList.get_will(i),
+        speed: wasmCharacterList.get_speed(i),
+        is_flying: wasmCharacterList.get_is_flying(i),
+        attacks: attacks,
+        companions: [], // TODO: Implement when WASM supports it
+        isFromWasm: true,
+        originalIndex: i
+      });
+    }
+  } catch (error) {
+    console.error('Failed to load WASM characters:', error);
+    wasmCharacterData = [];
+  }
+}
+
 // Load characters from localStorage or initialize with empty array
 function loadCharactersData() {
   const saved = localStorage.getItem('lw-rpg-characters');
   if (saved) {
     charactersData = JSON.parse(saved);
   } else {
-    // Initialize with existing characters from WASM (if available)
-    // For now, start with empty array - you can populate from JSON later
     charactersData = [];
   }
+  
+  // Load WASM characters
+  loadWasmCharacters();
+  
+  // Combine local and WASM characters
+  const allCharacters = [...wasmCharacterData, ...charactersData.map((char, index) => ({
+    ...char,
+    isFromWasm: false,
+    originalIndex: wasmCharacterData.length + index
+  }))];
+  
+  charactersData = allCharacters;
 }
 
 // Save characters to localStorage
@@ -73,13 +161,14 @@ function filterAndDisplayCharacters() {
     grid.innerHTML = '<div class="loading">No characters found matching your criteria.</div>';
   } else {
     grid.innerHTML = filteredCharacters.map((char, index) => `
-      <div class="admin-character-card">
+      <div class="admin-character-card ${char.isFromWasm ? 'wasm-character' : 'local-character'}">
         <div class="admin-card-header">
           <div>
             <h3 class="admin-card-title">${char.name}</h3>
             <p class="admin-card-subclass">${char.subclass || 'No subclass'}</p>
+            <span class="character-source">${char.isFromWasm ? 'From JSON' : 'Local'}</span>
           </div>
-          <button class="edit-character-btn" onclick="editCharacter(${char.originalIndex || index})">Edit</button>
+          <button class="edit-character-btn" onclick="editCharacter(${char.originalIndex})" ${char.isFromWasm ? 'disabled title="Cannot edit characters from JSON file"' : ''}>Edit</button>
         </div>
         
         <div class="admin-card-stats">
@@ -150,8 +239,19 @@ function addNewCharacter() {
 
 // Edit existing character
 function editCharacter(index) {
+  const char = charactersData.find(c => c.originalIndex === index);
+  
+  if (!char) {
+    alert('Character not found!');
+    return;
+  }
+  
+  if (char.isFromWasm) {
+    alert('Cannot edit characters from the JSON file. These are read-only.');
+    return;
+  }
+  
   editingCharacterIndex = index;
-  const char = charactersData[index];
 
   // Populate form with character data
   document.getElementById('char-name').value = char.name || '';
@@ -231,15 +331,20 @@ function saveCharacter(event) {
 
   // Save or update character
   if (editingCharacterIndex >= 0) {
-    // Update existing character
-    charactersData[editingCharacterIndex] = characterData;
+    // Update existing character (only local ones)
+    const localIndex = editingCharacterIndex - wasmCharacterData.length;
+    const localCharacters = charactersData.filter(char => !char.isFromWasm);
+    localCharacters[localIndex] = characterData;
+    localStorage.setItem('lw-rpg-characters', JSON.stringify(localCharacters));
   } else {
     // Add new character
-    charactersData.push(characterData);
+    const localCharacters = charactersData.filter(char => !char.isFromWasm);
+    localCharacters.push(characterData);
+    localStorage.setItem('lw-rpg-characters', JSON.stringify(localCharacters));
   }
 
-  // Save to localStorage
-  saveCharactersData();
+  // Reload all character data
+  loadCharactersData();
 
   // Return to character list
   showCharacterList();
@@ -250,9 +355,19 @@ function saveCharacter(event) {
 // Delete character
 function deleteCharacter() {
   if (editingCharacterIndex >= 0) {
+    const char = charactersData.find(c => c.originalIndex === editingCharacterIndex);
+    
+    if (char && char.isFromWasm) {
+      alert('Cannot delete characters from the JSON file.');
+      return;
+    }
+    
     if (confirm('Are you sure you want to delete this character? This cannot be undone.')) {
-      charactersData.splice(editingCharacterIndex, 1);
-      saveCharactersData();
+      const localIndex = editingCharacterIndex - wasmCharacterData.length;
+      const localCharacters = charactersData.filter(char => !char.isFromWasm);
+      localCharacters.splice(localIndex, 1);
+      localStorage.setItem('lw-rpg-characters', JSON.stringify(localCharacters));
+      loadCharactersData();
       showCharacterList();
       alert('Character deleted successfully!');
     }

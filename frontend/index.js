@@ -783,3 +783,205 @@ function setupPanelToggle() {
 
 // Call setup after a short delay to ensure DOM is ready
 setTimeout(setupPanelToggle, 100);
+
+// Admin functionality
+const ADMIN_PASSWORD_HASH = '2043945af7a4924fc6c9ca20c1b8ec0b413475ba33d8c30daa06c1515c324d76';
+const ADMIN_SESSION_KEY = 'lw-rpg-admin-session';
+let isAdminMode = false;
+
+// Password hashing function
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+// Admin login functionality
+function showAdminModal() {
+  console.log('showAdminModal called');
+  const modal = document.getElementById('admin-modal');
+  console.log('Admin modal element:', modal);
+  if (modal) {
+    modal.style.display = 'flex';
+    console.log('Admin modal should now be visible');
+  } else {
+    console.error('Admin modal element not found!');
+  }
+}
+
+function hideAdminModal() {
+  document.getElementById('admin-modal').style.display = 'none';
+  document.getElementById('admin-password').value = '';
+  document.getElementById('admin-password-error').style.display = 'none';
+}
+
+async function handleAdminLogin(event) {
+  event.preventDefault();
+  
+  const password = document.getElementById('admin-password').value;
+  const errorElement = document.getElementById('admin-password-error');
+
+  try {
+    const passwordHash = await hashPassword(password);
+
+    if (passwordHash === ADMIN_PASSWORD_HASH) {
+      // Set session flag (valid until browser tab closes)
+      sessionStorage.setItem(ADMIN_SESSION_KEY, 'valid');
+      enableAdminMode();
+      hideAdminModal();
+    } else {
+      errorElement.style.display = 'block';
+      document.getElementById('admin-password').value = '';
+      document.getElementById('admin-password').focus();
+    }
+  } catch (error) {
+    console.error('Password hashing failed:', error);
+    errorElement.textContent = 'Authentication error. Please try again.';
+    errorElement.style.display = 'block';
+  }
+}
+
+function enableAdminMode() {
+  isAdminMode = true;
+  document.getElementById('admin-controls').style.display = 'block';
+  
+  // Change admin button text
+  const adminLink = document.getElementById('admin-link');
+  adminLink.textContent = 'Admin Mode: ON';
+  adminLink.style.background = '#28a745';
+  adminLink.style.color = 'white';
+  adminLink.style.borderColor = '#28a745';
+}
+
+function disableAdminMode() {
+  isAdminMode = false;
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  document.getElementById('admin-controls').style.display = 'none';
+  
+  // Reset admin button
+  const adminLink = document.getElementById('admin-link');
+  adminLink.textContent = 'Admin';
+  adminLink.style.background = 'none';
+  adminLink.style.color = '#6c757d';
+  adminLink.style.borderColor = '#6c757d';
+}
+
+function checkAdminSession() {
+  const sessionValid = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'valid';
+  if (sessionValid) {
+    enableAdminMode();
+  }
+}
+
+function submitCharacterToJSON() {
+  const savedState = loadCharacterState();
+  if (!savedState || !savedState.characterData) {
+    alert('No character selected or character data not available.');
+    return;
+  }
+
+  const characterData = savedState.characterData;
+  
+  // Get current character stats from form
+  const updatedCharacter = {
+    name: characterData.name,
+    subclass: characterData.subclass,
+    description: characterData.description,
+    health: parseInt(document.getElementById('character-health').value) || characterData.health,
+    attack: parseInt(document.getElementById('character-attack').value) || characterData.attack,
+    defense: parseInt(document.getElementById('character-defense').value) || characterData.defense,
+    will: parseInt(document.getElementById('character-will').value) || characterData.will,
+    speed: parseInt(document.getElementById('character-speed').value) || characterData.speed,
+    is_flying: document.getElementById('character-flying').checked,
+    attacks: getCurrentAbilitiesList(),
+    companions: characterData.companions || []
+  };
+
+  // Show confirmation
+  const confirmation = confirm(
+    `Submit character "${updatedCharacter.name}" to JSON file?\n\n` +
+    `This will prepare the character data for addition to the main character database.`
+  );
+
+  if (confirmation) {
+    // In a real implementation, this would submit to GitHub API
+    console.log('Character data to submit:', updatedCharacter);
+    
+    // For now, just show success message and save to localStorage with special key
+    const submissionKey = `lw-rpg-submitted-${Date.now()}`;
+    localStorage.setItem(submissionKey, JSON.stringify({
+      character: updatedCharacter,
+      timestamp: new Date().toISOString(),
+      status: 'pending_submission'
+    }));
+    
+    alert(`Character "${updatedCharacter.name}" has been prepared for submission!\n\nThe character data has been saved locally and is ready to be added to the main JSON file.`);
+  }
+}
+
+function getCurrentAbilitiesList() {
+  const abilities = [];
+  const abilityItems = document.querySelectorAll('.ability-item textarea');
+  abilityItems.forEach(textarea => {
+    const value = textarea.value.trim();
+    if (value) {
+      abilities.push(value);
+    }
+  });
+  return abilities;
+}
+
+// Set up admin event listeners
+function setupAdminEventListeners() {
+  const adminLink = document.getElementById('admin-link');
+  const adminLoginForm = document.getElementById('admin-login-form');
+  const cancelAdminBtn = document.getElementById('cancel-admin-btn');
+  const submitCharacterBtn = document.getElementById('submit-character-btn');
+  const exitAdminBtn = document.getElementById('exit-admin-btn');
+
+  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !submitCharacterBtn || !exitAdminBtn) {
+    // Elements not ready yet, try again in a bit
+    setTimeout(setupAdminEventListeners, 100);
+    return;
+  }
+
+  // Admin link click
+  adminLink.addEventListener('click', function() {
+    console.log('Admin button clicked, isAdminMode:', isAdminMode);
+    if (isAdminMode) {
+      // If already in admin mode, show options or toggle off
+      const action = confirm('Exit admin mode?');
+      if (action) {
+        disableAdminMode();
+      }
+    } else {
+      showAdminModal();
+    }
+  });
+
+  // Admin login form
+  adminLoginForm.addEventListener('submit', handleAdminLogin);
+
+  // Cancel admin login
+  cancelAdminBtn.addEventListener('click', hideAdminModal);
+
+  // Admin controls
+  submitCharacterBtn.addEventListener('click', submitCharacterToJSON);
+  exitAdminBtn.addEventListener('click', disableAdminMode);
+
+  // Check for existing admin session
+  checkAdminSession();
+
+  console.log('Admin event listeners set up successfully');
+}
+
+// Check if DOM is already loaded, otherwise wait for it
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupAdminEventListeners);
+} else {
+  // DOM is already loaded, set up immediately
+  setupAdminEventListeners();
+}

@@ -884,3 +884,178 @@ html.character-will-be-shown #character-view-section {
   }
 }
 
+/* Admin-specific styles */
+
+/* Admin Modal */
+.admin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.admin-modal-content {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.admin-modal-content h2 {
+  color: #0d6efd;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+}
+
+.admin-modal-content input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.admin-modal-content input:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+.admin-form-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.admin-form-buttons button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.access-admin-btn {
+  background: #0d6efd;
+  color: white;
+}
+
+.access-admin-btn:hover {
+  background: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+.cancel-admin-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-admin-btn:hover {
+  background: #5c636a;
+  transform: translateY(-1px);
+}
+
+.admin-password-error {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+/* Admin Controls */
+.admin-controls {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 2px solid #2196f3;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 25px;
+}
+
+.admin-controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.admin-controls-header h3 {
+  color: #1976d2;
+  font-size: 1.2rem;
+}
+
+.admin-mode-indicator {
+  background: #4caf50;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.admin-buttons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-character-btn {
+  background: #28a745;
+  color: white;
+  flex: 1;
+}
+
+.submit-character-btn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.exit-admin-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.exit-admin-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Admin link button styling */
+.admin-link {
+  background: none;
+  border: 1px solid #6c757d;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-link:hover {
+  background: #6c757d;
+  color: white;
+  transform: translateY(-1px);
+}
+
