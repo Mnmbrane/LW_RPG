@@ -255,6 +255,14 @@ function updateSelectedCharacter(selectedIndex) {
 
 // Function to display character data
 function displayCharacter(data) {
+  // Hide editable fields and show normal displays
+  document.getElementById('character-name').style.display = 'block';
+  document.getElementById('character-name-edit').style.display = 'none';
+  document.getElementById('character-subclass').style.display = 'block';
+  document.getElementById('character-subclass-edit').style.display = 'none';
+  document.getElementById('character-description').style.display = 'block';
+  document.getElementById('character-description-edit').style.display = 'none';
+
   // Update basic info
   document.getElementById('character-name').textContent = data.name;
   document.getElementById('character-subclass').textContent = data.subclass;
