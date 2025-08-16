@@ -984,26 +984,12 @@ html.character-will-be-shown #character-view-section {
 }
 
 .admin-controls-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 15px;
 }
 
 .admin-controls-header h3 {
   color: #1976d2;
   font-size: 1.2rem;
-}
-
-.admin-mode-indicator {
-  background: #4caf50;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .admin-buttons {
@@ -1020,6 +1006,17 @@ html.character-will-be-shown #character-view-section {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.add-new-character-btn {
+  background: #007bff;
+  color: white;
+  flex: 1;
+}
+
+.add-new-character-btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
 }
 
 .submit-character-btn {
@@ -1057,5 +1054,44 @@ html.character-will-be-shown #character-view-section {
   background: #6c757d;
   color: white;
   transform: translateY(-1px);
+}
+
+/* Editable fields for new characters */
+.character-name-edit {
+  background: transparent;
+  border: 2px dashed #007bff;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  width: 100%;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.character-subclass-edit {
+  background: transparent;
+  border: 2px dashed #007bff;
+  border-radius: 4px;
+  padding: 3px;
+  font-size: 1.1rem;
+  color: #666;
+  width: 100%;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.character-description-edit {
+  background: transparent;
+  border: 2px dashed #007bff;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: inherit;
+  color: inherit;
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
 }
 

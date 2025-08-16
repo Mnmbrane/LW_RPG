@@ -213,14 +213,18 @@ function showCharacterView(data) {
   document.getElementById('welcome-section').style.display = 'none';
   document.getElementById('character-view-section').style.display = 'block';
 
-  // Add selected class to the character in the sidebar
-  updateSelectedCharacter(data.index);
+  // Add selected class to the character in the sidebar (only if data exists and has an index)
+  if (data && data.index !== undefined) {
+    updateSelectedCharacter(data.index);
+  }
 
   // Save view state
   saveViewState('character-view');
 
-  // Update character data
-  displayCharacter(data);
+  // Update character data (only if data exists)
+  if (data) {
+    displayCharacter(data);
+  }
 }
 
 // Function to show welcome section and hide character view
@@ -256,13 +260,13 @@ function displayCharacter(data) {
   document.getElementById('character-subclass').textContent = data.subclass;
   document.getElementById('character-description').textContent = data.description;
 
-  // Update stats in input elements
-  setStatValue('character-health', data.health);
-  setStatValue('character-attack', data.attack);
-  setStatValue('character-defense', data.defense);
-  setStatValue('character-will', data.will);
-  setStatValue('character-speed', data.speed);
-  document.getElementById('character-flying').checked = data.isFlying;
+  // Update stats in input elements (default to 0 if undefined)
+  setStatValue('character-health', data.health ?? 0);
+  setStatValue('character-attack', data.attack ?? 0);
+  setStatValue('character-defense', data.defense ?? 0);
+  setStatValue('character-will', data.will ?? 0);
+  setStatValue('character-speed', data.speed ?? 0);
+  document.getElementById('character-flying').checked = data.isFlying || false;
 
   // Add change listener for checkbox to save state
   const flyingCheckbox = document.getElementById('character-flying');
@@ -313,7 +317,8 @@ function displayCharacter(data) {
       textarea.addEventListener('input', autoResizeTextarea);
     });
   } else {
-    document.getElementById('character-attacks').innerHTML = '<div class="loading">No abilities available</div>';
+    // If no attacks, show empty container for adding new ones
+    document.getElementById('character-attacks').innerHTML = '';
   }
 
   // Hide companions section for now
@@ -525,7 +530,8 @@ function resetCharacterAbilities() {
     // Set up remove button listeners
     setupRemoveAbilityListeners();
   } else {
-    attacksContainer.innerHTML = '<div class="loading">No abilities available</div>';
+    // If no attacks, show empty container for adding new ones
+    attacksContainer.innerHTML = '';
   }
 
   // Save the updated state
@@ -883,55 +889,316 @@ function submitCharacterToJSON() {
     return;
   }
 
-  const characterData = savedState.characterData;
+  // Ensure all stat inputs have default values
+  ensureStatDefaults();
+
+  // Update character data if it's a new character
+  let characterData = savedState.characterData;
+  if (savedState.isNewCharacter) {
+    const updated = updateNewCharacterData();
+    if (updated) {
+      characterData = updated;
+    }
+  }
   
+  // Get current character data - ALWAYS check edit fields first if they're visible
+  let currentName, currentSubclass, currentDescription;
+  
+  // Check if edit fields exist and are visible
+  const nameEdit = document.getElementById('character-name-edit');
+  const subclassEdit = document.getElementById('character-subclass-edit');
+  const descEdit = document.getElementById('character-description-edit');
+  
+  const nameEditVisible = nameEdit && nameEdit.style.display === 'block';
+  const subclassEditVisible = subclassEdit && subclassEdit.style.display === 'block';
+  const descEditVisible = descEdit && descEdit.style.display === 'block';
+  
+  console.log('=== CHECKING EDIT FIELDS ===');
+  console.log('Name edit visible:', nameEditVisible);
+  console.log('Subclass edit visible:', subclassEditVisible);
+  console.log('Description edit visible:', descEditVisible);
+  
+  // Use edit field values if visible, otherwise use stored data
+  currentName = nameEditVisible ? nameEdit.value.trim() : characterData.name;
+  currentSubclass = subclassEditVisible ? subclassEdit.value.trim() : characterData.subclass;
+  currentDescription = descEditVisible ? descEdit.value.trim() : characterData.description;
+  
+  console.log('=== VALUES BEING USED ===');
+  console.log('Using name:', `"${currentName}"`);
+  console.log('Using subclass:', `"${currentSubclass}"`);
+  console.log('Using description:', `"${currentDescription}"`);
+  console.log('From edit fields:', nameEditVisible || subclassEditVisible || descEditVisible);
+
   // Get current character stats from form
   const updatedCharacter = {
-    name: characterData.name,
-    subclass: characterData.subclass,
-    description: characterData.description,
-    health: parseInt(document.getElementById('character-health').value) || characterData.health,
-    attack: parseInt(document.getElementById('character-attack').value) || characterData.attack,
-    defense: parseInt(document.getElementById('character-defense').value) || characterData.defense,
-    will: parseInt(document.getElementById('character-will').value) || characterData.will,
-    speed: parseInt(document.getElementById('character-speed').value) || characterData.speed,
+    name: currentName,
+    subclass: currentSubclass,
+    description: currentDescription,
+    health: getStatValueWithDefault('character-health'),
+    attack: getStatValueWithDefault('character-attack'),
+    defense: getStatValueWithDefault('character-defense'),
+    will: getStatValueWithDefault('character-will'),
+    speed: getStatValueWithDefault('character-speed'),
     is_flying: document.getElementById('character-flying').checked,
     attacks: getCurrentAbilitiesList(),
     companions: characterData.companions || []
   };
 
+  // Debug: Log the character data before validation
+  console.log('Character data before validation:', updatedCharacter);
+  console.log('Is new character:', savedState.isNewCharacter);
+  
+  // EMERGENCY DEBUG - Check input fields manually
+  console.log('=== EMERGENCY DEBUG ===');
+  const testNameEdit = document.getElementById('character-name-edit');
+  const testSubclassEdit = document.getElementById('character-subclass-edit');
+  const testDescEdit = document.getElementById('character-description-edit');
+  
+  console.log('Name edit exists:', !!testNameEdit);
+  console.log('Name edit value:', testNameEdit ? `"${testNameEdit.value}"` : 'FIELD NOT FOUND');
+  console.log('Name edit visible:', testNameEdit ? testNameEdit.style.display : 'N/A');
+  
+  console.log('Subclass edit exists:', !!testSubclassEdit);
+  console.log('Subclass edit value:', testSubclassEdit ? `"${testSubclassEdit.value}"` : 'FIELD NOT FOUND');
+  
+  console.log('Description edit exists:', !!testDescEdit);
+  console.log('Description edit value:', testDescEdit ? `"${testDescEdit.value}"` : 'FIELD NOT FOUND');
+
+  // Comprehensive validation
+  const validation = validateCharacterForSubmission(updatedCharacter, savedState.isNewCharacter);
+  
+  console.log('Validation result:', validation);
+  
+  if (!validation.isValid) {
+    const errorMessage = 'Please fix the following issues before submitting:\n\n' + 
+                        validation.errors.map((error, index) => `${index + 1}. ${error}`).join('\n');
+    console.error('Validation errors:', validation.errors);
+    alert(errorMessage);
+    return;
+  }
+
+  // Use the validated character data
+  const validatedCharacter = validation.characterData;
+
   // Show confirmation
   const confirmation = confirm(
-    `Submit character "${updatedCharacter.name}" to JSON file?\n\n` +
-    `This will prepare the character data for addition to the main character database.`
+    `Submit character "${validatedCharacter.name}"?\n\n` +
+    `This will prepare the character data for addition to the main character database.\n\n` +
+    `Character Summary:\n` +
+    `• Name: ${validatedCharacter.name}\n` +
+    `• Subclass: ${validatedCharacter.subclass}\n` +
+    `• Health: ${validatedCharacter.health}, Attack: ${validatedCharacter.attack}, Defense: ${validatedCharacter.defense}\n` +
+    `• Will: ${validatedCharacter.will}, Speed: ${validatedCharacter.speed}\n` +
+    `• Flying: ${validatedCharacter.is_flying ? 'Yes' : 'No'}\n` +
+    `• Abilities: ${validatedCharacter.attacks.length} total`
   );
 
   if (confirmation) {
     // In a real implementation, this would submit to GitHub API
-    console.log('Character data to submit:', updatedCharacter);
+    console.log('Character data to submit:', validatedCharacter);
     
     // For now, just show success message and save to localStorage with special key
     const submissionKey = `lw-rpg-submitted-${Date.now()}`;
     localStorage.setItem(submissionKey, JSON.stringify({
-      character: updatedCharacter,
+      character: validatedCharacter,
       timestamp: new Date().toISOString(),
-      status: 'pending_submission'
+      status: 'pending_submission',
+      isNewCharacter: savedState.isNewCharacter || false,
+      validationPassed: true
     }));
     
-    alert(`Character "${updatedCharacter.name}" has been prepared for submission!\n\nThe character data has been saved locally and is ready to be added to the main JSON file.`);
+    alert(`Character "${validatedCharacter.name}" has been validated and prepared for submission!\n\nThe character data has been saved locally and is ready to be added to the main JSON file.`);
   }
 }
 
 function getCurrentAbilitiesList() {
   const abilities = [];
   const abilityItems = document.querySelectorAll('.ability-item textarea');
-  abilityItems.forEach(textarea => {
+  console.log('Found ability textareas:', abilityItems.length);
+  abilityItems.forEach((textarea, index) => {
     const value = textarea.value.trim();
+    console.log(`Ability ${index + 1}:`, value);
     if (value) {
       abilities.push(value);
     }
   });
+  console.log('Final abilities array:', abilities);
   return abilities;
+}
+
+// Comprehensive character validation function
+function validateCharacterForSubmission(characterData, isNewCharacter = false) {
+  const errors = [];
+
+  // 1. Name validation
+  if (!characterData.name || characterData.name.trim() === '' || characterData.name.trim() === 'New Character') {
+    errors.push('Character name is required and cannot be "New Character"');
+  }
+
+  // 2. Subclass validation
+  if (!characterData.subclass || characterData.subclass.trim() === '') {
+    errors.push('Subclass is required');
+  }
+
+  // 3. Description validation
+  if (!characterData.description || characterData.description.trim() === '') {
+    errors.push('Description is required');
+  }
+
+  // 4. At least one ability/attack validation
+  if (!characterData.attacks || characterData.attacks.length === 0 || 
+      (characterData.attacks.length === 1 && characterData.attacks[0].trim() === '')) {
+    errors.push('At least one ability or attack is required');
+  }
+
+  // 5. Stat validation (0-255 inclusive)
+  const stats = ['health', 'attack', 'defense', 'will', 'speed'];
+  stats.forEach(stat => {
+    const value = characterData[stat];
+    if (value === undefined || value === null || value === '') {
+      // Default to 0 if empty
+      characterData[stat] = 0;
+    } else {
+      const numValue = parseInt(value);
+      if (isNaN(numValue) || numValue < 0 || numValue > 255) {
+        errors.push(`${stat.charAt(0).toUpperCase() + stat.slice(1)} must be between 0 and 255 (got: ${value})`);
+      } else {
+        characterData[stat] = numValue; // Ensure it's stored as number
+      }
+    }
+  });
+
+  return {
+    isValid: errors.length === 0,
+    errors: errors,
+    characterData: characterData
+  };
+}
+
+// Get stat value with default to 0
+function getStatValueWithDefault(elementId) {
+  const element = document.getElementById(elementId);
+  if (!element) return 0;
+  
+  if (element.value === '∞') return 255;
+  
+  const value = parseInt(element.value);
+  return isNaN(value) ? 0 : Math.max(0, Math.min(255, value));
+}
+
+// Ensure all stat inputs have default values
+function ensureStatDefaults() {
+  const statInputs = ['character-health', 'character-attack', 'character-defense', 'character-will', 'character-speed'];
+  
+  statInputs.forEach(inputId => {
+    const input = document.getElementById(inputId);
+    if (input && (input.value === '' || input.value === null || input.value === undefined)) {
+      input.value = '0';
+    }
+  });
+}
+
+// Create a new blank character
+function createNewCharacter() {
+  const newCharacter = {
+    name: "New Character",
+    subclass: "",
+    description: "",
+    health: 0,
+    attack: 0,
+    defense: 0,
+    will: 0,
+    speed: 0,
+    is_flying: false,
+    attacks: [""],
+    companions: [],
+    isNewCharacter: true
+  };
+
+  // Create a temporary character state
+  const newCharacterState = {
+    characterIndex: -1, // Special index for new characters
+    characterData: newCharacter,
+    currentView: 'character-view',
+    timestamp: Date.now(),
+    isNewCharacter: true
+  };
+
+  // Save this state and show the character
+  saveCharacterState(-1, newCharacter, 'character-view');
+  
+  // Show the character view section with the new character data
+  showCharacterView(newCharacterState);
+  
+  // Make character name editable
+  makeCharacterNameEditable();
+}
+
+function makeCharacterNameEditable() {
+  console.log('makeCharacterNameEditable called');
+  
+  // Hide display elements and show edit fields
+  document.getElementById('character-name').style.display = 'none';
+  document.getElementById('character-subclass').style.display = 'none';
+  document.getElementById('character-description').style.display = 'none';
+  
+  // Show edit fields
+  const nameEdit = document.getElementById('character-name-edit');
+  const subclassEdit = document.getElementById('character-subclass-edit');
+  const descEdit = document.getElementById('character-description-edit');
+  
+  nameEdit.style.display = 'block';
+  subclassEdit.style.display = 'block';
+  descEdit.style.display = 'block';
+  
+  // Set default values
+  nameEdit.value = 'New Character';
+  subclassEdit.value = '';
+  descEdit.value = '';
+  
+  // Focus on name field
+  nameEdit.focus();
+  nameEdit.select();
+  
+  console.log('Edit fields shown and focused');
+}
+
+function updateNewCharacterData() {
+  const savedState = loadCharacterState();
+  if (!savedState || !savedState.isNewCharacter) return;
+
+  const nameInput = document.getElementById('character-name-edit');
+  const subclassInput = document.getElementById('character-subclass-edit');
+  const descriptionInput = document.getElementById('character-description-edit');
+
+  console.log('updateNewCharacterData - Name input:', nameInput);
+  console.log('updateNewCharacterData - Subclass input:', subclassInput);
+  console.log('updateNewCharacterData - Description input:', descriptionInput);
+
+  if (nameInput) console.log('Name value:', nameInput.value);
+  if (subclassInput) console.log('Subclass value:', subclassInput.value);
+  if (descriptionInput) console.log('Description value:', descriptionInput.value);
+
+  const updatedCharacter = {
+    ...savedState.characterData,
+    name: nameInput ? nameInput.value.trim() || "New Character" : savedState.characterData.name,
+    subclass: subclassInput ? subclassInput.value.trim() : savedState.characterData.subclass,
+    description: descriptionInput ? descriptionInput.value.trim() : savedState.characterData.description,
+    health: parseInt(document.getElementById('character-health').value) || 0,
+    attack: parseInt(document.getElementById('character-attack').value) || 0,
+    defense: parseInt(document.getElementById('character-defense').value) || 0,
+    will: parseInt(document.getElementById('character-will').value) || 0,
+    speed: parseInt(document.getElementById('character-speed').value) || 0,
+    is_flying: document.getElementById('character-flying').checked,
+    attacks: getCurrentAbilitiesList().length > 0 ? getCurrentAbilitiesList() : [""]
+  };
+
+  console.log('Updated character after updateNewCharacterData:', updatedCharacter);
+
+  // Update the saved state
+  saveCharacterState(-1, updatedCharacter, 'character-view');
+  
+  return updatedCharacter;
 }
 
 // Set up admin event listeners
@@ -939,10 +1206,11 @@ function setupAdminEventListeners() {
   const adminLink = document.getElementById('admin-link');
   const adminLoginForm = document.getElementById('admin-login-form');
   const cancelAdminBtn = document.getElementById('cancel-admin-btn');
+  const addNewCharacterBtn = document.getElementById('add-new-character-btn');
   const submitCharacterBtn = document.getElementById('submit-character-btn');
   const exitAdminBtn = document.getElementById('exit-admin-btn');
 
-  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !submitCharacterBtn || !exitAdminBtn) {
+  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !addNewCharacterBtn || !submitCharacterBtn || !exitAdminBtn) {
     // Elements not ready yet, try again in a bit
     setTimeout(setupAdminEventListeners, 100);
     return;
@@ -969,6 +1237,7 @@ function setupAdminEventListeners() {
   cancelAdminBtn.addEventListener('click', hideAdminModal);
 
   // Admin controls
+  addNewCharacterBtn.addEventListener('click', createNewCharacter);
   submitCharacterBtn.addEventListener('click', submitCharacterToJSON);
   exitAdminBtn.addEventListener('click', disableAdminMode);
 

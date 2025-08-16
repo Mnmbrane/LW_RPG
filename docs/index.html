@@ -73,7 +73,10 @@
         <div id="character-view-section" class="character-sheet" style="display: none;">
           <div class="character-header">
             <h2 id="character-name" class="character-name">&nbsp;</h2>
+            <input type="text" id="character-name-edit" class="character-name-edit" placeholder="Enter character name..." style="display: none;">
+            
             <p id="character-subclass" class="character-subclass">&nbsp;</p>
+            <input type="text" id="character-subclass-edit" class="character-subclass-edit" placeholder="Enter subclass..." style="display: none;">
           </div>
           
           <div class="character-content">
@@ -91,6 +94,7 @@
               <div id="character-description" class="character-description">
                 Character description will appear here...
               </div>
+              <textarea id="character-description-edit" class="character-description-edit" placeholder="Enter character description..." style="display: none;"></textarea>
             </div>
             
             <div class="character-stats">
@@ -147,10 +151,10 @@
           <div id="admin-controls" class="admin-controls" style="display: none;">
             <div class="admin-controls-header">
               <h3>Admin Actions</h3>
-              <span class="admin-mode-indicator">Admin Mode Active</span>
             </div>
             <div class="admin-buttons">
-              <button id="submit-character-btn" class="submit-character-btn">Submit Character to JSON</button>
+              <button id="add-new-character-btn" class="add-new-character-btn">Add New Character</button>
+              <button id="submit-character-btn" class="submit-character-btn">Submit Character</button>
               <button id="exit-admin-btn" class="exit-admin-btn">Exit Admin Mode</button>
             </div>
           </div>
