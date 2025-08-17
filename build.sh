@@ -14,6 +14,7 @@ npm run build
 
 echo "🚀 Deploying to GitHub Pages (docs/ directory)..."
 cd ..
+mkdir -p docs
 rm -rf docs/*
 cp -r frontend/dist/* docs/
 
