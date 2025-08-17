@@ -271,18 +271,33 @@ function updateSelectedCharacter(selectedIndex) {
 
 // Function to display character data
 function displayCharacter(data) {
-  // Hide editable fields and show normal displays
-  document.getElementById('character-name').style.display = 'block';
-  document.getElementById('character-name-edit').style.display = 'none';
-  document.getElementById('character-subclass').style.display = 'block';
-  document.getElementById('character-subclass-edit').style.display = 'none';
-  document.getElementById('character-description').style.display = 'block';
-  document.getElementById('character-description-edit').style.display = 'none';
+  if (data && data.isNewCharacter) {
+    // For new characters, show editable fields
+    document.getElementById('character-name').style.display = 'none';
+    document.getElementById('character-name-edit').style.display = 'block';
+    document.getElementById('character-subclass').style.display = 'none';
+    document.getElementById('character-subclass-edit').style.display = 'block';
+    document.getElementById('character-description').style.display = 'none';
+    document.getElementById('character-description-edit').style.display = 'block';
 
-  // Update basic info
-  document.getElementById('character-name').textContent = data.name;
-  document.getElementById('character-subclass').textContent = data.subclass;
-  document.getElementById('character-description').textContent = data.description;
+    // Set values in edit fields
+    document.getElementById('character-name-edit').value = data.name || 'New Character';
+    document.getElementById('character-subclass-edit').value = data.subclass || '';
+    document.getElementById('character-description-edit').value = data.description || '';
+  } else {
+    // For existing characters, hide editable fields and show normal displays
+    document.getElementById('character-name').style.display = 'block';
+    document.getElementById('character-name-edit').style.display = 'none';
+    document.getElementById('character-subclass').style.display = 'block';
+    document.getElementById('character-subclass-edit').style.display = 'none';
+    document.getElementById('character-description').style.display = 'block';
+    document.getElementById('character-description-edit').style.display = 'none';
+
+    // Update basic info
+    document.getElementById('character-name').textContent = data.name;
+    document.getElementById('character-subclass').textContent = data.subclass;
+    document.getElementById('character-description').textContent = data.description;
+  }
 
   // Update stats in input elements (default to 0 if undefined)
   setStatValue('character-health', data.health ?? 0);
