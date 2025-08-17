@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json;
 use wasm_bindgen::prelude::*;
+use web_sys::console;
 
 #[wasm_bindgen]
 #[derive(Serialize, Deserialize, Debug)]
@@ -51,6 +52,11 @@ impl CharacterList {
             result.push(0u8);
         }
         result
+    }
+
+    pub fn add_character(&mut self, json_string: &str) {
+        self.list
+            .push(serde_json::from_str::<Character>(&json_string).unwrap());
     }
 
     pub fn get_health(&self, index: usize) -> u8 {
@@ -112,17 +118,6 @@ impl CharacterList {
 
     pub fn get_attacks_count(&self, index: usize) -> usize {
         self.list[index].attacks.len()
-    }
-
-    pub fn get_companions(&self, index: usize) -> *const u8 {
-        // TODO: Implement - return companions as null-terminated string
-        let empty = String::new();
-        empty.as_ptr()
-    }
-
-    pub fn get_companions_count(&self, index: usize) -> usize {
-        // TODO: Implement
-        0
     }
 
     pub fn get_name_list(&self) -> *const u8 {

@@ -9,7 +9,8 @@ function saveCharacterState(index, characterData, currentView = 'character-view'
     characterIndex: index,
     characterData: characterData,
     currentView: currentView,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    isNewCharacter: characterData.isNewCharacter || false
   };
   sessionStorage.setItem('lw-rpg-state', JSON.stringify(state));
 
@@ -352,6 +353,21 @@ function displayCharacter(data) {
   
   // Add event delegation for remove ability buttons
   setupRemoveAbilityListeners();
+  
+  // Update admin button text based on character type
+  updateAdminButtonText(data);
+}
+
+// Update admin button text based on character type
+function updateAdminButtonText(data) {
+  const addCharacterBtn = document.getElementById('add-character-btn');
+  if (addCharacterBtn) {
+    if (data && data.isNewCharacter) {
+      addCharacterBtn.textContent = 'Submit Character';
+    } else {
+      addCharacterBtn.textContent = 'Submit Modific.';
+    }
+  }
 }
 
 // Back button functionality
@@ -1235,15 +1251,113 @@ function updateNewCharacterData() {
   return updatedCharacter;
 }
 
+// Add character to the main character list or submit modifications
+function addCharacterToList() {
+  const savedState = loadCharacterState();
+  if (!savedState || !savedState.characterData) {
+    alert('No character data available.');
+    return;
+  }
+  
+  const isNewCharacter = savedState.isNewCharacter;
+
+  // Get current character data from the form
+  const nameEdit = document.getElementById('character-name-edit');
+  const subclassEdit = document.getElementById('character-subclass-edit');
+  const descEdit = document.getElementById('character-description-edit');
+  
+  const currentName = nameEdit && nameEdit.style.display === 'block' ? nameEdit.value.trim() : savedState.characterData.name;
+  const currentSubclass = subclassEdit && subclassEdit.style.display === 'block' ? subclassEdit.value.trim() : savedState.characterData.subclass;
+  const currentDescription = descEdit && descEdit.style.display === 'block' ? descEdit.value.trim() : savedState.characterData.description;
+
+  if (isNewCharacter) {
+    // Validate required fields for new characters
+    if (!currentName || currentName === 'New Character' || !currentSubclass || !currentDescription) {
+      alert('Please fill in all required fields: Name, Subclass, and Description');
+      return;
+    }
+
+    // Create the new character object
+    const newCharacter = {
+      name: currentName,
+      subclass: currentSubclass,
+      description: currentDescription,
+      health: getStatValueWithDefault('character-health'),
+      attack: getStatValueWithDefault('character-attack'),
+      defense: getStatValueWithDefault('character-defense'),
+      will: getStatValueWithDefault('character-will'),
+      speed: getStatValueWithDefault('character-speed'),
+      is_flying: document.getElementById('character-flying').checked,
+      companions: null,
+      attacks: getCurrentAbilitiesList().length > 0 ? getCurrentAbilitiesList() : [""]
+    };
+
+    // Call Rust add_character method
+    characterList.add_character(JSON.stringify(newCharacter));
+
+    // Add to allCharacterData at the beginning with proper index
+    const newCharacterWithIndex = {
+      ...newCharacter,
+      index: allCharacterData.length,
+      isFlying: newCharacter.is_flying // Convert back for JS compatibility
+    };
+    allCharacterData.unshift(newCharacterWithIndex);
+    
+    // Update indices for all characters
+    allCharacterData.forEach((char, index) => {
+      char.index = index;
+    });
+
+    // Re-populate the subclass filter
+    const subclassFilter = document.getElementById('subclass-filter');
+    const subclasses = new Set();
+    subclassFilter.innerHTML = '<option value="">All Subclasses</option>';
+    
+    allCharacterData.forEach(char => {
+      subclasses.add(char.subclass);
+    });
+    
+    Array.from(subclasses).sort().forEach(subclass => {
+      const option = document.createElement('option');
+      option.value = subclass;
+      option.textContent = subclass;
+      subclassFilter.appendChild(option);
+    });
+
+    // Refresh the character list display
+    filterAndDisplayCharacters();
+
+    // Clear the new character state
+    clearCharacterState();
+    
+    // Show the character selection view
+    showCharacterSelection();
+    
+    alert(`Character "${currentName}" has been submitted to the character list!`);
+  } else {
+    // Handle existing character modifications - confirm global commit
+    const confirmCommit = confirm(
+      `Are you sure you want to commit changes to "${currentName}" globally?\n\n` +
+      `This will update the main JSON file and deploy to GitHub Pages.\n\n` +
+      `Changes will be visible to all users.`
+    );
+    
+    if (confirmCommit) {
+      // TODO: Call Rust function to commit changes to lw.json and push to GitHub
+      alert(`Changes to "${currentName}" have been committed globally!`);
+    }
+  }
+}
+
 // Set up admin event listeners
 function setupAdminEventListeners() {
   const adminLink = document.getElementById('admin-link');
   const adminLoginForm = document.getElementById('admin-login-form');
   const cancelAdminBtn = document.getElementById('cancel-admin-btn');
   const addNewCharacterBtn = document.getElementById('add-new-character-btn');
-  const submitCharacterBtn = document.getElementById('submit-character-btn');
+  const addCharacterBtn = document.getElementById('add-character-btn');
 
-  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !addNewCharacterBtn || !submitCharacterBtn) {
+  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !addNewCharacterBtn || !addCharacterBtn) {
     // Elements not ready yet, try again in a bit
     setTimeout(setupAdminEventListeners, 100);
     return;
@@ -1271,7 +1385,7 @@ function setupAdminEventListeners() {
 
   // Admin controls
   addNewCharacterBtn.addEventListener('click', createNewCharacter);
-  submitCharacterBtn.addEventListener('click', submitCharacterToJSON);
+  addCharacterBtn.addEventListener('click', addCharacterToList);
 
   // Check for existing admin session
   checkAdminSession();

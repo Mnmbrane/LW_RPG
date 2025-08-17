@@ -1021,7 +1021,7 @@ html.character-will-be-shown #character-view-section {
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  min-width: 120px;
+  min-width: 160px;
 }
 
 .add-new-character-btn {
@@ -1035,13 +1035,14 @@ html.character-will-be-shown #character-view-section {
   transform: translateY(-1px);
 }
 
-.submit-character-btn {
+.add-character-btn {
   background: #28a745;
   color: white;
   flex: 1;
+  text-align: center;
 }
 
-.submit-character-btn:hover {
+.add-character-btn:hover {
   background: #218838;
   transform: translateY(-1px);
 }
