@@ -764,6 +764,7 @@ html.character-will-be-shown #character-view-section {
   overflow: hidden;
   min-height: 40px;
   padding-right: 25px;
+  box-sizing: border-box;
 }
 
 .ability-text:focus {

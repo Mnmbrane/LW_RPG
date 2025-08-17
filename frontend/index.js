@@ -367,6 +367,8 @@ function displayCharacter(data) {
       textarea.addEventListener('blur', updateStoredStats);
       textarea.addEventListener('input', autoResizeTextarea);
       textarea.addEventListener('input', () => updateAdminButtonText(data));
+      // Auto-resize on load for existing content
+      autoResizeTextarea.call(textarea);
     });
   } else {
     // If no attacks, show empty container for adding new ones
@@ -539,7 +541,7 @@ function getStatValue(elementId) {
 
 function autoResizeTextarea() {
   this.style.height = 'auto';
-  this.style.height = (this.scrollHeight) + 'px';
+  this.style.height = Math.max(40, this.scrollHeight) + 'px';
 }
 
 function resetCharacterStats() {
@@ -638,6 +640,8 @@ function resetCharacterAbilities() {
     attackTextareas.forEach(textarea => {
       textarea.addEventListener('blur', updateStoredStats);
       textarea.addEventListener('input', autoResizeTextarea);
+      // Auto-resize on load for existing content
+      autoResizeTextarea.call(textarea);
     });
 
     // Set up remove button listeners
@@ -669,6 +673,8 @@ function addNewAbility() {
   const textarea = abilityItem.querySelector('.ability-text');
   textarea.addEventListener('blur', updateStoredStats);
   textarea.addEventListener('input', autoResizeTextarea);
+  // Set initial height
+  autoResizeTextarea.call(textarea);
 
   // Add validation listener for real-time validation
   const savedState = loadCharacterState();
