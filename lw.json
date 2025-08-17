@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "name": "The Archangel",
     "health": 40,
@@ -9,6 +9,7 @@
     "will": 255,
     "speed": 12,
     "is_flying": true,
+    "companions": null,
     "attacks": [
       "Strength- 14 - push an enemy up to 5 paces - within 1 pace.",
       "Push- 3- push the opponent in any direction 8 spaces (3 grace) - within 8 paces away",
@@ -31,6 +32,7 @@
     "will": 11,
     "speed": 12,
     "is_flying": true,
+    "companions": null,
     "attacks": [
       "Strength- 10 - push enemy up to 5 paces - within 1 pace.",
       "Push- 5- push the opponent in any direction 8 spaces (5 pride) - within 5 and 8 paces away",
@@ -53,6 +55,7 @@
     "will": 255,
     "speed": 1,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Suspension - choose up to 2 players on the field, those players cannot be killed until their next turn, but they can take damage. (1 time)",
       "Touch -Kill a player within 1 pace, or kill a player possessing them.(1 time)",
@@ -74,6 +77,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": true,
+    "companions": null,
     "attacks": [
       "Strength - 9 - within 2 paces",
       "Conjuring - conjure three ‘demon beasts’ minions within 8 paces that each have 14 health, 6 speed, and 8 damage within 4 paces. (3 times)",
@@ -92,6 +96,7 @@
     "will": 10,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Adv - +7 against magic",
       "Demon’s Blade - 12 - You may target 2 players at once if they are within 2 paces of each other. Push the victim back 4 paces. Within 4 paces. Shieldbreaker. You may give this weapon to another player within 18 paces.",
@@ -113,6 +118,7 @@
     "will": 10,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Attack Advantage - 7 against dark",
       "Defense Advantage - 6 against dark",
@@ -132,6 +138,7 @@
     "will": 8,
     "speed": 10,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Fairy Light- 8-  Within 8 paces. Push the victim back 6 paces.",
       "Supernova- 10- if this attack damages a vampire, wraith, or undead, kill it instantly. Within 5 paces. (2 times)",
@@ -154,6 +161,7 @@
     "will": 7,
     "speed": 1,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Shapes - During one of your phases, select one of the following to change your stats and attacks for up to 2 turns.",
       "* Tiger: A+8, D+2,speed: 10, (10 piercing damage within 3 paces.)",
@@ -177,6 +185,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 12 - you may push the victim up to 3 paces. (within 2 paces)",
       "Mjolnir  - 10 - knock the victim down. Only light players may wield this weapon. This weapon may only be destroyed by an archaic player ability. You may call this weapon to your hand at any time. within 2 paces.",
@@ -198,6 +207,7 @@
     "will": 7,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Knives - 5 - decrease the victim’s defense by 2 when attacking with this weapon. You may attack twice with this weapon during one of your phases. within 2 paces.",
       "* Throw - up to 8 paces.",
@@ -218,9 +228,10 @@
     "description": "Armored 3. Immune to fire, poisons, illusions, and possession. Any player that damages this one within 3 paces is dealt an immediate 2 fire damage. This player takes an extra 6 damage from lightning attacks.",
     "attack": 5,
     "defense": 2,
-    "speed": 5,
     "will": 8,
+    "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Molten Blade - 9 - shieldbreaker and non-enchanted/elven/ crystal weapon breaker. If this weapon fails an attack against a player wielding an Elven weapon, destroy this one. This weapon can only be destroyed by a spell or an elven weapon. (within 4 paces)",
       "Whip of Fire - 4 - this weapon’s damage counts as fire damage. You may choose to either bind the victim or bring them 3 paces closer to you. You may roll for this attack when you are falling from over 2 levels. This weapon does not need to be held / wielded. (within 7 paces)",
@@ -241,6 +252,7 @@
     "will": 9,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Light Beam-  push a Dark enemy within 8 paces back 12 paces (4 times)",
       "Spell Release W-  if a player is under the influence of a spell that lasts a certain amount of time or is possessed, the effects of that spell or possession are undone. (3 times)",
@@ -271,6 +283,7 @@
     "will": 9,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "The One Ring of Power - While wielding this weapon, you may increase your attack, defense, and damage of all your attacks by 3, and if any other player uses a Ring of Power on the field, instantly come  under your control until the wielder of this weapon dies or is disarmed. If the Wraith or Wraith King is on the field, he becomes under your control instantly. Drop this weapon if this player is destroyed, it cannot be destroyed.",
       "-Malice - While attacking, deal an extra 3 damage to the victim and an instant 3 damage to any player within 2 paces of the victim. Push all victims back 6 paces. (4 times)",
@@ -296,6 +309,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Attack Advantage - (7 against spells) (2 against maidens)",
       "Staff- 3- 1 pace",
@@ -322,6 +336,7 @@
     "will": 9,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Enchanted Spear Staff- 8 - within 3-5 paces.",
       "* Rune of Strength - Give a player within 6 paces +2 attack and damage, or a weapon within 4 paces an extra 4 damage. (2 times)",
@@ -346,6 +361,7 @@
     "will": 8,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage - (7 against spells)",
       "Blasting powder- 10- deal instant damage to any unshielded or unarmored player within a 6 pace radius and push all players back 5 paces. This weapon takes 1 turn to ready and must be used the following turn. If it is not thrown, then the damage is done to this player and everyone in range. (2 times)- within 8 paces",
@@ -371,6 +387,7 @@
     "will": 9,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage - (7 against spells)",
       "Death’s Wand- While holding this weapon, you may roll an extra die for  magical attacks. Any attacks on companions and minions are instant. If a player using this is killed or disarmed, the player who did so may use this wand for all his magical abilities with 3 extra damage.",
@@ -400,6 +417,7 @@
     "will": 10,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage - (7 against swords and projectiles)",
       "Crystal Sword - 8 - you may increase your speed to 10 paces if you would attack with this weapon this turn. - Within 2 paces",
@@ -425,6 +443,7 @@
     "will": 9,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage - (7 against swords)",
       "The Dark Side - move an object or player within 12 paces up to 10 paces, unless the object is being wielded by a legendary player.",
@@ -450,6 +469,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Halfling Companion - 15 Health, 5 Atk, 6 Def, 8 Will, 5 Speed, Elven Dagger 5 Atk",
       "Defense Advantage - (+7 against fire attacks)",
@@ -477,6 +497,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Cursed flames - 8 deal magical cursed damage to all players in a 6 pace range and set all victims on fire. (2 times)",
       "Burning Phantom Blade - 7 - Set the victim of this attack on fire. If this weapon is removed from the user's hand, then it is removed from the field instantly and placed back into this player's hand next turn. This weapon is treated as magical damage.  - within 3 paces",
@@ -501,6 +522,7 @@
     "will": 9,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Time Blast- 7- within 10 paces (inifinite)",
       "Player Praise -  after you take over 10 damage from an attack, have all of your other players skip their turn. Then during the same turn you use this, increase the damage of Time Blast to 18, and gain 15 health. (1 time)",
@@ -524,6 +546,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage - (6 against spells)",
       "Wand",
@@ -550,6 +573,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+6 against spells)",
       "Wand",
@@ -576,6 +600,7 @@
     "will": 9,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage -(+7 against spells and attacks over 6 paces)",
       "Arcane Blast Beam - 8 -  Within within 8  paces (4 times)",
@@ -606,6 +631,7 @@
     "will": 10,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Wand",
       "* Signature Disarm -6-  Disarm an opponent’s weapon and place it 8 paces away after pushing them         3 paces back and knocking them down.",
@@ -633,6 +659,7 @@
     "will": 7,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Book of Songs - Each song takes two phases to activate and can only be used once.",
       "* Chant of Inspiration - give each of your players an extra 2 will, speed, and attack for the next two turns.",
@@ -657,6 +684,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Black Lotus - Place this within 1 pace of you with 10 health. It cannot be moved or picked up. Any of your players within 3 paces of this item begin their turn with 3 readied spells. (1 time)",
       "Commander Staff - 4 - within 3 paces. Choose 2 abilities from 1 color for this staff to use, except each can only be used 1 time and not be included in the chosen abilities for your Command Post.",
@@ -703,6 +731,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Enchanted Staff- 6- push the victim back 5 paces (within 2 paces)",
       "* Lightning- 6- deal damage to all enemies within 4 paces of the victim. (within 8 paces)",
@@ -725,6 +754,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Cursed Dagger- 5- (within 2 paces)",
       "Accursing- give a weapon within 5 paces the ‘cursed’ quality. (3 times)",
@@ -749,6 +779,7 @@
     "will": 9,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Ring of Power",
       "* Water Spell- 6- within 10 paces (inifinite)",
@@ -777,6 +808,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Wand",
       "* Curse- 5- decrease the victim’s defense by 3, and decrease their speed by -2.( these effects can only be used 3 times.)- within 10 paces",
@@ -803,6 +835,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Cursed  Dagger- 6- within 2 paces",
       "Strength-7 - push the victim 4 paces. Within 2 paces.",
@@ -825,6 +858,7 @@
     "will": 7,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Cursed Crystal Phantom Blade - 7 - This player cannot be disarmed of this weapon. within 3 paces",
       "Mystic Force - move an object or minion within 10 paces up to 6 paces. You may use dropped weapons as an attack with this ability.",
@@ -847,6 +881,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Long Sword- 7- within 3 paces.",
       "Strength- 7- push the victim 2 paces back. - within 2 paces",
@@ -869,6 +904,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Beast Master- choose one animal and move it in any direction, within 10 paces.",
       "Mushroom Potions -  give 4 health to a player in 1 pace and undo any poisoned effects(3 times)",
@@ -894,6 +930,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Staff- 4- 1 pace",
       "* Osmosis Property - this weapon can hold the effects of Wolf's Bane or Acid. Once a potion is added to the staff it cannot be removed or switched.",
@@ -921,6 +958,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Madness P[tion-3- each non magic attack the victim makes is dealt to every player within the range of the attack and the victim’s speed and attack are increases by 3 paces and his defense is decreased by 3 -within 4 paces",
       "Snake Juice Potion - remove all poisoned properties from a player but limit their attack range to 3 paces -  within 4 paces.",
@@ -946,6 +984,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Cursed Necro Blade- 8- Any player, companion, or minion that is killed with this weapon becomes a Dead Soldier. - within 3 paces",
       "Strength- 7- push the victim up to 3 paces (within 1 pace)",
@@ -968,6 +1007,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Dagger- 5-within 2 paces.",
       "Staff- 4- 1 pace",
@@ -992,6 +1032,7 @@
     "will": 7,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Enchanted Library Codex - You may only cast one Tale at a time. Once you cast another, undo the effects and minions from the previous.",
       "* Tales of Adventure - change the field into a single file row with ascending levels up to 8 levels total. Place no more than 3 players on any one board tile, then place a treasure chest at the top of the 8th level. The first player to touch the chest may roll to conjure one of the Archeologist’s mapping discoveries at random. You may conjure 7 “Stone Gollem” minions with 20 health, 4 speed, and 10 damage within 4 paces.",
@@ -1013,6 +1054,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage -(6 against spells)",
       "Wand",
@@ -1038,6 +1080,7 @@
     "will": 7,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Millennium Item",
       "* Push - 5 -  push the victim up to 6 paces (within 6 paces) (3 times)",
@@ -1070,6 +1113,7 @@
     "will": 7,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 7- within 2 paces, push the victim back 3 paces",
       "Telekinesis- move an object or player up to 10 paces - within 3-5 paces away (inifinite)",
@@ -1092,6 +1136,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Obsidian Dagger- 6- while attacking decreases your opponent’s defense by 2. Within 2 paces",
       "Spirit Summoning- pay 3 health to conjure 1 spirit to the field. That spirit can move an object to you or deal an instant 3 magical damage to an enemy. This spirit will leave the field in 2 turns unless it possesses a conjured enemy or a corpse. (5 times)",
@@ -1115,6 +1160,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Poisoned Dagger -5- piercing. give the victim of this attack the effects of poison. Decrease your opponent’s defense by 2 when attacking with this weapon (within 2 paces)",
       "Ceremonial Sword - 7 - Non supernatural players damaged by this weapon decrease their wills by 2 each time they take damage. within 3 paces.",
@@ -1135,6 +1181,7 @@
     "will": 9,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Capture Spheres - You may instantly return one of your companions to your capture spheres if their health is below 5, then return them to full health in 3 turns. You may instantly capture an animal companion if their health is below 3, then use them as a conjured creature in 2 turns.",
       "Thunder Mouse - health 14, speed 10, earth attacks deal double damage",
@@ -1175,6 +1222,7 @@
     "will": 7,
     "speed": 9,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Attack Advantage - (+7 with bow attacks)",
       "Elven Sword -9- piercing. within 4 paces",
@@ -1204,6 +1252,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Attack Advantage - (+7 with bow)",
       "Dark bow - this weapon can be the only one used in a phase",
@@ -1227,6 +1276,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage -(+6 against fire and Berserkers)",
       "Last Dragon Sword- 8- add an extra 3 damage to any minions or companions  - within 3 paces",
@@ -1249,6 +1299,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Wraith Sword- 8- within 3 paces",
       "* Cold Fire -  all enemy wizards’ defenses on the field are instantly decreased by 3 until the end of your next turn. (2 times)",
@@ -1271,6 +1322,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage -(6 against swords and projectiles)",
       "Crystal Sword- 10- you may push the victim 3 paces back or knock them down. within 3 paces.",
@@ -1296,6 +1348,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage -(7 against Swords, projectiles, spears, and staffs)",
       "Crystal Sword- 8- if you are defending against an enemy wielding a sword, spear, or staff, roll to deal 4 damage to them- within 3 paces.",
@@ -1324,6 +1377,7 @@
     "will": 9,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Sword - 8 - You may choose to push victims back up to 2 paces. You may call this weapon back to you instantly. within 3 paces.",
       "* Saber Skills - as you attack, increase your attack by 2 and roll to either knock the victim down and disarm them, attack again to deal 5 damage and disarm the victim, or push them back 3 paces and knock them down. (2 times)",
@@ -1348,6 +1402,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Sword - 8 - you may choose to push players back up to 3 paces that are damaged with this weapon. (within 3 paces)",
       "* Strength Form - as you attack, choose to either disarm the victim, deal an extra 4 damage, or knock the victim down. (2 times)",
@@ -1373,6 +1428,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage -(+7 against dark enemies)",
       "Crystal Sword - 8 - if your attack fails roll to deal 4 damage. Opponents without Battle IQ decrease their defense by 2. You may call this weapon back to you instantly. (within 4 paces)",
@@ -1400,6 +1456,7 @@
     "will": 7,
     "speed": 9,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Sword Staff - 8 - opponents without battle IQ decrease their defense by 2 and take and instant 4 damage from this weapon. within 3 paces.",
       "* Savage Fury - increase your attack by 2 and make up to 3 attacks this phase. (1 times)",
@@ -1421,6 +1478,7 @@
     "will": 7,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Saber - 8 - you may make an attack twice with this weapon in one of your phases, but one must be a basic attack. An opponent must successfully roll a second attack to disarm this weapon. Within 3 paces.",
       "* Fencing Flourish - make up to 3 attacks of 6 damage on an opponent and decrease their defense by 2. (2 times)",
@@ -1445,6 +1503,7 @@
     "will": 6,
     "speed": 10,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Dual Crystal Swords - 10- Opponents without Battle IQ decrease their defense by 3. (within 4 paces) If this player is disarmed, decrease the damage of these attacks by 2.",
       "* Unorthodox Technique - as you attack, decrease your opponent’s defense by 3 and attack all enemies within range. (2 times)",
@@ -1464,6 +1523,7 @@
     "will": 7,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Swords- 6 - within 3 paces. Decrease the victim’s defense when attacking with this weapon by 2 unless they have battle IQ.",
       "* Cunning Tactics -  if your attack is successful, roll to either knock the victim down, attack again for 3 damage, or disarm them. (2 times)",
@@ -1485,6 +1545,7 @@
     "will": 9,
     "speed": 9,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Sword Staff - 7 - opponents without battle IQ decrease their defense by 2 and take an instant 3 damage from this weapon.  you may attack all enemies within range. You may call this weapon back to you instantly. within 3 paces.",
       "* Dashing Attack - move 8 paces and attack all enemies you come within range of for a single attack each. (1 time)",
@@ -1506,6 +1567,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Sword- 9 -  knock down any player that is dealt damage by this weapon. You may call this weapon back to you instantly. within 3 paces.",
       "* Pressing Offensive - make two attacks on one enemy within range and choose to either disarm or push them back 4 paces. (3 times)",
@@ -1528,6 +1590,7 @@
     "will": 6,
     "speed": 14,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage -(1 against maidens)",
       "Claws- 10-  Piercing. Within 1 pace.",
@@ -1551,6 +1614,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Long Sword - 8- (within 3 paces)",
       "Tuning Energy - spend a turn without moving or being attacked. Next turn use up to four luxin abilities. (3 times)",
@@ -1592,6 +1656,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+7 against fire, air, earth, and water)",
       "Elemental State- until the end of your next turn, increase the damage of all your attacks by 5, make your Will 10,  and increase the range of them by 6 paces. Give this player flying and 14 speed. (2 times)",
@@ -1623,6 +1688,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+7 against earth attacks)",
       "Boulder- 8- within 15 paces. (inifinite).",
@@ -1649,6 +1715,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+7 against fire attacks)",
       "Fire Ball- 6 -within 10 paces",
@@ -1676,6 +1743,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Water Attack- 6- within 10 paces.(inifinite)",
       "Sweeping Attack - 5 - Deal damage to all enemies within 8 paces. (3 times)",
@@ -1701,6 +1769,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Air Blast- 8- push the victim back 3 paces. Within 5 paces.",
       "Quick Winds-4- send one attack at 3 players within 8 paces or all three attacks at one player and push the victim back 3 paces. (3 times)",
@@ -1725,6 +1794,7 @@
     "will": 8,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Ice Blade- 8-  piercing. Decrease the victim’s defense by 2 unless they are healed.(within 3 paces)",
       "Ice Spear - 10 - piercing. Decrease the victim’s defense by 2 unless they are healed. Push the victim back 3 paces in a knocked down position.  (Within 4 paces)",
@@ -1746,6 +1816,7 @@
     "will": 8,
     "speed": 10,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 13 -within 2 paces, push the victim back 3 paces or knock them down.",
       "Sword - 7 - within 3 paces",
@@ -1770,6 +1841,7 @@
     "will": 5,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (6 against dark players)",
       "Wand",
@@ -1801,6 +1873,7 @@
     "will": 9,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Sword of Temperance - 7 - this weapon has the Blessed features. Deal an extra 5 damage to any demonic or undead players. (within 3 paces)",
       "Staff of Wonders - 3 - while holding this weapon, this player cannot receive damage or be affected by fire, wind, or water. If an animal is damaged with this weapon, it is killed instantly and removed from the field.  - within 2 paces.",
@@ -1823,6 +1896,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Reliquary",
       "* Blast - 4 - push the victim back 5 paces -within 6 paces. (3 times)",
@@ -1846,6 +1920,7 @@
     "will": 8,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 7 - push the victim back 2 paces in a knocked down position. Within 2 paces.",
       "Greatsword - 9 - within 3 paces",
@@ -1868,6 +1943,7 @@
     "will": 5,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Excalibur - 10 - you may increase this damage by 4 if it is the only weapon you use this phase Piercing. Blessed. Enchanted. Shield Breaker- within 3 paces",
       "* Call for Power - Spend a phase while your health is below 12 to give this weapon an extra 3 damage and destroy any non-legendary weapon the defending player is using while defending. (1 time)",
@@ -1889,6 +1965,7 @@
     "will": 10,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+5 while wielding shield)",
       "Sword of Truth- 10- piercing, elven.  within 4 paces.",
@@ -1912,6 +1989,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Heirloom Sword - 8 - piercing, shieldbreaker. Within 3 paces.",
       "* Sunlight Strike - decrease all non-archaic and non-supernatural dark enemies’ defense by 3, then deal damage to all enemies within range of you. (2 times)",
@@ -1933,6 +2011,7 @@
     "will": 5,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Black Mace - 10 - shield breaker, push the victim back 2 paces - within 2 paces.",
       "* Hateful Strike - push the victim back 3 paces, knock them down, and disarm them. (2 times)",
@@ -1953,6 +2032,7 @@
     "will": 5,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+7 against swords)",
       "+7 against swords",
@@ -1974,6 +2054,7 @@
     "will": 10,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Broadsword - 7 - within 3 paces.",
       "* Youthful Mastery - choose to either deal damage to all enemies within range of you, disarm an opponent, or break an opponent’s shield. (2 times)",
@@ -1993,6 +2074,7 @@
     "will": 5,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crimson Blade - 8 - within 3 paces.",
       "* Medieval Mastery - disarm an opponent’s shield after a successful attack and push them 3 paces back. (2 times)",
@@ -2013,6 +2095,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Long sword- 8 - double any damage done to minions or companions. within 3 paces",
       "* Wrathful Vengeance - if one of your players died within 6 paces of this player, immediately roll to attack an enemy for 15 piercing damage. (2 times)",
@@ -2032,6 +2115,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Scimitar -9- if this attack fails, role again, if successful the second time, the victim takes 3 damage and is pushed 3 paces back. - within 3 paces",
       "Moon Axe - 5 - piercing. within 2 paces",
@@ -2054,6 +2138,7 @@
     "will": 7,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Longsword - 8 - Shield breaking (within 3 paces)",
       "Shield - 4 - within 1 pace. Increase your defense by 2 while wielding. Gain protection from fire while wielding.",
@@ -2073,6 +2158,7 @@
     "will": 6,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Sword of the Holy Land - 7 - Piercing, Blessed (within 3 paces)",
       "Great Shield - 3 - push an enemy back 3 paces. Increase your defense by 3 (within 1 pace)",
@@ -2093,6 +2179,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+6 against supernatural dark players)",
       "Strength - 7 - within 1 pace.",
@@ -2116,6 +2203,7 @@
     "will": 4,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Battle Ax-10- within 4 paces.",
       "Halberd- 12- decrease your defense by 2 after attacking with this weapon until the start of your next turn. Shield Breaker - within 4 paces",
@@ -2135,6 +2223,7 @@
     "will": 4,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Orc Sword-  8.- within 3 paces.",
       "* Decapitate- 18- if you are within 1 pace of your enemy. If your attack is fatal, remove the victims head and use it as a projectile attack with 2 damage a range of 10 paces. This can only be used while single wielding this weapon. (1 time)",
@@ -2156,6 +2245,7 @@
     "will": 3,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Hacking Long Blade - 10 - shieldbreaker, within 3 paces",
       "* Cleaving - deal an extra 4 damage, knock the victim down, and destroy one of the victim’s weapons of their choice, then reduce their armored quality by 2. (1 time)",
@@ -2178,6 +2268,7 @@
     "will": 7,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Enchanted Ax- 8- When attacking with this weapon, if there are more than 1 opponent’s in range, you may attack each of them once. within 3 paces",
       "Great Ax- 12- Shield Breaker. Piercing. within 3 paces",
@@ -2202,6 +2293,7 @@
     "will": 4,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+6 with shield)",
       "Long spear- 8- enemy must be between 4 and 6 paces away. Piercing.",
@@ -2225,6 +2317,7 @@
     "will": 5,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Gladius - 8- within 3 paces.",
       "* Throw- 9- between 6 and 12 paces away.(2 times)",
@@ -2245,6 +2338,7 @@
     "will": 3,
     "speed": 4,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Skull Staff - 8 - within 5 paces.",
       "* Minion Calling - Skip a phase to conjure 2 goblin minions with 6 health, 4 damage within 2 paces, A+4, and 8 speed. (3 times)",
@@ -2264,6 +2358,7 @@
     "will": 10,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Dragon Slayer  Sword - 12- This weapon may fully damage supernatural players and can only be destroyed by a legendary magic ability. Shield breaker. within 5 paces",
       "* Great Swipes - spend a phase to increase your attack by +2 and deal damage to all enemies in range while attacking (3 times)",
@@ -2285,6 +2380,7 @@
     "will": 3,
     "speed": 9,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Claws - 10 - within 2 paces",
       "Tail Slash - 8 - piercing. within 3 paces",
@@ -2305,6 +2401,7 @@
     "will": 4,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 7 - push the victim up to 3 paces back or knock them down. within 1 pace.",
       "Wrist Blades - 8 - piercing. within 2 paces.",
@@ -2329,6 +2426,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Tomahawk Axes - 6 - decrease an opponent’s defense by 2 unless they have battle IQ. within 2 paces.",
       "* Throw - deal damage to an enemy up to 6 paces.",
@@ -2352,6 +2450,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Ninjato - 6 - piercing, within 3 paces. Deal an extra 3 piercing damage if you are within 1 pace.",
       "* Speedy Dueling - deal damage to all enemies within range. (1 time)",
@@ -2375,6 +2474,7 @@
     "will": 6,
     "speed": 11,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Short Swords- 5- your enemy’s defense is decreased by 2. within 2 paces",
       "Hidden Blades - 5-Piercing. Your enemy’s defense is decreased by 3, while attacking with this weapon. within 1 pace.",
@@ -2394,6 +2494,7 @@
     "will": 5,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Cutlass- 7- if your enemy is wielding a sword, increase your attack by +2.",
       "* Fencing Flourish - If there is more than 1 enemy in range you may attack each of them once.- within 3 paces (2 times)",
@@ -2414,6 +2515,7 @@
     "will": 8,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Rapier - 7 -  if your enemy is wielding a sword, increase your attack by 2. You may reroll a failed attack to deal 3 damage.",
       "* Furious Flourish - deal damage to all enemies within range of you. (2 times)",
@@ -2433,6 +2535,7 @@
     "will": 5,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+7 against a sword)",
       "Long sword- 7- if this attack fails, role again, if successful the second time, the victim takes no damage and is placed in a Knocked down position. Piercing - within 3 paces",
@@ -2452,6 +2555,7 @@
     "will": 5,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Sword of Righteousness -9- piercing. Deal extra 3 damage to all dark enemies. Deal instant damage to ‘The Shapeshifter’ and his legendary form. This weapon cannot deal damage to non dark enemies when wielded by a dark enemy. within 3 paces",
       "* Throw - 8 - any enemy within 9 paces. (3 times)",
@@ -2474,6 +2578,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Attack Adv - +7 with bow and arrow attacks",
       "Defense Adv - +6 against arrow attacks",
@@ -2499,6 +2604,7 @@
     "will": 7,
     "speed": 9,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+6 against attacks within 2 paces)",
       "Strength - 5 - within 2 paces",
@@ -2523,6 +2629,7 @@
     "will": 10,
     "speed": 10,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 10- you may push the victim back up to 3 paces or knock the down. within 2 paces",
       "Fighting - 8 - deal damage to either 1 target 2 times or 2 targets 1 time each. within 2 paces. (3 times)",
@@ -2542,6 +2649,7 @@
     "will": 7,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 11 - you may push the victim back 3 paces. within 2 paces",
       "Webs - use any up to 16 times.",
@@ -2565,6 +2673,7 @@
     "will": 7,
     "speed": 10,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+6 against attacks over 8 paces away)",
       "Sword - 9 - piercing (within 3 paces) - this weapon can be conjured if destroyed or if this player is disarmed.",
@@ -2588,6 +2697,7 @@
     "will": 6,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Crystal Rifle - 6 - within 12 paces",
       "Dark Crystal Sword - 6 - Within 2 paces",
@@ -2612,6 +2722,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Sand vanishing - while you are on the ground level you may have this player vanish from his current square then reappear on his next turn within 5 paces. If he would appear within 2 paces of an enemy, decrease the enemy’s defense by 3. Only supernatural players, players with earthbending, rings of power, or vision impairment resistance may attack him while using this ability. (3 times)",
       "Long Range rifle - 8 - piercing. within 25 paces.",
@@ -2632,6 +2743,7 @@
     "will": 8,
     "speed": 4,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Elven Short Sword - 6 - piercing, does an extra 4 damage to minions within 2 paces.",
       "Elven Star Phial - instantly reduce the defense of all Dark enemies within 5 paces by 3 and keep them 3 paces away from you until your next turn. (2 times)",
@@ -2661,6 +2773,7 @@
     "will": 4,
     "speed": 9,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Elven Short Swords- 6- this weapon cannot be destroyed by non magical means, piercing. While attacking your enemy’s defense is decreased by 2. Within 2 paces",
       "Forging Hammer- 5-use a phase to give one weapon within 1 pace the piercing effect and the Elven Quality. Within 2 paces",
@@ -2683,6 +2796,7 @@
     "will": 7,
     "speed": 4,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Smithing Ax - 10 - shieldbreaker, piercing. knock the victim down. within 3 paces.",
       "Piercing Crossbow - 6 - piercing. within 10 paces. (4 times)",
@@ -2700,6 +2814,7 @@
     "will": 4,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "The Smith’s Halberd- 12- This weapon can only be used once per phase. Piercing, Shieldbreaker. Push the victim back 2 paces. Within 4 paces.",
       "Forging Hammer- 5-use an attack phase to give one weapon within 1 pace the piercing ability and an extra 2 damage. Within 2 paces",
@@ -2722,6 +2837,7 @@
     "will": 8,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Autonomous Armor - you may remove the armor from this player to act as a new player with 15 health whose turn must be taken right after this player’s turn. This new player takes all of this player’s current abilities. If the armor player loses all their health, this player must pick up the armor to regain their abilities. this player may call the armor back to them without spending a phase during any turn. You may also send this armor to any player and recall it at any time. If this player dies while the armor is on another player, they may continue to use it. (2 times)",
       "* Strength - 9 - within 2 paces",
@@ -2747,6 +2863,7 @@
     "will": 5,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Long Range Rifle - 8 - within 28 paces, this weapon may be the only one used within a phase. knock the victim down.",
       "Rapid Fire Rifle - 6 - within 20 paces, this weapon may be the only one used within a phase.",
@@ -2772,6 +2889,7 @@
     "will": 4,
     "speed": 7,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Rapid Bayonet Rifle- 6 - piercing ability and a range of 22 paces. Within 4 paces",
       "Poison Contraption- place a Poison contraption within 1 pace with 8 speed. This contraption may deal an instant successful attack within 1 pace to give the victim the effects of poison. this contraption may also choose to detonate and deal those effects to all players in 6 paces. (1 time)",
@@ -2796,6 +2914,7 @@
     "will": 6,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Mechanical Arms - decrease the defense of any player being attacked by 2 unless they have battle IQ.",
       "* strike - 6 - choose to either knock the victim down or push them 3 paces. within 5 paces.",
@@ -2819,6 +2938,7 @@
     "will": 10,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Enhanced Sorcerous Armor",
       "* Spell Removal - remove the lasting effects of any magical ability within 6 paces that was not from a HotO player. (1 time)",
@@ -2842,6 +2962,7 @@
     "will": 0,
     "speed": 8,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Strength - 9 - within 1 pace.",
       "Beams - 6 - piercing. push the victim back 2 paces and knock them down. within 8 paces.",
@@ -2867,6 +2988,7 @@
     "will": 6,
     "speed": 6,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Brawling Strength - 5 - within 1 pace.",
       "Bullwhip - 3 - decrease the victim’s defense by 2 until the end of your turn. Between 3-4 paces.",
@@ -2891,6 +3013,7 @@
     "will": 6,
     "speed": 1,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Defense Advantage = (+7 against strength-based attacks)",
       "+6 against fighters",
@@ -2919,6 +3042,7 @@
     "will": 9,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Refined Crystal Pistol - 6 - within 8 paces.",
       "Tactical Genius - During each of your opponents’ turns, you may take an immediate phase after one of their player’s first phase. This can only be done once per each opponent’s turn. (5 times)",
@@ -2941,6 +3065,7 @@
     "will": 7,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Long Barrel Blaster  - 6 - piering. within 8 paces",
       "Inspirational Call - increase the will and attack of your players by 3 until the end of your next turn. (1 time)",
@@ -2963,6 +3088,7 @@
     "will": 0,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Wrist Blaster - 7 - within 6 paces. You may target up to two targets within 4 paces of each other",
       "Wrist Rockets - 8 - deal instant damage to anyone within 3 paces of the target. within 12 paces. (1 time)",
@@ -2984,10 +3110,41 @@
     "will": 6,
     "speed": 5,
     "is_flying": false,
+    "companions": null,
     "attacks": [
       "Refined pistol - 6 - piercing. Within 8 paces.",
       "Grenades - 6 - deal instant damage to all players within 3 paces. within 6 paces. (3 times)",
       "Command Post Strike -  12 - declare a pace to target within 20 paces. Then at the start of your next turn deal damage to all players within 6 paces of the target. You may only use this ability if your command post is active. (2 times)"
+    ]
+  },
+  {
+    "name": "asdf",
+    "health": 0,
+    "subclass": "asdf",
+    "description": "asdf",
+    "attack": 0,
+    "defense": 0,
+    "will": 0,
+    "speed": 0,
+    "is_flying": false,
+    "companions": null,
+    "attacks": [
+      "asdf"
+    ]
+  },
+  {
+    "name": "asdf",
+    "health": 0,
+    "subclass": "asdf",
+    "description": "asdf",
+    "attack": 0,
+    "defense": 0,
+    "will": 0,
+    "speed": 0,
+    "is_flying": false,
+    "companions": null,
+    "attacks": [
+      "asdf"
     ]
   }
 ]
