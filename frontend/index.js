@@ -117,17 +117,17 @@ fetch('./lw.json')
   .then(response => response.text())
   .then(jsonString => {
     characterList = CharacterList.new(jsonString);
-    
+
     // Initialize name list data that other functions depend on
     nameListPtr = characterList.get_name_list();
     listSize = characterList.get_character_count();
     nameListArray = new Uint8Array(memory.buffer, nameListPtr);
-    
+
     // Convert the byte array to string and split by null terminators
     const decoder = new TextDecoder('utf-8');
     const fullString = decoder.decode(nameListArray);
     characterNames = fullString.split('\0').filter(name => name.length > 0).slice(0, listSize);
-    
+
     // Initialize character data and display
     populateCharacterData();
     filterAndDisplayCharacters();
@@ -158,7 +158,7 @@ fetch('./lw.json')
   })
   .catch(error => {
     console.error('Failed to load characters:', error);
-    document.getElementById('character-list').innerHTML = 
+    document.getElementById('character-list').innerHTML =
       '<div class="loading">Failed to load character data</div>';
   });
 
@@ -287,11 +287,11 @@ function displayCharacter(data) {
     const nameEdit = document.getElementById('character-name-edit');
     const subclassEdit = document.getElementById('character-subclass-edit');
     const descEdit = document.getElementById('character-description-edit');
-    
+
     nameEdit.value = data.name === 'New Character' ? '' : data.name || '';
     subclassEdit.value = data.subclass || '';
     descEdit.value = data.description || '';
-    
+
     // Add validation event listeners for real-time validation
     nameEdit.addEventListener('input', () => updateAdminButtonText(data));
     subclassEdit.addEventListener('input', () => updateAdminButtonText(data));
@@ -328,13 +328,13 @@ function displayCharacter(data) {
   const resetStatsBtn = document.getElementById('reset-stats-btn');
   const resetAbilitiesBtn = document.getElementById('reset-abilities-btn');
   const addAbilityBtn = document.getElementById('add-ability-btn');
-  
+
   resetStatsBtn.removeEventListener('click', resetCharacterStats);
   resetStatsBtn.addEventListener('click', resetCharacterStats);
-  
+
   resetAbilitiesBtn.removeEventListener('click', resetCharacterAbilities);
   resetAbilitiesBtn.addEventListener('click', resetCharacterAbilities);
-  
+
   addAbilityBtn.removeEventListener('click', addNewAbility);
   addAbilityBtn.addEventListener('click', addNewAbility);
 
@@ -342,11 +342,11 @@ function displayCharacter(data) {
   const uploadBtn = document.getElementById('upload-portrait-btn');
   const uploadInput = document.getElementById('portrait-upload');
   const removeBtn = document.getElementById('remove-portrait-btn');
-  
+
   uploadBtn.removeEventListener('click', uploadBtnHandler);
   uploadInput.removeEventListener('change', handlePortraitUpload);
   removeBtn.removeEventListener('click', removeCustomPortrait);
-  
+
   uploadBtn.addEventListener('click', uploadBtnHandler);
   uploadInput.addEventListener('change', handlePortraitUpload);
   removeBtn.addEventListener('click', removeCustomPortrait);
@@ -378,10 +378,10 @@ function displayCharacter(data) {
 
   // Load custom portrait if available
   loadCustomPortrait(data.index);
-  
+
   // Add event delegation for remove ability buttons
   setupRemoveAbilityListeners();
-  
+
   // Update admin button text based on character type
   updateAdminButtonText(data);
 }
@@ -395,15 +395,15 @@ function validateRequiredFields() {
   const nameEdit = document.getElementById('character-name-edit');
   const subclassEdit = document.getElementById('character-subclass-edit');
   const descEdit = document.getElementById('character-description-edit');
-  
+
   const currentName = nameEdit && nameEdit.style.display === 'block' ? nameEdit.value.trim() : savedState.characterData.name;
   const currentSubclass = subclassEdit && subclassEdit.style.display === 'block' ? subclassEdit.value.trim() : savedState.characterData.subclass;
   const currentDescription = descEdit && descEdit.style.display === 'block' ? descEdit.value.trim() : savedState.characterData.description;
-  
+
   // Check abilities/attacks
   const abilityTextareas = document.querySelectorAll('.ability-text');
   const hasAbilities = Array.from(abilityTextareas).some(textarea => textarea.value.trim() !== '');
-  
+
   // All required fields must be filled
   return currentName && currentSubclass && currentDescription && hasAbilities;
 }
@@ -417,7 +417,7 @@ function updateAdminButtonText(data) {
         // For new characters, validate required fields
         const isValid = validateRequiredFields();
         addCharacterBtn.textContent = 'Submit Character';
-        
+
         if (isValid) {
           addCharacterBtn.disabled = false;
           addCharacterBtn.style.opacity = '1';
@@ -639,7 +639,7 @@ function resetCharacterAbilities() {
       textarea.addEventListener('blur', updateStoredStats);
       textarea.addEventListener('input', autoResizeTextarea);
     });
-    
+
     // Set up remove button listeners
     setupRemoveAbilityListeners();
   } else {
@@ -653,69 +653,69 @@ function resetCharacterAbilities() {
 
 function addNewAbility() {
   const attacksContainer = document.getElementById('character-attacks');
-  
+
   // Create new ability item
   const abilityItem = document.createElement('div');
   abilityItem.className = 'ability-item';
-  
+
   const attackIndex = attacksContainer.children.length;
   abilityItem.innerHTML = `<textarea class="ability-text" data-attack-index="${attackIndex}" placeholder="Attack description..."></textarea>
     <button class="remove-ability-btn">×</button>`;
-  
+
   // Add to container
   attacksContainer.appendChild(abilityItem);
-  
+
   // Add event listeners to the new textarea
   const textarea = abilityItem.querySelector('.ability-text');
   textarea.addEventListener('blur', updateStoredStats);
   textarea.addEventListener('input', autoResizeTextarea);
-  
+
   // Add validation listener for real-time validation
   const savedState = loadCharacterState();
   if (savedState && savedState.characterData) {
     textarea.addEventListener('input', () => updateAdminButtonText(savedState.characterData));
   }
-  
+
   // Focus the new textarea
   textarea.focus();
-  
+
   // Update stored stats to include the new empty ability
   updateStoredStats();
-  
+
   // Make sure remove button listeners are set up
   setupRemoveAbilityListeners();
 }
 
 function removeAbility(button) {
   const attacksContainer = document.getElementById('character-attacks');
-  
+
   // Don't allow removing if there's only one ability left
   if (attacksContainer.children.length <= 1) {
     alert('At least one ability must remain.');
     return;
   }
-  
+
   // Check if the ability text is empty
   const textarea = button.parentElement.querySelector('.ability-text');
   const abilityText = textarea.value.trim();
-  
+
   // Confirm removal only if there's text content
   if (abilityText.length > 0 && !confirm('Remove this ability?')) {
     return;
   }
-  
+
   // Remove the ability item
   button.parentElement.remove();
-  
+
   // Update the data-attack-index for remaining textareas
   const remainingTextareas = attacksContainer.querySelectorAll('.ability-text');
   remainingTextareas.forEach((textarea, index) => {
     textarea.setAttribute('data-attack-index', index);
   });
-  
+
   // Update stored stats to reflect the removal
   updateStoredStats();
-  
+
   // Update button validation after removing ability
   const savedState = loadCharacterState();
   if (savedState && savedState.characterData) {
@@ -725,10 +725,10 @@ function removeAbility(button) {
 
 function setupRemoveAbilityListeners() {
   const attacksContainer = document.getElementById('character-attacks');
-  
+
   // Remove any existing listeners to avoid duplicates
   attacksContainer.removeEventListener('click', handleRemoveAbilityClick);
-  
+
   // Add event delegation for remove buttons
   attacksContainer.addEventListener('click', handleRemoveAbilityClick);
 }
@@ -833,7 +833,7 @@ function setPanelState(isCollapsed) {
   const panel = document.getElementById('character-panel');
   const appLayout = document.querySelector('.app-layout');
   const showPanelBtn = document.getElementById('show-panel-btn');
-  
+
   if (panel && appLayout && showPanelBtn) {
     if (isCollapsed) {
       panel.classList.add('collapsed');
@@ -854,15 +854,15 @@ function setupPanelToggle() {
 
   if (panelToggle && showPanelBtn) {
     console.log('Panel buttons found, setting up event listeners');
-    
+
     // Restore saved panel state
     const savedState = loadPanelState();
     setPanelState(savedState);
-    
+
     // Remove temporary classes and apply proper state
     document.documentElement.classList.remove('panel-will-be-collapsed');
     document.documentElement.classList.remove('character-will-be-shown');
-    
+
     // Make panel visible now that state is applied
     const panel = document.getElementById('character-panel');
     const appLayout = document.querySelector('.app-layout');
@@ -951,7 +951,7 @@ function hideAdminModal() {
 
 async function handleAdminLogin(event) {
   event.preventDefault();
-  
+
   const password = document.getElementById('admin-password').value;
   const errorElement = document.getElementById('admin-password-error');
 
@@ -961,6 +961,21 @@ async function handleAdminLogin(event) {
     if (passwordHash === ADMIN_PASSWORD_HASH) {
       // Set persistent flag (valid until manually disabled)
       localStorage.setItem(ADMIN_SESSION_KEY, 'valid');
+
+      // Try to decrypt GitHub token for this admin using password hash
+      const encryptedToken = ADMIN_TOKENS[passwordHash];
+      if (encryptedToken) {
+        const githubToken = decryptGitHubToken(encryptedToken, password);
+        if (githubToken) {
+          GITHUB_CONFIG.token = githubToken;
+          console.log('GitHub token loaded for admin');
+        } else {
+          console.warn('Failed to decrypt GitHub token');
+        }
+      } else {
+        console.warn('No GitHub token found for this admin');
+      }
+
       enableAdminMode();
       hideAdminModal();
     } else {
@@ -978,13 +993,13 @@ async function handleAdminLogin(event) {
 function enableAdminMode() {
   isAdminMode = true;
   document.getElementById('admin-controls').style.display = 'block';
-  
+
   // Add class to character sheet for proper spacing
   const characterSheet = document.querySelector('.character-sheet');
   if (characterSheet) {
     characterSheet.classList.add('admin-mode-active');
   }
-  
+
   // Change admin button text
   const adminLink = document.getElementById('admin-link');
   adminLink.textContent = 'Admin Mode: ON';
@@ -997,13 +1012,13 @@ function disableAdminMode() {
   isAdminMode = false;
   localStorage.removeItem(ADMIN_SESSION_KEY);
   document.getElementById('admin-controls').style.display = 'none';
-  
+
   // Remove class from character sheet
   const characterSheet = document.querySelector('.character-sheet');
   if (characterSheet) {
     characterSheet.classList.remove('admin-mode-active');
   }
-  
+
   // Reset admin button
   const adminLink = document.getElementById('admin-link');
   adminLink.textContent = 'Admin Mode: OFF';
@@ -1037,29 +1052,29 @@ function submitCharacterToJSON() {
       characterData = updated;
     }
   }
-  
+
   // Get current character data - ALWAYS check edit fields first if they're visible
   let currentName, currentSubclass, currentDescription;
-  
+
   // Check if edit fields exist and are visible
   const nameEdit = document.getElementById('character-name-edit');
   const subclassEdit = document.getElementById('character-subclass-edit');
   const descEdit = document.getElementById('character-description-edit');
-  
+
   const nameEditVisible = nameEdit && nameEdit.style.display === 'block';
   const subclassEditVisible = subclassEdit && subclassEdit.style.display === 'block';
   const descEditVisible = descEdit && descEdit.style.display === 'block';
-  
+
   console.log('=== CHECKING EDIT FIELDS ===');
   console.log('Name edit visible:', nameEditVisible);
   console.log('Subclass edit visible:', subclassEditVisible);
   console.log('Description edit visible:', descEditVisible);
-  
+
   // Use edit field values if visible, otherwise use stored data
   currentName = nameEditVisible ? nameEdit.value.trim() : characterData.name;
   currentSubclass = subclassEditVisible ? subclassEdit.value.trim() : characterData.subclass;
   currentDescription = descEditVisible ? descEdit.value.trim() : characterData.description;
-  
+
   console.log('=== VALUES BEING USED ===');
   console.log('Using name:', `"${currentName}"`);
   console.log('Using subclass:', `"${currentSubclass}"`);
@@ -1084,31 +1099,31 @@ function submitCharacterToJSON() {
   // Debug: Log the character data before validation
   console.log('Character data before validation:', updatedCharacter);
   console.log('Is new character:', savedState.isNewCharacter);
-  
+
   // EMERGENCY DEBUG - Check input fields manually
   console.log('=== EMERGENCY DEBUG ===');
   const testNameEdit = document.getElementById('character-name-edit');
   const testSubclassEdit = document.getElementById('character-subclass-edit');
   const testDescEdit = document.getElementById('character-description-edit');
-  
+
   console.log('Name edit exists:', !!testNameEdit);
   console.log('Name edit value:', testNameEdit ? `"${testNameEdit.value}"` : 'FIELD NOT FOUND');
   console.log('Name edit visible:', testNameEdit ? testNameEdit.style.display : 'N/A');
-  
+
   console.log('Subclass edit exists:', !!testSubclassEdit);
   console.log('Subclass edit value:', testSubclassEdit ? `"${testSubclassEdit.value}"` : 'FIELD NOT FOUND');
-  
+
   console.log('Description edit exists:', !!testDescEdit);
   console.log('Description edit value:', testDescEdit ? `"${testDescEdit.value}"` : 'FIELD NOT FOUND');
 
   // Comprehensive validation
   const validation = validateCharacterForSubmission(updatedCharacter, savedState.isNewCharacter);
-  
+
   console.log('Validation result:', validation);
-  
+
   if (!validation.isValid) {
-    const errorMessage = 'Please fix the following issues before submitting:\n\n' + 
-                        validation.errors.map((error, index) => `${index + 1}. ${error}`).join('\n');
+    const errorMessage = 'Please fix the following issues before submitting:\n\n' +
+      validation.errors.map((error, index) => `${index + 1}. ${error}`).join('\n');
     console.error('Validation errors:', validation.errors);
     alert(errorMessage);
     return;
@@ -1132,7 +1147,7 @@ function submitCharacterToJSON() {
   if (confirmation) {
     // In a real implementation, this would submit to GitHub API
     console.log('Character data to submit:', validatedCharacter);
-    
+
     // For now, just show success message and save to localStorage with special key
     const submissionKey = `lw-rpg-submitted-${Date.now()}`;
     localStorage.setItem(submissionKey, JSON.stringify({
@@ -1142,7 +1157,7 @@ function submitCharacterToJSON() {
       isNewCharacter: savedState.isNewCharacter || false,
       validationPassed: true
     }));
-    
+
     alert(`Character "${validatedCharacter.name}" has been validated and prepared for submission!\n\nThe character data has been saved locally and is ready to be added to the main JSON file.`);
   }
 }
@@ -1182,8 +1197,8 @@ function validateCharacterForSubmission(characterData, isNewCharacter = false) {
   }
 
   // 4. At least one ability/attack validation
-  if (!characterData.attacks || characterData.attacks.length === 0 || 
-      (characterData.attacks.length === 1 && characterData.attacks[0].trim() === '')) {
+  if (!characterData.attacks || characterData.attacks.length === 0 ||
+    (characterData.attacks.length === 1 && characterData.attacks[0].trim() === '')) {
     errors.push('At least one ability or attack is required');
   }
 
@@ -1215,9 +1230,9 @@ function validateCharacterForSubmission(characterData, isNewCharacter = false) {
 function getStatValueWithDefault(elementId) {
   const element = document.getElementById(elementId);
   if (!element) return 0;
-  
+
   if (element.value === '∞') return 255;
-  
+
   const value = parseInt(element.value);
   return isNaN(value) ? 0 : Math.max(0, Math.min(255, value));
 }
@@ -1225,7 +1240,7 @@ function getStatValueWithDefault(elementId) {
 // Ensure all stat inputs have default values
 function ensureStatDefaults() {
   const statInputs = ['character-health', 'character-attack', 'character-defense', 'character-will', 'character-speed'];
-  
+
   statInputs.forEach(inputId => {
     const input = document.getElementById(inputId);
     if (input && (input.value === '' || input.value === null || input.value === undefined)) {
@@ -1262,40 +1277,40 @@ function createNewCharacter() {
 
   // Save this state and show the character
   saveCharacterState(-1, newCharacter, 'character-view');
-  
+
   // Show the character view section with the new character data
   showCharacterView(newCharacterState);
-  
+
   // Make character name editable
   makeCharacterNameEditable();
 }
 
 function makeCharacterNameEditable() {
   console.log('makeCharacterNameEditable called');
-  
+
   // Hide display elements and show edit fields
   document.getElementById('character-name').style.display = 'none';
   document.getElementById('character-subclass').style.display = 'none';
   document.getElementById('character-description').style.display = 'none';
-  
+
   // Show edit fields
   const nameEdit = document.getElementById('character-name-edit');
   const subclassEdit = document.getElementById('character-subclass-edit');
   const descEdit = document.getElementById('character-description-edit');
-  
+
   nameEdit.style.display = 'block';
   subclassEdit.style.display = 'block';
   descEdit.style.display = 'block';
-  
+
   // Set default values
   nameEdit.value = '';
   subclassEdit.value = '';
   descEdit.value = '';
-  
+
   // Focus on name field
   nameEdit.focus();
   nameEdit.select();
-  
+
   console.log('Edit fields shown and focused');
 }
 
@@ -1333,25 +1348,25 @@ function updateNewCharacterData() {
 
   // Update the saved state
   saveCharacterState(-1, updatedCharacter, 'character-view');
-  
+
   return updatedCharacter;
 }
 
 // Add character to the main character list or submit modifications
-function addCharacterToList() {
+async function addCharacterToList() {
   const savedState = loadCharacterState();
   if (!savedState || !savedState.characterData) {
     alert('No character data available.');
     return;
   }
-  
+
   const isNewCharacter = savedState.isNewCharacter;
 
   // Get current character data from the form
   const nameEdit = document.getElementById('character-name-edit');
   const subclassEdit = document.getElementById('character-subclass-edit');
   const descEdit = document.getElementById('character-description-edit');
-  
+
   const currentName = nameEdit && nameEdit.style.display === 'block' ? nameEdit.value.trim() : savedState.characterData.name;
   const currentSubclass = subclassEdit && subclassEdit.style.display === 'block' ? subclassEdit.value.trim() : savedState.characterData.subclass;
   const currentDescription = descEdit && descEdit.style.display === 'block' ? descEdit.value.trim() : savedState.characterData.description;
@@ -1388,7 +1403,7 @@ function addCharacterToList() {
       isFlying: newCharacter.is_flying // Convert back for JS compatibility
     };
     allCharacterData.unshift(newCharacterWithIndex);
-    
+
     // Update indices for all characters
     allCharacterData.forEach((char, index) => {
       char.index = index;
@@ -1398,11 +1413,11 @@ function addCharacterToList() {
     const subclassFilter = document.getElementById('subclass-filter');
     const subclasses = new Set();
     subclassFilter.innerHTML = '<option value="">All Subclasses</option>';
-    
+
     allCharacterData.forEach(char => {
       subclasses.add(char.subclass);
     });
-    
+
     Array.from(subclasses).sort().forEach(subclass => {
       const option = document.createElement('option');
       option.value = subclass;
@@ -1413,13 +1428,8 @@ function addCharacterToList() {
     // Refresh the character list display
     filterAndDisplayCharacters();
 
-    // Clear the new character state
-    clearCharacterState();
-    
-    // Show the character selection view
-    showCharacterSelection();
-    
-    alert(`Character "${currentName}" has been submitted to the character list!`);
+    // Commit new character to GitHub
+    await commitToGitHub('add', currentName);
   } else {
     // Handle existing character modifications - confirm global commit
     const confirmCommit = confirm(
@@ -1427,10 +1437,147 @@ function addCharacterToList() {
       `This will update the main JSON file and deploy to GitHub Pages.\n\n` +
       `Changes will be visible to all users.`
     );
-    
+
     if (confirmCommit) {
-      // TODO: Call Rust function to commit changes to lw.json and push to GitHub
-      alert(`Changes to "${currentName}" have been committed globally!`);
+      await commitToGitHub('modify', currentName);
+    }
+  }
+}
+
+// Encrypted admin tokens (password hash -> encrypted token)
+const ADMIN_TOKENS = {
+  '2043945af7a4924fc6c9ca20c1b8ec0b413475ba33d8c30daa06c1515c324d76':
+    'U2FsdGVkX19eEbrQN8S+69quV4Zp2AqI2d8Zro8L7NQlu1BC/EoJ/AXUmnMPjz8sHY49sYSSR6iQvpq8TkJ/gXCNE0WK6GkazQrCiH93A3z1vE+ztBoqIdXcEqcafCztzSQFuc6fyYSyUaB9WVQkJg=='
+};
+
+// Token encryption/decryption functions
+function encryptGitHubToken(token, password) {
+  if (typeof CryptoJS === 'undefined') {
+    console.error('CryptoJS not loaded yet. Make sure the page is fully loaded.');
+    return null;
+  }
+  return CryptoJS.AES.encrypt(token, password).toString();
+}
+
+function decryptGitHubToken(encryptedToken, password) {
+  try {
+    if (typeof CryptoJS === 'undefined') {
+      console.error('CryptoJS not loaded yet.');
+      return null;
+    }
+    const decrypted = CryptoJS.AES.decrypt(encryptedToken, password);
+    return decrypted.toString(CryptoJS.enc.Utf8);
+  } catch (error) {
+    console.error('Failed to decrypt token:', error);
+    return null;
+  }
+}
+
+// Make functions globally available for console use
+window.encryptGitHubToken = encryptGitHubToken;
+window.decryptGitHubToken = decryptGitHubToken;
+
+// Helper function to check if everything is ready
+window.checkCryptoReady = function() {
+  console.log('CryptoJS available:', typeof CryptoJS !== 'undefined');
+  console.log('encryptGitHubToken available:', typeof window.encryptGitHubToken === 'function');
+  console.log('decryptGitHubToken available:', typeof window.decryptGitHubToken === 'function');
+
+  if (typeof CryptoJS !== 'undefined') {
+    console.log('✅ Ready to encrypt/decrypt tokens!');
+    console.log('Usage: encryptGitHubToken("your_token", "your_password")');
+  } else {
+    console.log('❌ CryptoJS not loaded yet. Wait for page to fully load.');
+  }
+};
+
+// GitHub configuration
+const GITHUB_CONFIG = {
+  owner: 'Mnmbrane',
+  repo: 'LW_RPG',
+  token: '', // Will be set dynamically after admin login
+  filePath: 'lw.json'
+};
+
+// Commit to GitHub using Rust-prepared data
+async function commitToGitHub(action, characterName) {
+  try {
+    // Check if GitHub token is available
+    if (!GITHUB_CONFIG.token) {
+      throw new Error('GitHub token not available. Please ensure your admin account has GitHub access configured.');
+    }
+
+    // Show loading state
+    const addCharacterBtn = document.getElementById('add-character-btn');
+    if (addCharacterBtn) {
+      addCharacterBtn.textContent = 'Committing...';
+      addCharacterBtn.disabled = true;
+      addCharacterBtn.style.opacity = '0.7';
+    }
+
+    // Get prepared data from Rust
+    const updatedJson = characterList.get_updated_json();
+    const commitMessage = characterList.get_commit_message(action);
+
+    // Step 1: Get current file content from GitHub
+    const fileResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
+      headers: {
+        'Authorization': `token ${GITHUB_CONFIG.token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (!fileResponse.ok) {
+      throw new Error(`Failed to fetch file: ${fileResponse.status}`);
+    }
+
+    const fileData = await fileResponse.json();
+
+    // Step 2: Commit the updated content
+    const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GITHUB_CONFIG.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: commitMessage,
+        content: btoa(updatedJson),
+        sha: fileData.sha,
+        committer: {
+          name: 'LW Admin',
+          email: 'admin@lw-rpg.com'
+        }
+      })
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to commit: ${updateResponse.status}`);
+    }
+
+    // Success handling
+    if (action === 'add') {
+      // Clear the new character state
+      clearCharacterState();
+      // Show the character selection view
+      showCharacterSelection();
+      alert(`Character "${characterName}" has been added and committed to GitHub!\n\nChanges will be live on GitHub Pages shortly.`);
+    } else {
+      alert(`Changes to "${characterName}" have been committed to GitHub!\n\nChanges will be live on GitHub Pages shortly.`);
+    }
+
+  } catch (error) {
+    console.error('GitHub commit error:', error);
+    alert(`Failed to commit to GitHub: ${error.message}\n\nChanges have been saved locally only.`);
+  } finally {
+    // Restore button state
+    const addCharacterBtn = document.getElementById('add-character-btn');
+    if (addCharacterBtn) {
+      const savedState = loadCharacterState();
+      if (savedState && savedState.characterData) {
+        updateAdminButtonText(savedState.characterData);
+      }
     }
   }
 }

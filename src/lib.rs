@@ -55,8 +55,23 @@ impl CharacterList {
     }
 
     pub fn add_character(&mut self, json_string: &str) {
-        self.list
-            .push(serde_json::from_str::<Character>(&json_string).unwrap());
+        let new_character = serde_json::from_str::<Character>(&json_string).unwrap();
+        self.serialized_name_list
+            .extend(new_character.name.as_bytes());
+        self.serialized_name_list.push(0u8);
+        self.list.push(new_character);
+    }
+
+    pub fn get_updated_json(&self) -> String {
+        serde_json::to_string_pretty(&self.list).unwrap_or_else(|_| "[]".to_string())
+    }
+
+    pub fn get_commit_message(&self, action: &str) -> String {
+        match action {
+            "add" => "Add new character".to_string(),
+            "modify" => "Update character data".to_string(),
+            _ => "Update character data".to_string(),
+        }
     }
 
     pub fn get_health(&self, index: usize) -> u8 {
