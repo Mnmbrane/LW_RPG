@@ -413,6 +413,8 @@ function validateRequiredFields() {
 // Update admin button text and state based on character type and validation
 function updateAdminButtonText(data) {
   const addCharacterBtn = document.getElementById('add-character-btn');
+  const deleteCharacterBtn = document.getElementById('delete-character-btn');
+  
   if (addCharacterBtn) {
     if (data && (data.isNewCharacter || data)) {
       if (data.isNewCharacter) {
@@ -442,6 +444,21 @@ function updateAdminButtonText(data) {
       addCharacterBtn.disabled = true;
       addCharacterBtn.style.opacity = '0.5';
       addCharacterBtn.style.cursor = 'not-allowed';
+    }
+  }
+  
+  // Update delete button state
+  if (deleteCharacterBtn) {
+    if (data && !data.isNewCharacter && data.index !== undefined && data.index >= 0) {
+      // Enable delete for existing characters only
+      deleteCharacterBtn.disabled = false;
+      deleteCharacterBtn.style.opacity = '1';
+      deleteCharacterBtn.style.cursor = 'pointer';
+    } else {
+      // Disable delete for new characters or when no character selected
+      deleteCharacterBtn.disabled = true;
+      deleteCharacterBtn.style.opacity = '0.5';
+      deleteCharacterBtn.style.cursor = 'not-allowed';
     }
   }
 }
@@ -1472,6 +1489,96 @@ async function addCharacterToList() {
   }
 }
 
+// Delete character from the main character list
+async function deleteCharacterFromList() {
+  const savedState = loadCharacterState();
+  if (!savedState || !savedState.characterData || savedState.characterData.isNewCharacter) {
+    alert('No existing character selected for deletion.');
+    return;
+  }
+
+  const characterName = savedState.characterData.name;
+  const characterIndex = savedState.characterData.index;
+
+  // Confirm deletion
+  const confirmDelete = confirm(
+    `Are you sure you want to permanently delete "${characterName}"?\n\n` +
+    `This action cannot be undone and will:\n` +
+    `• Remove the character from the main JSON file\n` +
+    `• Deploy the changes to GitHub Pages\n` +
+    `• Make the deletion visible to all users\n\n` +
+    `Type the character name to confirm deletion.`
+  );
+
+  if (!confirmDelete) return;
+
+  // Double confirmation with name typing
+  const typedName = prompt(`To confirm deletion, please type the character name exactly: "${characterName}"`);
+  if (typedName !== characterName) {
+    alert('Character name does not match. Deletion cancelled.');
+    return;
+  }
+
+  try {
+    // Show loading state
+    const deleteBtn = document.getElementById('delete-character-btn');
+    if (deleteBtn) {
+      deleteBtn.textContent = 'Deleting...';
+      deleteBtn.disabled = true;
+      deleteBtn.style.opacity = '0.7';
+    }
+
+    // Call Rust delete_character method
+    characterList.delete_character(characterIndex);
+
+    // Remove from allCharacterData
+    allCharacterData = allCharacterData.filter(char => char.index !== characterIndex);
+
+    // Update indices for remaining characters
+    allCharacterData.forEach((char, index) => {
+      char.index = index;
+    });
+
+    // Re-populate the subclass filter
+    const subclassFilter = document.getElementById('subclass-filter');
+    const subclasses = new Set();
+    subclassFilter.innerHTML = '<option value="">All Subclasses</option>';
+
+    allCharacterData.forEach(char => {
+      subclasses.add(char.subclass);
+    });
+
+    Array.from(subclasses).sort().forEach(subclass => {
+      const option = document.createElement('option');
+      option.value = subclass;
+      option.textContent = subclass;
+      subclassFilter.appendChild(option);
+    });
+
+    // Refresh the character list display
+    filterAndDisplayCharacters();
+
+    // Clear the character view and go back to selection
+    clearCharacterState();
+    showCharacterSelection();
+
+    // Commit deletion to GitHub
+    await commitToGitHub('delete', characterName);
+
+  } catch (error) {
+    console.error('Character deletion error:', error);
+    alert(`Failed to delete character: ${error.message}\n\nDeletion has been cancelled.`);
+    
+    // Restore button state on error
+    const deleteBtn = document.getElementById('delete-character-btn');
+    if (deleteBtn) {
+      deleteBtn.textContent = 'Delete Character';
+      deleteBtn.disabled = false;
+      deleteBtn.style.opacity = '1';
+    }
+  }
+}
+
 // Encrypted admin tokens (password hash -> encrypted token)
 const ADMIN_TOKENS = {
   '2043945af7a4924fc6c9ca20c1b8ec0b413475ba33d8c30daa06c1515c324d76':
@@ -1622,8 +1729,9 @@ function setupAdminEventListeners() {
   const cancelAdminBtn = document.getElementById('cancel-admin-btn');
   const addNewCharacterBtn = document.getElementById('add-new-character-btn');
   const addCharacterBtn = document.getElementById('add-character-btn');
+  const deleteCharacterBtn = document.getElementById('delete-character-btn');
 
-  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !addNewCharacterBtn || !addCharacterBtn) {
+  if (!adminLink || !adminLoginForm || !cancelAdminBtn || !addNewCharacterBtn || !addCharacterBtn || !deleteCharacterBtn) {
     // Elements not ready yet, try again in a bit
     setTimeout(setupAdminEventListeners, 100);
     return;
@@ -1652,6 +1760,7 @@ function setupAdminEventListeners() {
   // Admin controls
   addNewCharacterBtn.addEventListener('click', createNewCharacter);
   addCharacterBtn.addEventListener('click', addCharacterToList);
+  deleteCharacterBtn.addEventListener('click', deleteCharacterFromList);
 
   // Check for existing admin session
   checkAdminSession();

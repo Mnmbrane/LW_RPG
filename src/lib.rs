@@ -61,6 +61,14 @@ impl CharacterList {
         self.list.push(new_character);
     }
 
+    pub fn delete_character(&mut self, index: usize) {
+        if index < self.list.len() {
+            self.list.remove(index);
+            // Rebuild the serialized name list
+            self.serialized_name_list = Self::build_name_list(&self.list);
+        }
+    }
+
     pub fn get_updated_json(&self) -> String {
         serde_json::to_string_pretty(&self.list).unwrap_or_else(|_| "[]".to_string())
     }
@@ -69,6 +77,7 @@ impl CharacterList {
         match action {
             "add" => "Add new character".to_string(),
             "modify" => "Update character data".to_string(),
+            "delete" => "Delete character".to_string(),
             _ => "Update character data".to_string(),
         }
     }
