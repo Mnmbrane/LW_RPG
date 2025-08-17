@@ -9,3 +9,5 @@ wasm-pack.log
 frontend/node_modules/
 frontend/dist/
 frontend/package-lock.json
+docs/
+frontend/docs/
