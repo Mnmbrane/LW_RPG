@@ -21,6 +21,21 @@ mkdir -p docs
 rm -rf docs/*
 cp -r frontend/dist/* docs/
 
+echo "📄 Adding cache control headers..."
+cat > docs/.htaccess << 'EOF'
+# Cache control for GitHub Pages
+<FilesMatch "\.(html|js|css|json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# Force revalidation for JSON files specifically
+<FilesMatch "\.json$">
+    Header set Cache-Control "no-cache, must-revalidate, max-age=0"
+</FilesMatch>
+EOF
+
 echo "✅ Build complete! Files deployed to docs/ directory"
 echo "📊 Build summary:"
 echo "   - WASM package: $(du -h pkg/lw_rpg_bg.wasm | cut -f1)"

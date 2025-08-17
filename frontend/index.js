@@ -87,6 +87,66 @@ function populateCharacterData() {
   });
 }
 
+function refreshCharacterListFromRust() {
+  // Clear existing data
+  allCharacterData = [];
+  
+  // Update list size from Rust
+  listSize = characterList.get_character_count();
+  
+  // Update name list data
+  nameListPtr = characterList.get_name_list();
+  nameListArray = new Uint8Array(memory.buffer, nameListPtr);
+  
+  // Convert the byte array to string and split by null terminators
+  const decoder = new TextDecoder('utf-8');
+  const fullString = decoder.decode(nameListArray);
+  characterNames = fullString.split('\0').filter(name => name.length > 0).slice(0, listSize);
+  
+  // Repopulate character data from Rust
+  populateCharacterData();
+  
+  // Refresh the display
+  filterAndDisplayCharacters();
+}
+
+async function reloadCharacterDataFromServer() {
+  try {
+    console.log('Reloading character data from server...');
+    
+    // Check if we're currently viewing a character
+    const savedState = loadCharacterState();
+    const currentCharacterName = savedState?.characterData?.name;
+    
+    // Fetch fresh JSON data
+    const response = await fetch(`./lw.json?v=${Date.now()}`);
+    const jsonString = await response.text();
+    
+    // Create new CharacterList with fresh data
+    characterList = CharacterList.new(jsonString);
+    
+    // Clear existing data and refresh from new Rust data
+    allCharacterData = [];
+    refreshCharacterListFromRust();
+    
+    // Check if currently viewed character still exists
+    if (currentCharacterName) {
+      const characterStillExists = allCharacterData.some(char => char.name === currentCharacterName);
+      if (!characterStillExists) {
+        console.log(`Character "${currentCharacterName}" was deleted by another user`);
+        // Clear the character view and go back to selection
+        clearCharacterState();
+        showCharacterSelection();
+        alert(`The character "${currentCharacterName}" has been deleted by another user.`);
+      }
+    }
+    
+    console.log('Character data reloaded successfully');
+  } catch (error) {
+    console.error('Failed to reload character data:', error);
+  }
+}
+
 // Filter and display characters
 function filterAndDisplayCharacters() {
   const searchTerm = document.getElementById('character-search').value.toLowerCase();
@@ -113,7 +173,7 @@ function filterAndDisplayCharacters() {
 }
 
 // Load characters dynamically and initialize
-fetch('./lw.json')
+fetch(`./lw.json?v=${Date.now()}`)
   .then(response => response.text())
   .then(jsonString => {
     characterList = CharacterList.new(jsonString);
@@ -161,6 +221,32 @@ fetch('./lw.json')
     document.getElementById('character-list').innerHTML =
       '<div class="loading">Failed to load character data</div>';
   });
+
+// Auto-refresh character data when user returns to page
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    // Page became visible, check for updates
+    console.log('Page visible again, checking for character data updates...');
+    reloadCharacterDataFromServer();
+  }
+});
+
+// Also refresh when window regains focus
+window.addEventListener('focus', () => {
+  console.log('Window focused, checking for character data updates...');
+  reloadCharacterDataFromServer();
+});
+
+// Manual refresh button
+document.addEventListener('DOMContentLoaded', () => {
+  const refreshBtn = document.getElementById('refresh-character-list-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+      console.log('Manual refresh requested');
+      reloadCharacterDataFromServer();
+    });
+  }
+});
 
 // Handle character selection (using event delegation for dynamic content)
 document.getElementById('character-list').addEventListener('click', (event) => {
@@ -1441,37 +1527,8 @@ async function addCharacterToList() {
     // Call Rust add_character method
     characterList.add_character(JSON.stringify(newCharacter));
 
-    // Add to allCharacterData at the beginning with proper index
-    const newCharacterWithIndex = {
-      ...newCharacter,
-      index: allCharacterData.length,
-      isFlying: newCharacter.is_flying // Convert back for JS compatibility
-    };
-    allCharacterData.unshift(newCharacterWithIndex);
-
-    // Update indices for all characters
-    allCharacterData.forEach((char, index) => {
-      char.index = index;
-    });
-
-    // Re-populate the subclass filter
-    const subclassFilter = document.getElementById('subclass-filter');
-    const subclasses = new Set();
-    subclassFilter.innerHTML = '<option value="">All Subclasses</option>';
-
-    allCharacterData.forEach(char => {
-      subclasses.add(char.subclass);
-    });
-
-    Array.from(subclasses).sort().forEach(subclass => {
-      const option = document.createElement('option');
-      option.value = subclass;
-      option.textContent = subclass;
-      subclassFilter.appendChild(option);
-    });
-
-    // Refresh the character list display
-    filterAndDisplayCharacters();
+    // Refresh all character data from Rust to ensure sync
+    refreshCharacterListFromRust();
 
     // Commit new character to GitHub
     await commitToGitHub('add', currentName);
@@ -1523,7 +1580,6 @@ async function deleteCharacterFromList() {
     // Show loading state
     const deleteBtn = document.getElementById('delete-character-btn');
     if (deleteBtn) {
-      deleteBtn.textContent = 'Deleting...';
       deleteBtn.disabled = true;
       deleteBtn.style.opacity = '0.7';
     }
@@ -1531,32 +1587,8 @@ async function deleteCharacterFromList() {
     // Call Rust delete_character method
     characterList.delete_character(characterIndex);
 
-    // Remove from allCharacterData
-    allCharacterData = allCharacterData.filter(char => char.index !== characterIndex);
-
-    // Update indices for remaining characters
-    allCharacterData.forEach((char, index) => {
-      char.index = index;
-    });
-
-    // Re-populate the subclass filter
-    const subclassFilter = document.getElementById('subclass-filter');
-    const subclasses = new Set();
-    subclassFilter.innerHTML = '<option value="">All Subclasses</option>';
-
-    allCharacterData.forEach(char => {
-      subclasses.add(char.subclass);
-    });
-
-    Array.from(subclasses).sort().forEach(subclass => {
-      const option = document.createElement('option');
-      option.value = subclass;
-      option.textContent = subclass;
-      subclassFilter.appendChild(option);
-    });
-
-    // Refresh the character list display
-    filterAndDisplayCharacters();
+    // Refresh all character data from Rust to ensure sync
+    refreshCharacterListFromRust();
 
     // Clear the character view and go back to selection
     clearCharacterState();
@@ -1572,7 +1604,6 @@ async function deleteCharacterFromList() {
     // Restore button state on error
     const deleteBtn = document.getElementById('delete-character-btn');
     if (deleteBtn) {
-      deleteBtn.textContent = 'Delete Character';
       deleteBtn.disabled = false;
       deleteBtn.style.opacity = '1';
     }
