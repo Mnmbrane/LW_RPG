@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json;
 use wasm_bindgen::prelude::*;
-use web_sys::console;
 
 #[wasm_bindgen]
 #[derive(Serialize, Deserialize, Debug)]
@@ -37,8 +36,8 @@ impl CharacterList {
     }
 
     fn parse_json() -> Vec<Character> {
-        const EMBEDDED_JSON: &str = include_str!("../lw.json");
-        let json_string = EMBEDDED_JSON.trim_start_matches('\u{feff}').to_string();
+        const LW_JSON_STR: &str = include_str!("../lw.json");
+        let json_string = LW_JSON_STR.trim_start_matches('\u{feff}').to_string();
         match serde_json::from_str::<Vec<Character>>(&json_string) {
             Ok(characters) => characters,
             Err(e) => panic!("JSON parse error: {}", e),
