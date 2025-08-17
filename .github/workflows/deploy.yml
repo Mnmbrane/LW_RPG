@@ -23,9 +23,6 @@ jobs:
     - name: Install wasm-pack
       run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       
-    - name: Build Rust WASM
-      run: wasm-pack build --target web --out-dir pkg
-      
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
@@ -34,15 +31,17 @@ jobs:
     - name: Install dependencies
       run: cd frontend && npm install
       
-    - name: Build frontend
-      run: cd frontend && npm run build
+    - name: Run build script
+      run: |
+        chmod +x ./build.sh
+        ./build.sh
       
     - name: Add .nojekyll file
-      run: touch ./frontend/dist/.nojekyll
+      run: touch ./docs/.nojekyll
       
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./frontend/dist
+        publish_dir: ./docs

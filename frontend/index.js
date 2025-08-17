@@ -976,7 +976,9 @@ async function handleAdminLogin(event) {
         
         if (githubToken) {
           GITHUB_CONFIG.token = githubToken;
-          console.log('✅ GitHub token loaded for admin');
+          // Save token persistently for this admin session
+          sessionStorage.setItem('lw-rpg-github-token', githubToken);
+          console.log('✅ GitHub token loaded and saved for admin');
           console.log('🔍 Debug: Token starts with:', githubToken.substring(0, 10));
         } else {
           console.warn('❌ Failed to decrypt GitHub token');
@@ -1022,6 +1024,9 @@ function enableAdminMode() {
 function disableAdminMode() {
   isAdminMode = false;
   localStorage.removeItem(ADMIN_SESSION_KEY);
+  // Clear GitHub token when exiting admin mode
+  sessionStorage.removeItem('lw-rpg-github-token');
+  GITHUB_CONFIG.token = '';
   document.getElementById('admin-controls').style.display = 'none';
 
   // Remove class from character sheet
@@ -1041,6 +1046,12 @@ function disableAdminMode() {
 function checkAdminSession() {
   const sessionValid = localStorage.getItem(ADMIN_SESSION_KEY) === 'valid';
   if (sessionValid) {
+    // Restore GitHub token if available
+    const savedToken = sessionStorage.getItem('lw-rpg-github-token');
+    if (savedToken) {
+      GITHUB_CONFIG.token = savedToken;
+      console.log('🔄 GitHub token restored from session');
+    }
     enableAdminMode();
   }
 }
