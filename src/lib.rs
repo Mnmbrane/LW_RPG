@@ -27,8 +27,8 @@ pub struct CharacterList {
 
 #[wasm_bindgen]
 impl CharacterList {
-    pub fn new() -> Self {
-        let char_list = Self::parse_json();
+    pub fn new(json_string: &str) -> Self {
+        let char_list = Self::parse_json(json_string);
         let name_list = Self::build_name_list(&char_list);
         Self {
             list: char_list,
@@ -36,8 +36,7 @@ impl CharacterList {
         }
     }
 
-    fn parse_json() -> Vec<Character> {
-        let json_string: &str = include_str!("../lw.json");
+    fn parse_json(json_string: &str) -> Vec<Character> {
         let json_string = json_string.trim_start_matches('\u{feff}').to_string();
         match serde_json::from_str::<Vec<Character>>(&json_string) {
             Ok(characters) => characters,

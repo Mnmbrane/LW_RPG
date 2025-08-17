@@ -16,7 +16,8 @@ module.exports = {
       patterns: [
         { from: 'index.html', to: 'index.html' },
         { from: 'styles.css', to: 'styles.css' },
-        { from: '../default_profile.jpg', to: 'default_profile.jpg' }
+        { from: '../default_profile.jpg', to: 'default_profile.jpg' },
+        { from: 'lw.json', to: 'lw.json' }
       ]
     })
   ],

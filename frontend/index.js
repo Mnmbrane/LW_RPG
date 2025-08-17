@@ -1,7 +1,7 @@
 import { CharacterList } from "lw-rpg";
 import { memory } from "lw-rpg/lw_rpg_bg.wasm";
 
-const characterList = CharacterList.new();
+let characterList;
 
 // Session storage functions for current view state
 function saveCharacterState(index, characterData, currentView = 'character-view') {
@@ -48,17 +48,10 @@ function loadFromGlobalStates(characterIndex) {
   const globalStates = JSON.parse(sessionStorage.getItem('lw-rpg-global-states') || '{}');
   return globalStates[characterIndex] || null;
 }
-const nameListPtr = characterList.get_name_list();
-const listSize = characterList.get_character_count();
-const nameListArray = new Uint8Array(memory.buffer, nameListPtr);
-
-// Convert the byte array to string and split by null terminators
-const decoder = new TextDecoder('utf-8');
-const fullString = decoder.decode(nameListArray);
-const characterNames = fullString.split('\0').filter(name => name.length > 0).slice(0, listSize);
 
 // Store all character data for filtering
 let allCharacterData = [];
+let nameListPtr, listSize, nameListArray, characterNames;
 
 // Populate character data array and subclass filter
 function populateCharacterData() {
@@ -118,33 +111,55 @@ function filterAndDisplayCharacters() {
   }
 }
 
-// Initialize character data and display
-populateCharacterData();
-filterAndDisplayCharacters();
+// Load characters dynamically and initialize
+fetch('./lw.json')
+  .then(response => response.text())
+  .then(jsonString => {
+    characterList = CharacterList.new(jsonString);
+    
+    // Initialize name list data that other functions depend on
+    nameListPtr = characterList.get_name_list();
+    listSize = characterList.get_character_count();
+    nameListArray = new Uint8Array(memory.buffer, nameListPtr);
+    
+    // Convert the byte array to string and split by null terminators
+    const decoder = new TextDecoder('utf-8');
+    const fullString = decoder.decode(nameListArray);
+    characterNames = fullString.split('\0').filter(name => name.length > 0).slice(0, listSize);
+    
+    // Initialize character data and display
+    populateCharacterData();
+    filterAndDisplayCharacters();
 
-// Add search and filter event listeners
-document.getElementById('character-search').addEventListener('input', filterAndDisplayCharacters);
-document.getElementById('subclass-filter').addEventListener('change', filterAndDisplayCharacters);
-document.getElementById('clear-filters-btn').addEventListener('click', () => {
-  document.getElementById('character-search').value = '';
-  document.getElementById('subclass-filter').value = '';
-  filterAndDisplayCharacters();
-});
+    // Add search and filter event listeners
+    document.getElementById('character-search').addEventListener('input', filterAndDisplayCharacters);
+    document.getElementById('subclass-filter').addEventListener('change', filterAndDisplayCharacters);
+    document.getElementById('clear-filters-btn').addEventListener('click', () => {
+      document.getElementById('character-search').value = '';
+      document.getElementById('subclass-filter').value = '';
+      filterAndDisplayCharacters();
+    });
 
-// Check for saved state on page load
-const savedState = loadCharacterState();
-if (savedState && savedState.characterData) {
-  if (savedState.currentView === 'character-view') {
-    // Restore character view with saved data
-    showCharacterView(savedState.characterData);
-  } else {
-    // Stay on character selection but keep the saved data
-    showCharacterSelection();
-  }
-} else {
-  // No saved state, default to character selection
-  showCharacterSelection();
-}
+    // Check for saved state on page load
+    const savedState = loadCharacterState();
+    if (savedState && savedState.characterData) {
+      if (savedState.currentView === 'character-view') {
+        // Restore character view with saved data
+        showCharacterView(savedState.characterData);
+      } else {
+        // Stay on character selection but keep the saved data
+        showCharacterSelection();
+      }
+    } else {
+      // No saved state, default to character selection
+      showCharacterSelection();
+    }
+  })
+  .catch(error => {
+    console.error('Failed to load characters:', error);
+    document.getElementById('character-list').innerHTML = 
+      '<div class="loading">Failed to load character data</div>';
+  });
 
 // Handle character selection (using event delegation for dynamic content)
 document.getElementById('character-list').addEventListener('click', (event) => {
