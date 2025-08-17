@@ -1,3 +1,5 @@
+use std::fs;
+
 use serde::{Deserialize, Serialize};
 use serde_json;
 use wasm_bindgen::prelude::*;
@@ -14,7 +16,6 @@ pub struct Character {
     will: u8,
     speed: u8,
     is_flying: bool,
-    companions: Option<Vec<Character>>,
     attacks: Vec<String>,
 }
 
@@ -23,6 +24,7 @@ pub struct Character {
 pub struct CharacterList {
     list: Vec<Character>,
     serialized_name_list: Vec<u8>,
+    has_new_characters: bool,
 }
 
 #[wasm_bindgen]
@@ -33,15 +35,37 @@ impl CharacterList {
         Self {
             list: char_list,
             serialized_name_list: name_list,
+            has_new_characters: false,
         }
     }
 
     fn parse_json() -> Vec<Character> {
-        let json_string: &str = include_str!("../lw.json");
+        let json_string: String = fs::read_to_string("lw.json").unwrap();
         let json_string = json_string.trim_start_matches('\u{feff}').to_string();
         match serde_json::from_str::<Vec<Character>>(&json_string) {
             Ok(characters) => characters,
             Err(e) => panic!("JSON parse error: {}", e),
+        }
+    }
+
+    pub fn append_and_get_lw_json(&mut self, json_str: &str) -> Result<String, String> {
+        match serde_json::from_str::<Character>(json_str) {
+            Ok(character) => {
+                self.serialized_name_list.extend(character.name.as_bytes());
+                self.serialized_name_list.push(0u8);
+                self.list.push(character);
+                self.has_new_characters = true;
+                let json_string = serde_json::to_string_pretty(&self.list)
+                    .map_err(|e| format!("Failed to serialize: {}", e))?;
+                Ok(json_string)
+            }
+            Err(e) => Err(format!("Invalid JSON: {}", e)),
+        }
+    }
+
+    pub fn submit_characters(&mut self) {
+        if self.has_new_characters {
+            self.has_new_characters = false;
         }
     }
 
@@ -115,22 +139,15 @@ impl CharacterList {
         self.list[index].attacks.len()
     }
 
-    pub fn get_companions(&self, index: usize) -> *const u8 {
-        // TODO: Implement - return companions as null-terminated string
-        let empty = String::new();
-        empty.as_ptr()
-    }
-
-    pub fn get_companions_count(&self, index: usize) -> usize {
-        // TODO: Implement
-        0
-    }
-
     pub fn get_name_list(&self) -> *const u8 {
         self.serialized_name_list.as_ptr()
     }
 
     pub fn get_character_count(&self) -> usize {
         self.list.len()
+    }
+
+    pub fn has_new_characters(&self) -> bool {
+        self.has_new_characters
     }
 }
