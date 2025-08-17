@@ -2989,33 +2989,5 @@
       "Grenades - 6 - deal instant damage to all players within 3 paces. within 6 paces. (3 times)",
       "Command Post Strike -  12 - declare a pace to target within 20 paces. Then at the start of your next turn deal damage to all players within 6 paces of the target. You may only use this ability if your command post is active. (2 times)"
     ]
-  },
-  {
-    "name": "asdf",
-    "health": 0,
-    "subclass": "asdf",
-    "description": "asdf",
-    "attack": 0,
-    "defense": 0,
-    "will": 0,
-    "speed": 0,
-    "is_flying": false,
-    "attacks": [
-      "asdf"
-    ]
-  },
-  {
-    "name": "asdf",
-    "health": 0,
-    "subclass": "asdf",
-    "description": "asdf",
-    "attack": 0,
-    "defense": 0,
-    "will": 0,
-    "speed": 0,
-    "is_flying": false,
-    "attacks": [
-      "asdf"
-    ]
   }
 ]
