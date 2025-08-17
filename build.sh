@@ -8,6 +8,9 @@ set -e  # Exit on any error
 echo "🦀 Building WASM package..."
 wasm-pack build
 
+echo "📦 Copying lw.json to frontend..."
+cp lw.json frontend/lw.json
+
 echo "📦 Building frontend..."
 cd frontend
 npm run build
