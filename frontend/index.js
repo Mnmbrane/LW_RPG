@@ -106,6 +106,9 @@ function refreshCharacterListFromRust() {
   // Repopulate character data from Rust
   populateCharacterData();
   
+  // Debug: Log the order of characters
+  console.log('Character order after refresh:', allCharacterData.map((char, i) => `${i}: ${char.name}`));
+  
   // Refresh the display
   filterAndDisplayCharacters();
 }
@@ -163,6 +166,9 @@ function filterAndDisplayCharacters() {
   if (filteredCharacters.length === 0) {
     characterListElement.innerHTML = '<div class="loading">No characters found matching your criteria.</div>';
   } else {
+    // Debug: Log the filtered characters order
+    console.log('Filtered characters order:', filteredCharacters.map((char, i) => `${i}: ${char.name} (index: ${char.index})`));
+    
     characterListElement.innerHTML = filteredCharacters.map(char =>
       `<div class="character-item" data-index="${char.index}">
         <h3>${char.name}</h3>
