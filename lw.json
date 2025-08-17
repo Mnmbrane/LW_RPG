@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "name": "The Archangel",
     "health": 40,
@@ -218,8 +218,8 @@
     "description": "Armored 3. Immune to fire, poisons, illusions, and possession. Any player that damages this one within 3 paces is dealt an immediate 2 fire damage. This player takes an extra 6 damage from lightning attacks.",
     "attack": 5,
     "defense": 2,
-    "speed": 5,
     "will": 8,
+    "speed": 5,
     "is_flying": false,
     "attacks": [
       "Molten Blade - 9 - shieldbreaker and non-enchanted/elven/ crystal weapon breaker. If this weapon fails an attack against a player wielding an Elven weapon, destroy this one. This weapon can only be destroyed by a spell or an elven weapon. (within 4 paces)",
@@ -2988,6 +2988,20 @@
       "Refined pistol - 6 - piercing. Within 8 paces.",
       "Grenades - 6 - deal instant damage to all players within 3 paces. within 6 paces. (3 times)",
       "Command Post Strike -  12 - declare a pace to target within 20 paces. Then at the start of your next turn deal damage to all players within 6 paces of the target. You may only use this ability if your command post is active. (2 times)"
+    ]
+  },
+  {
+    "name": "asdf",
+    "health": 0,
+    "subclass": "asdf",
+    "description": "asdf",
+    "attack": 0,
+    "defense": 0,
+    "will": 0,
+    "speed": 0,
+    "is_flying": false,
+    "attacks": [
+      "asdf"
     ]
   }
 ]
