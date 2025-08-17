@@ -253,6 +253,9 @@ function showCharacterSelection() {
     item.classList.remove('selected');
   });
 
+  // Update admin button state (grey out when no character selected)
+  updateAdminButtonText(null);
+
   // Save view state but don't clear character data
   saveViewState('character-selection');
 }
@@ -281,9 +284,18 @@ function displayCharacter(data) {
     document.getElementById('character-description-edit').style.display = 'block';
 
     // Set values in edit fields
-    document.getElementById('character-name-edit').value = data.name || 'New Character';
-    document.getElementById('character-subclass-edit').value = data.subclass || '';
-    document.getElementById('character-description-edit').value = data.description || '';
+    const nameEdit = document.getElementById('character-name-edit');
+    const subclassEdit = document.getElementById('character-subclass-edit');
+    const descEdit = document.getElementById('character-description-edit');
+    
+    nameEdit.value = data.name === 'New Character' ? '' : data.name || '';
+    subclassEdit.value = data.subclass || '';
+    descEdit.value = data.description || '';
+    
+    // Add validation event listeners for real-time validation
+    nameEdit.addEventListener('input', () => updateAdminButtonText(data));
+    subclassEdit.addEventListener('input', () => updateAdminButtonText(data));
+    descEdit.addEventListener('input', () => updateAdminButtonText(data));
   } else {
     // For existing characters, hide editable fields and show normal displays
     document.getElementById('character-name').style.display = 'block';
@@ -354,6 +366,7 @@ function displayCharacter(data) {
     attackTextareas.forEach(textarea => {
       textarea.addEventListener('blur', updateStoredStats);
       textarea.addEventListener('input', autoResizeTextarea);
+      textarea.addEventListener('input', () => updateAdminButtonText(data));
     });
   } else {
     // If no attacks, show empty container for adding new ones
@@ -373,14 +386,60 @@ function displayCharacter(data) {
   updateAdminButtonText(data);
 }
 
-// Update admin button text based on character type
+// Check if required fields are filled for validation
+function validateRequiredFields() {
+  const savedState = loadCharacterState();
+  if (!savedState || !savedState.characterData) return false;
+
+  // Get current values from form
+  const nameEdit = document.getElementById('character-name-edit');
+  const subclassEdit = document.getElementById('character-subclass-edit');
+  const descEdit = document.getElementById('character-description-edit');
+  
+  const currentName = nameEdit && nameEdit.style.display === 'block' ? nameEdit.value.trim() : savedState.characterData.name;
+  const currentSubclass = subclassEdit && subclassEdit.style.display === 'block' ? subclassEdit.value.trim() : savedState.characterData.subclass;
+  const currentDescription = descEdit && descEdit.style.display === 'block' ? descEdit.value.trim() : savedState.characterData.description;
+  
+  // Check abilities/attacks
+  const abilityTextareas = document.querySelectorAll('.ability-text');
+  const hasAbilities = Array.from(abilityTextareas).some(textarea => textarea.value.trim() !== '');
+  
+  // All required fields must be filled
+  return currentName && currentSubclass && currentDescription && hasAbilities;
+}
+
+// Update admin button text and state based on character type and validation
 function updateAdminButtonText(data) {
   const addCharacterBtn = document.getElementById('add-character-btn');
   if (addCharacterBtn) {
-    if (data && data.isNewCharacter) {
-      addCharacterBtn.textContent = 'Submit Character';
+    if (data && (data.isNewCharacter || data)) {
+      if (data.isNewCharacter) {
+        // For new characters, validate required fields
+        const isValid = validateRequiredFields();
+        addCharacterBtn.textContent = 'Submit Character';
+        
+        if (isValid) {
+          addCharacterBtn.disabled = false;
+          addCharacterBtn.style.opacity = '1';
+          addCharacterBtn.style.cursor = 'pointer';
+        } else {
+          addCharacterBtn.disabled = true;
+          addCharacterBtn.style.opacity = '0.5';
+          addCharacterBtn.style.cursor = 'not-allowed';
+        }
+      } else {
+        // For existing characters, always allow modifications
+        addCharacterBtn.textContent = 'Submit Modific.';
+        addCharacterBtn.disabled = false;
+        addCharacterBtn.style.opacity = '1';
+        addCharacterBtn.style.cursor = 'pointer';
+      }
     } else {
-      addCharacterBtn.textContent = 'Submit Modific.';
+      // No character selected - grey out button
+      addCharacterBtn.textContent = 'Submit Character';
+      addCharacterBtn.disabled = true;
+      addCharacterBtn.style.opacity = '0.5';
+      addCharacterBtn.style.cursor = 'not-allowed';
     }
   }
 }
@@ -611,6 +670,12 @@ function addNewAbility() {
   textarea.addEventListener('blur', updateStoredStats);
   textarea.addEventListener('input', autoResizeTextarea);
   
+  // Add validation listener for real-time validation
+  const savedState = loadCharacterState();
+  if (savedState && savedState.characterData) {
+    textarea.addEventListener('input', () => updateAdminButtonText(savedState.characterData));
+  }
+  
   // Focus the new textarea
   textarea.focus();
   
@@ -650,6 +715,12 @@ function removeAbility(button) {
   
   // Update stored stats to reflect the removal
   updateStoredStats();
+  
+  // Update button validation after removing ability
+  const savedState = loadCharacterState();
+  if (savedState && savedState.characterData) {
+    updateAdminButtonText(savedState.characterData);
+  }
 }
 
 function setupRemoveAbilityListeners() {
@@ -1096,8 +1167,8 @@ function validateCharacterForSubmission(characterData, isNewCharacter = false) {
   const errors = [];
 
   // 1. Name validation
-  if (!characterData.name || characterData.name.trim() === '' || characterData.name.trim() === 'New Character') {
-    errors.push('Character name is required and cannot be "New Character"');
+  if (!characterData.name || characterData.name.trim() === '') {
+    errors.push('Character name is required');
   }
 
   // 2. Subclass validation
@@ -1166,7 +1237,7 @@ function ensureStatDefaults() {
 // Create a new blank character
 function createNewCharacter() {
   const newCharacter = {
-    name: "New Character",
+    name: "",
     subclass: "",
     description: "",
     health: 0,
@@ -1217,7 +1288,7 @@ function makeCharacterNameEditable() {
   descEdit.style.display = 'block';
   
   // Set default values
-  nameEdit.value = 'New Character';
+  nameEdit.value = '';
   subclassEdit.value = '';
   descEdit.value = '';
   
@@ -1246,7 +1317,7 @@ function updateNewCharacterData() {
 
   const updatedCharacter = {
     ...savedState.characterData,
-    name: nameInput ? nameInput.value.trim() || "New Character" : savedState.characterData.name,
+    name: nameInput ? nameInput.value.trim() : savedState.characterData.name,
     subclass: subclassInput ? subclassInput.value.trim() : savedState.characterData.subclass,
     description: descriptionInput ? descriptionInput.value.trim() : savedState.characterData.description,
     health: parseInt(document.getElementById('character-health').value) || 0,
@@ -1287,7 +1358,7 @@ function addCharacterToList() {
 
   if (isNewCharacter) {
     // Validate required fields for new characters
-    if (!currentName || currentName === 'New Character' || !currentSubclass || !currentDescription) {
+    if (!currentName || !currentSubclass || !currentDescription) {
       alert('Please fill in all required fields: Name, Subclass, and Description');
       return;
     }
