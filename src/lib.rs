@@ -15,7 +15,6 @@ pub struct Character {
     will: u8,
     speed: u8,
     is_flying: bool,
-    companions: Option<Vec<Character>>,
     attacks: Vec<String>,
 }
 

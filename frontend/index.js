@@ -963,17 +963,28 @@ async function handleAdminLogin(event) {
       localStorage.setItem(ADMIN_SESSION_KEY, 'valid');
 
       // Try to decrypt GitHub token for this admin using password hash
+      console.log('🔍 Debug: Looking for token with hash:', passwordHash);
+      console.log('🔍 Debug: Available token keys:', Object.keys(ADMIN_TOKENS));
+      
       const encryptedToken = ADMIN_TOKENS[passwordHash];
+      console.log('🔍 Debug: Found encrypted token:', !!encryptedToken);
+      
       if (encryptedToken) {
+        console.log('🔍 Debug: Attempting decryption with password...');
         const githubToken = decryptGitHubToken(encryptedToken, password);
+        console.log('🔍 Debug: Decryption successful:', !!githubToken);
+        
         if (githubToken) {
           GITHUB_CONFIG.token = githubToken;
-          console.log('GitHub token loaded for admin');
+          console.log('✅ GitHub token loaded for admin');
+          console.log('🔍 Debug: Token starts with:', githubToken.substring(0, 10));
         } else {
-          console.warn('Failed to decrypt GitHub token');
+          console.warn('❌ Failed to decrypt GitHub token');
         }
       } else {
-        console.warn('No GitHub token found for this admin');
+        console.warn('❌ No GitHub token found for this admin');
+        console.log('🔍 Debug: Expected hash:', passwordHash);
+        console.log('🔍 Debug: Available hashes:', Object.keys(ADMIN_TOKENS));
       }
 
       enableAdminMode();
@@ -1476,6 +1487,7 @@ function decryptGitHubToken(encryptedToken, password) {
 // Make functions globally available for console use
 window.encryptGitHubToken = encryptGitHubToken;
 window.decryptGitHubToken = decryptGitHubToken;
+window.hashPassword = hashPassword;
 
 // Helper function to check if everything is ready
 window.checkCryptoReady = function() {
@@ -1498,6 +1510,10 @@ const GITHUB_CONFIG = {
   token: '', // Will be set dynamically after admin login
   filePath: 'lw.json'
 };
+
+// Make variables globally available for debugging
+window.GITHUB_CONFIG = GITHUB_CONFIG;
+window.ADMIN_TOKENS = ADMIN_TOKENS;
 
 // Commit to GitHub using Rust-prepared data
 async function commitToGitHub(action, characterName) {
@@ -1543,7 +1559,7 @@ async function commitToGitHub(action, characterName) {
       },
       body: JSON.stringify({
         message: commitMessage,
-        content: btoa(updatedJson),
+        content: btoa(unescape(encodeURIComponent(updatedJson))),
         sha: fileData.sha,
         committer: {
           name: 'LW Admin',
