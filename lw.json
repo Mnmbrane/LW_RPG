@@ -2989,5 +2989,35 @@
       "Grenades - 6 - deal instant damage to all players within 3 paces. within 6 paces. (3 times)",
       "Command Post Strike -  12 - declare a pace to target within 20 paces. Then at the start of your next turn deal damage to all players within 6 paces of the target. You may only use this ability if your command post is active. (2 times)"
     ]
+  },
+  {
+    "name": "The Test Admiral",
+    "health": 22,
+    "subclass": "Legendary Commander",
+    "description": "This player’s troops may have a total of 6 phases.",
+    "attack": 4,
+    "defense": 3,
+    "will": 6,
+    "speed": 5,
+    "is_flying": false,
+    "attacks": [
+      "Refined pistol - 6 - piercing. Within 8 paces.",
+      "Grenades - 6 - deal instant damage to all players within 3 paces. within 6 paces. (3 times)",
+      "Command Post Strike -  12 - declare a pace to target within 20 paces. Then at the start of your next turn deal damage to all players within 6 paces of the target. You may only use this ability if your command post is active. (2 times)"
+    ]
+  },
+  {
+    "name": "Bald guy",
+    "health": 0,
+    "subclass": "Ueuud",
+    "description": "Bdbsn",
+    "attack": 0,
+    "defense": 0,
+    "will": 0,
+    "speed": 0,
+    "is_flying": false,
+    "attacks": [
+      "Brick"
+    ]
   }
 ]
