@@ -1,0 +1,11 @@
+# Cache control for GitHub Pages
+<FilesMatch "\.(html|js|css|json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# Force revalidation for JSON files specifically
+<FilesMatch "\.json$">
+    Header set Cache-Control "no-cache, must-revalidate, max-age=0"
+</FilesMatch>

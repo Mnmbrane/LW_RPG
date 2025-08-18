@@ -113,13 +113,41 @@ function refreshCharacterListFromRust() {
   filterAndDisplayCharacters();
 }
 
-// Note: With embedded data, we can't reload from server at runtime
-// This function is kept for compatibility but will just refresh the UI
-function reloadCharacterDataFromServer() {
-  console.log('Refreshing character list display...');
-  
-  // Just refresh the character list display
-  refreshCharacterListFromRust();
+async function reloadCharacterDataFromServer() {
+  try {
+    console.log('Reloading character data from server...');
+    
+    // Check if we're currently viewing a character
+    const savedState = loadCharacterState();
+    const currentCharacterName = savedState?.characterData?.name;
+    
+    // Fetch fresh JSON data
+    const response = await fetch(`./lw.json?v=${Date.now()}`);
+    const jsonString = await response.text();
+    
+    // Create new CharacterList with fresh data
+    characterList = CharacterList.new(jsonString);
+    
+    // Clear existing data and refresh from new Rust data
+    allCharacterData = [];
+    refreshCharacterListFromRust();
+    
+    // Check if currently viewed character still exists
+    if (currentCharacterName) {
+      const characterStillExists = allCharacterData.some(char => char.name === currentCharacterName);
+      if (!characterStillExists) {
+        console.log(`Character "${currentCharacterName}" was deleted by another user`);
+        // Clear the character view and go back to selection
+        clearCharacterState();
+        showCharacterSelection();
+        alert(`The character "${currentCharacterName}" has been deleted by another user.`);
+      }
+    }
+    
+    console.log('Character data reloaded successfully');
+  } catch (error) {
+    console.error('Failed to reload character data:', error);
+  }
 }
 
 // Filter and display characters
@@ -150,10 +178,11 @@ function filterAndDisplayCharacters() {
   }
 }
 
-// Load characters from embedded data and initialize
-function initializeCharacters() {
-  try {
-    characterList = CharacterList.new();
+// Load characters dynamically and initialize
+fetch(`./lw.json?v=${Date.now()}`)
+  .then(response => response.text())
+  .then(jsonString => {
+    characterList = CharacterList.new(jsonString);
 
     // Initialize name list data that other functions depend on
     nameListPtr = characterList.get_name_list();
@@ -192,15 +221,12 @@ function initializeCharacters() {
       // No saved state, default to character selection
       showCharacterSelection();
     }
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Failed to load characters:', error);
     document.getElementById('character-list').innerHTML =
       '<div class="loading">Failed to load character data</div>';
-  }
-}
-
-// Initialize characters when WASM is ready
-initializeCharacters();
+  });
 
 // Auto-refresh character data when user returns to page
 document.addEventListener('visibilitychange', () => {

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LW - Character Admin</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="admin.css?v=1">
+  </head>
+  <body>
+    <!-- Password Protection Modal -->
+    <div id="password-modal" class="password-modal">
+      <div class="password-modal-content">
+        <h2>Admin Access Required</h2>
+        <form id="password-form">
+          <input type="password" id="admin-password" placeholder="Enter admin password" required>
+          <div class="password-form-buttons">
+            <button type="button" id="cancel-admin-btn" class="cancel-admin-btn">Cancel</button>
+            <button type="submit" class="access-admin-btn">Access Admin</button>
+          </div>
+        </form>
+        <p id="password-error" class="password-error" style="display: none;">Incorrect password. Please try again.</p>
+      </div>
+    </div>
+
+    <div class="container" id="admin-content" style="display: none;">
+      <header>
+        <a href="index.html" class="back-btn">← Back to Game</a>
+        <h1 class="title" style="margin-right: 40px;">LW Admin</h1>
+        <nav class="admin-nav">
+          <div class="admin-actions">
+            <button id="add-character-btn" class="add-character-btn">+ Add New Character</button>
+          </div>
+        </nav>
+      </header>
+      
+      <!-- Character List Section -->
+      <main id="admin-character-list" class="admin-section">
+        <h2>Manage Characters</h2>
+        
+        <div class="admin-search-controls">
+          <input type="text" id="admin-search" placeholder="Search characters..." class="admin-search-input">
+          <select id="admin-subclass-filter" class="admin-filter-select">
+            <option value="">All Subclasses</option>
+          </select>
+        </div>
+        
+        <div id="admin-character-grid" class="admin-character-grid">
+          <div class="loading">Loading characters...</div>
+        </div>
+      </main>
+
+      <!-- Character Edit/Add Section -->
+      <main id="admin-character-form" class="admin-section" style="display: none;">
+        <div class="form-header">
+          <h2 id="form-title">Add New Character</h2>
+          <button id="cancel-edit-btn" class="cancel-btn">Cancel</button>
+        </div>
+        
+        <form id="character-form" class="character-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="char-name">Character Name *</label>
+              <input type="text" id="char-name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="char-subclass">Subclass *</label>
+              <input type="text" id="char-subclass" required>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="char-description">Description *</label>
+              <textarea id="char-description" rows="4" required></textarea>
+            </div>
+            
+            <div class="stats-grid">
+              <div class="form-group">
+                <label for="char-health">Health *</label>
+                <input type="number" id="char-health" min="0" max="255" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="char-attack">Attack *</label>
+                <input type="number" id="char-attack" min="0" max="255" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="char-defense">Defense *</label>
+                <input type="number" id="char-defense" min="0" max="255" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="char-will">Will *</label>
+                <input type="number" id="char-will" min="0" max="255" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="char-speed">Speed *</label>
+                <input type="number" id="char-speed" min="0" max="255" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="char-flying">Flying</label>
+                <input type="checkbox" id="char-flying">
+              </div>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="char-attacks">Attacks & Abilities</label>
+              <div id="attacks-container">
+                <div class="attack-item">
+                  <textarea class="attack-input" placeholder="Enter attack or ability description..."></textarea>
+                  <button type="button" class="remove-attack-btn">Remove</button>
+                </div>
+              </div>
+              <button type="button" id="add-attack-btn" class="add-attack-btn">+ Add Attack/Ability</button>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" id="save-character-btn" class="save-btn">Save Character</button>
+            <button type="button" id="delete-character-btn" class="delete-btn" style="display: none;">Delete Character</button>
+          </div>
+        </form>
+      </main>
+    </div>
+
+    <!-- GitHub Settings Modal -->
+    <div id="github-settings-modal" class="password-modal" style="display: none;">
+      <div class="password-modal-content">
+        <h2>GitHub Settings</h2>
+        <form id="github-settings-form">
+          <div class="form-group">
+            <label for="github-token">GitHub Personal Access Token</label>
+            <input type="password" id="github-token" placeholder="Enter your GitHub token...">
+            <small>This token is stored locally and used to create pull requests</small>
+          </div>
+          <div class="form-group">
+            <label>Repository Configuration</label>
+            <div class="github-config-info">
+              <p><strong>Owner:</strong> Mnmbrane</p>
+              <p><strong>Repository:</strong> LW_RPG</p>
+              <p><strong>Branch:</strong> main</p>
+              <p><strong>File:</strong> lw.json</p>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="save-github-settings-btn" class="save-btn">Save Settings</button>
+            <button type="button" id="cancel-github-settings-btn" class="cancel-btn">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <script type="module" src="./admin-bootstrap.js"></script>
+  </body>
+</html>
