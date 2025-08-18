@@ -1669,8 +1669,7 @@ window.checkCryptoReady = function() {
 const GITHUB_CONFIG = {
   owner: 'Mnmbrane',
   repo: 'LW_RPG',
-  token: '', // Will be set dynamically after admin login
-  filePath: 'lw.json'
+  token: '' // Will be set dynamically after admin login
 };
 
 // Make variables globally available for debugging
@@ -1680,10 +1679,15 @@ window.ADMIN_TOKENS = ADMIN_TOKENS;
 // Commit to GitHub using Rust-prepared data
 async function commitToGitHub(action, characterName) {
   try {
+    console.log('🚀 Starting GitHub commit process...', { action, characterName });
+    
     // Check if GitHub token is available
     if (!GITHUB_CONFIG.token) {
+      console.error('❌ No GitHub token available');
       throw new Error('GitHub token not available. Please ensure your admin account has GitHub access configured.');
     }
+    
+    console.log('✅ GitHub token available, proceeding with commit...');
 
     // Show loading state
     const addCharacterBtn = document.getElementById('add-character-btn');
@@ -1696,43 +1700,114 @@ async function commitToGitHub(action, characterName) {
     // Get prepared data from Rust
     const updatedJson = characterList.get_updated_json();
     const commitMessage = characterList.get_commit_message(action);
+    
+    console.log('📝 Prepared commit data:', { 
+      commitMessage, 
+      jsonLength: updatedJson.length,
+      action 
+    });
 
-    // Step 1: Get current file content from GitHub
-    const fileResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
-      headers: {
-        'Authorization': `token ${GITHUB_CONFIG.token}`,
-        'Accept': 'application/vnd.github.v3+json'
+    // Files to update: both root lw.json and docs/lw.json
+    const filesToUpdate = [
+      { path: 'lw.json', description: 'root' },
+      { path: 'docs/lw.json', description: 'deployment' }
+    ];
+
+    // Step 1: Get current content for both files
+    const fileDataPromises = filesToUpdate.map(async (file) => {
+      const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${file.path}`, {
+        headers: {
+          'Authorization': `token ${GITHUB_CONFIG.token}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return { ...file, sha: data.sha, exists: true };
+      } else if (response.status === 404) {
+        // File doesn't exist yet
+        return { ...file, sha: null, exists: false };
+      } else {
+        throw new Error(`Failed to fetch ${file.description} file: ${response.status}`);
       }
     });
 
-    if (!fileResponse.ok) {
-      throw new Error(`Failed to fetch file: ${fileResponse.status}`);
-    }
+    const filesData = await Promise.all(fileDataPromises);
 
-    const fileData = await fileResponse.json();
+    // Step 2: Commit updates to both files with retry on conflicts
+    const updatePromises = filesData.map(async (file) => {
+      let retries = 3;
+      let currentSha = file.sha;
+      let fileExists = file.exists;
 
-    // Step 2: Commit the updated content
-    const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${GITHUB_CONFIG.token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: commitMessage,
-        content: btoa(unescape(encodeURIComponent(updatedJson))),
-        sha: fileData.sha,
-        committer: {
-          name: 'LW Admin',
-          email: 'admin@lw-rpg.com'
+      while (retries > 0) {
+        try {
+          const requestBody = {
+            message: `${commitMessage} (${file.description})`,
+            content: btoa(unescape(encodeURIComponent(updatedJson))),
+            committer: {
+              name: 'LW Admin',
+              email: 'admin@lw-rpg.com'
+            }
+          };
+
+          // Only include SHA if the file exists
+          if (fileExists && currentSha) {
+            requestBody.sha = currentSha;
+          }
+
+          const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${file.path}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `token ${GITHUB_CONFIG.token}`,
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+          });
+
+          if (response.ok) {
+            return response.json();
+          } else if (response.status === 409) {
+            // Conflict - refetch the current SHA and retry
+            console.log(`🔄 Conflict on ${file.description} file, retrying...`);
+            retries--;
+            
+            if (retries > 0) {
+              // Refetch the current file state
+              const refetchResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${file.path}`, {
+                headers: {
+                  'Authorization': `token ${GITHUB_CONFIG.token}`,
+                  'Accept': 'application/vnd.github.v3+json'
+                }
+              });
+
+              if (refetchResponse.ok) {
+                const refetchData = await refetchResponse.json();
+                currentSha = refetchData.sha;
+                fileExists = true;
+                console.log(`📝 Updated SHA for ${file.description} file, retrying...`);
+                continue;
+              }
+            }
+            
+            throw new Error(`Failed to commit ${file.description} file after ${3 - retries} retries: 409 Conflict`);
+          } else {
+            const errorText = await response.text();
+            throw new Error(`Failed to commit ${file.description} file: ${response.status} - ${errorText}`);
+          }
+        } catch (error) {
+          if (retries === 1) throw error;
+          retries--;
+          console.log(`⚠️ Error committing ${file.description} file, retrying...`, error.message);
         }
-      })
+      }
     });
 
-    if (!updateResponse.ok) {
-      throw new Error(`Failed to commit: ${updateResponse.status}`);
-    }
+    await Promise.all(updatePromises);
+    
+    console.log('✅ Successfully committed to both files!');
 
     // Success handling
     if (action === 'add') {
@@ -1740,9 +1815,9 @@ async function commitToGitHub(action, characterName) {
       clearCharacterState();
       // Show the character selection view
       showCharacterSelection();
-      alert(`Character "${characterName}" has been added and committed to GitHub!\n\nChanges will be live on GitHub Pages shortly.`);
+      alert(`Character "${characterName}" has been added and deployed!\n\nChanges are now live on GitHub Pages.`);
     } else {
-      alert(`Changes to "${characterName}" have been committed to GitHub!\n\nChanges will be live on GitHub Pages shortly.`);
+      alert(`Changes to "${characterName}" have been deployed!\n\nChanges are now live on GitHub Pages.`);
     }
 
   } catch (error) {
