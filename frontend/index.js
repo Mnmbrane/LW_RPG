@@ -254,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
 // Handle character selection (using event delegation for dynamic content)
 document.getElementById('character-list').addEventListener('click', (event) => {
   console.log('Click detected on:', event.target);
